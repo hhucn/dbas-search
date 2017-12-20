@@ -1,14 +1,14 @@
 from elasticsearch import Elasticsearch
 
+from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import FILTER
 from search_service.database_handling.query_with_graphql import graphql_query, query_all_data_by_uid, \
     query_every_datas_from_active_issue, query_language_of_issue_by_uid, query_all_uids
 from search_service.elastic.elastic_search_helper import setting_string, query_string_by_whitespace, \
     query_string_synonym_text_search, query_search
-from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 
-#ELASTIC_SEARCH_PORT = 9200
-#ELASTIC_SEARCH_ADDRESS = "elasticsearch"
+# ELASTIC_SEARCH_PORT = 9200
+# ELASTIC_SEARCH_ADDRESS = "elasticsearch"
 INDEX_NAME = "test_index"
 
 

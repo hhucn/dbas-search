@@ -46,19 +46,19 @@ flake8:
     - flake8 .
   allow_failure: true
 
-unit:
-  <<: *add-services
-  stage: test
-  script:
-    - cd search_service
-    - pip3 install nose coverage
-    - pip3 install -r requirements.txt
-    - nosetests --with-coverage --cover-package=search_service --cover-xml search_service
-  coverage: '/^TOTAL\s*\d+\s*\d+\s*(\d+\%)\s*$/'
-  artifacts:
-    paths:
-      - coverage.xml
-    expire_in: 10 mins
+#unit:
+#  <<: *add-services
+#  stage: test
+#  script:
+#    - cd search_service
+#    - pip3 install nose coverage
+#    - pip3 install -r requirements.txt
+#    - nosetests --with-coverage --cover-package=search_service --cover-xml search_service
+# coverage: '/^TOTAL\s*\d+\s*\d+\s*(\d+\%)\s*$/'
+#  artifacts:
+#    paths:
+#      - coverage.xml
+#    expire_in: 10 mins
 
 deploy_image:
   stage: deploy
