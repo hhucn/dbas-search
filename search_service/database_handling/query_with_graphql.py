@@ -94,24 +94,6 @@ def query_issue_id_by_issue_slug(slug):
                 ''') % slug
 
 
-def query_all_users_nicknames_with_issues():
-    """
-
-    :return: all publicNames of users who took part in a discussion
-    """
-
-    return '''
-           query{
-                issues{
-                    uid
-                    users{
-                        publicNickname
-                    }
-                }
-           }
-           '''
-
-
 def query_all_data_by_uid(uid, is_startpoint):
     """
 

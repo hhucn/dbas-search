@@ -1,7 +1,7 @@
 import unittest
 
 from search_service.database_handling.query_with_graphql import graphql_query, query_issue_id_by_issue_slug, \
-    query_all_uids, query_all_users_nicknames_with_issues, query_language_of_issue_by_uid, \
+    query_all_uids, query_language_of_issue_by_uid, \
     query_every_datas_from_active_issue
 
 
@@ -25,11 +25,6 @@ class TestRequest(unittest.TestCase):
         query = query_all_uids()
         response = graphql_query(query)
         self.assertGreaterEqual(len(response.get("issues")), 5)
-
-    def test_there_are_users_with_issues(self):
-        query = query_all_users_nicknames_with_issues()
-        response = graphql_query(query)
-        self.assertIsNotNone(response)
 
     def test_language_of_town_has_to_cut_spending_is_english(self):
         query = query_language_of_issue_by_uid(2)
