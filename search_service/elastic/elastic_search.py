@@ -1,8 +1,7 @@
 from elasticsearch import Elasticsearch
 
-from search_service import INDEX_NAME, DOC_TYPE
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
-from search_service import FILTER
+from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database_handling.query_with_graphql import graphql_query, query_every_datas_from_active_issue, \
     query_language_of_issue_by_uid, query_all_uids
 from search_service.elastic.elastic_search_helper import setting_string, query_search
@@ -15,17 +14,6 @@ def create_elastic_search_client():
     """
 
     return Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
-
-
-def search_in_statements_with_query(es, query):
-    """
-
-    :param es: elastic client
-    :param query: query string for the search
-    :return results for the elastic search for a string in all of the statements
-    """
-
-    return es.search(index="post_statements", doc_type="json", body=query)
 
 
 def get_strings_for_suggestion_with_synonyms(es, uid, search, is_startpoint):
