@@ -1,6 +1,7 @@
 import os
 
 INDEX_NAME = "test_index"
+DOC_TYPE = "json"
 
 ELASTIC_SEARCH_ADDRESS = "localhost"
 ELASTIC_SEARCH_PORT = 9200

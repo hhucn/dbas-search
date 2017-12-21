@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 
-from search_service import INDEX_NAME
+from search_service import INDEX_NAME, DOC_TYPE
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import FILTER
 from search_service.database_handling.query_with_graphql import graphql_query, query_every_datas_from_active_issue, \
@@ -81,7 +81,7 @@ def create_elastic_search_connection():
     content = get_all_data_of_active_issues()
     for i in range(len(content)):
         es.index(index=INDEX_NAME,
-                 doc_type="json",
+                 doc_type=DOC_TYPE,
                  id=i,
                  body=content[i])
     es.indices.refresh(index=INDEX_NAME)
