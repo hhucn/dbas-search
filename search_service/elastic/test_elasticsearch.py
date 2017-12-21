@@ -130,3 +130,17 @@ class TestElasticResults(unittest.TestCase):
                 search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
                 self.assertIsNotNone(search_results)
                 self.assertIn("we should close public <em>swimming</em> <em>pools</em>", search_results)
+
+    def test_german_synonyms_are_used(self):
+        uid = get_uid_of_issue("pferdehuhn")
+        search_words = ["fogel"]
+        es = self.client
+        if not is_elastic_search_available():
+            self.assertRaises(Exception("Elastic is not available"),
+                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], True))
+
+        else:
+            for search_word in search_words:
+                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
+                self.assertIsNotNone(search_results)
+                self.assertIn("das <em>Huhn</em> gewinnen w\u00fcrde", search_results)

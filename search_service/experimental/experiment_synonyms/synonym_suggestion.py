@@ -36,7 +36,7 @@ def get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoi
             es.indices.create(index=index_name,
                               body=settings)
         else:
-            requests.put("http://elasticsearch:9200/"+index_name, data=settings)
+            requests.put("http://elasticsearch:9200/" + index_name, data=settings)
 
         index_query_result_text_versions(es, content.get("statements"))
 
@@ -111,6 +111,6 @@ if __name__ == "__main__":
 
     result = es.search(index=index_name, doc_type="json", body=search_query)
     pretty_print(result)
-    
+
     print(es.indices.exists(index="post_statments"))
     """
