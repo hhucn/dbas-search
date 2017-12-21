@@ -2,7 +2,7 @@ import unittest
 
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, \
-    get_all_matching_statements_by_uid_and_synonyms
+    get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms
 from search_service.elastic.elastic_search_helper import is_elastic_search_available
 
 
@@ -144,3 +144,20 @@ class TestElasticResults(unittest.TestCase):
                 search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
                 self.assertIsNotNone(search_results)
                 self.assertIn("das <em>Huhn</em> gewinnen w\u00fcrde", search_results)
+
+
+class TestElasticSuggestions(unittest.TestCase):
+    def setUp(self):
+        self.client = create_elastic_search_client()
+
+    def test_suggestions_for_swimming_pool_in_town_has_to_cut_spending(self):
+        uid = get_uid_of_issue("town-has-to-cut-spending")
+        search_words = ["swimming pools", "SWIMMING POOLS", "SWIMIng Ploos", "swimming poos"]
+        es = self.client
+        if not is_elastic_search_available():
+            raise Exception("These are not the results you are looking for")
+        else:
+            for search_word in search_words:
+                search_results = get_strings_for_suggestion_with_synonyms(es, uid, search_word, True)
+                for result in search_results:
+                    self.assertIn("we should close public <em>swimming</em> <em>pools</em>", result.get("text"))

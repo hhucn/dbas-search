@@ -31,11 +31,9 @@ def search_in_statements_with_query(es, query):
 
 def get_strings_for_suggestion_with_synonyms(es, uid, search, is_startpoint):
     results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoint)
-    print(results)
     content_to_show = []
     for result in results:
-        # todo work on second tags
-        filling = {"text": "Fits: " + result}
+        filling = {"text": result}
         content_to_show.append(filling)
     return content_to_show
 
