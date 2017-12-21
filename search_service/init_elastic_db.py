@@ -1,3 +1,4 @@
+from search_service import INDEX_NAME
 from search_service.elastic.elastic_search import create_elastic_search_client
 from search_service.elastic.elastic_search import create_elastic_search_connection
 
@@ -8,5 +9,5 @@ print("Connection is established: {0}".format(es.ping()))
 print(":: Fill elasticsearch database")
 es = create_elastic_search_connection()
 print("Connection is established: {0}".format(es.ping()))
-content = es.get(index="test_index", doc_type="json", id=0)
+content = es.get(index=INDEX_NAME, doc_type="json", id=0)
 print("Content is set: {0}".format(content is not None))

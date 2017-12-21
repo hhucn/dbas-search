@@ -1,6 +1,7 @@
 import os
 
-# todo rename address to host
+INDEX_NAME = "test_index"
+
 ELASTIC_SEARCH_ADDRESS = "localhost"
 ELASTIC_SEARCH_PORT = 9200
 
