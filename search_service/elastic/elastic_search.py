@@ -98,8 +98,13 @@ def get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoi
     return results
 
 
-def check_existence(es, search):
+def search_result_length(es, search):
     where = "textversions.content"
     query = query_exact_term(search, where)
     res = es.search(index=INDEX_NAME, body=query)
     return len(res.get("hits").get("hits"))
+
+
+def get_existence(es, search):
+    res = search_result_length(es, search)
+    return True if res is 1 else False

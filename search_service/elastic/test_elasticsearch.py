@@ -3,7 +3,7 @@ import unittest
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, \
     get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms, \
-    check_existence
+    search_result_length, get_existence
 from search_service.elastic.elastic_search_helper import is_elastic_search_available
 
 
@@ -168,17 +168,35 @@ class TestInsertion(unittest.TestCase):
     def test_single_result(self):
         es = create_elastic_search_client()
         term = "jeder Mensch eine Chance verdient"
-        res = check_existence(es, term)
+        res = search_result_length(es, term)
         self.assertEqual(res, 1)
 
     def test_multi_result(self):
         es = create_elastic_search_client()
         term = "Mensch"
-        res = check_existence(es, term)
+        res = search_result_length(es, term)
         self.assertEqual(res, 2)
 
     def test_no_result(self):
         es = create_elastic_search_client()
         term = "foo bar"
-        res = check_existence(es, term)
+        res = search_result_length(es, term)
         self.assertEqual(res, 0)
+
+    def test_exists_unique(self):
+        es = create_elastic_search_client()
+        term = "jeder Mensch eine Chance verdient"
+        res = get_existence(es, term)
+        self.assertTrue(res)
+
+    def test_exists_multiple(self):
+        es = create_elastic_search_client()
+        term = "Mensch"
+        res = get_existence(es, term)
+        self.assertFalse(res)
+
+    def test_dont_exists(self):
+        es = create_elastic_search_client()
+        term = "foo bar"
+        res = get_existence(es, term)
+        self.assertFalse(res)
