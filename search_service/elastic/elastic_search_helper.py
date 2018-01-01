@@ -250,3 +250,13 @@ def query_string_synonym_text_search(text, synonym_analyzer="synonyms_english"):
             }
         }
     }
+
+
+def query_exact_term(term, where):
+    return {
+        "query": {
+            "match_phrase": {
+                where: term
+            }
+        }
+    }

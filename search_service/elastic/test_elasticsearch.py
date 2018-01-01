@@ -2,7 +2,8 @@ import unittest
 
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, \
-    get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms
+    get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms, \
+    check_existence
 from search_service.elastic.elastic_search_helper import is_elastic_search_available
 
 
@@ -161,3 +162,23 @@ class TestElasticSuggestions(unittest.TestCase):
                 search_results = get_strings_for_suggestion_with_synonyms(es, uid, search_word, True)
                 for result in search_results:
                     self.assertIn("we should close public <em>swimming</em> <em>pools</em>", result.get("text"))
+
+
+class TestInsertion(unittest.TestCase):
+    def test_single_result(self):
+        es = create_elastic_search_client()
+        term = "jeder Mensch eine Chance verdient"
+        res = check_existence(es, term)
+        self.assertEqual(res, 1)
+
+    def test_multi_result(self):
+        es = create_elastic_search_client()
+        term = "Mensch"
+        res = check_existence(es, term)
+        self.assertEqual(res, 2)
+
+    def test_no_result(self):
+        es = create_elastic_search_client()
+        term = "foo bar"
+        res = check_existence(es, term)
+        self.assertEqual(res, 0)

@@ -4,7 +4,7 @@ from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database_handling.query_with_graphql import graphql_query, query_every_datas_from_active_issue, \
     query_language_of_issue_by_uid, query_all_uids
-from search_service.elastic.elastic_search_helper import setting_string, query_search
+from search_service.elastic.elastic_search_helper import setting_string, query_search, query_exact_term
 
 
 def create_elastic_search_client():
@@ -96,3 +96,10 @@ def get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoi
             if "highlight" in result:
                 results.append(result.get("highlight").get("textversions.content")[0])
     return results
+
+
+def check_existence(es, search):
+    where = "textversions.content"
+    query = query_exact_term(search, where)
+    res = es.search(index=INDEX_NAME, body=query)
+    return len(res.get("hits").get("hits"))
