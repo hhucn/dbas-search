@@ -260,3 +260,18 @@ def query_exact_term(term, where):
             }
         }
     }
+
+
+def data_mapping(text, is_startpoint, uid, langUid):
+    return (
+        {
+            "isStartpoint": is_startpoint,
+            "textversions": {
+                "content": text
+            },
+            "issues": {
+                "uid": uid,
+                "langUid": langUid
+            }
+        }
+    )

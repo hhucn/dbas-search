@@ -1,9 +1,9 @@
 import unittest
 
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
-from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, \
+from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, DOC_TYPE, \
     get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms, \
-    search_result_length, get_existence
+    search_result_length, get_existence, get_length_of_index, insert_data_to_index
 from search_service.elastic.elastic_search_helper import is_elastic_search_available
 
 
@@ -165,38 +165,90 @@ class TestElasticSuggestions(unittest.TestCase):
 
 
 class TestInsertion(unittest.TestCase):
+    def setUp(self):
+        self.client = create_elastic_search_client()
+
     def test_single_result(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "jeder Mensch eine Chance verdient"
         res = search_result_length(es, term)
         self.assertEqual(res, 1)
 
     def test_multi_result(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "Mensch"
         res = search_result_length(es, term)
         self.assertEqual(res, 2)
 
     def test_no_result(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "foo bar"
         res = search_result_length(es, term)
         self.assertEqual(res, 0)
 
     def test_exists_unique(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "jeder Mensch eine Chance verdient"
         res = get_existence(es, term)
         self.assertTrue(res)
 
     def test_exists_multiple(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "Mensch"
         res = get_existence(es, term)
         self.assertFalse(res)
 
     def test_dont_exists(self):
-        es = create_elastic_search_client()
+        es = self.client
         term = "foo bar"
         res = get_existence(es, term)
         self.assertFalse(res)
+
+    def test_length_of_index_is_greater_equals_625(self):
+        es = self.client
+        length = get_length_of_index(es)
+        self.assertGreaterEqual(length, 625)
+
+    def test_insertion_increases_index_length(self):
+        es = self.client
+        previous_length = get_length_of_index(es)
+        insert_data_to_index(es, "Coconut", True, 1, 2)
+        next_length = get_length_of_index(es)
+        self.assertEqual(previous_length, next_length - 1)
+        es.delete(index=INDEX_NAME,
+                  doc_type=DOC_TYPE,
+                  id=next_length - 1)
+        es.indices.refresh(index=INDEX_NAME)
+        length = get_length_of_index(es)
+        self.assertEqual(previous_length, length)
+
+    def test_same_insertion_dont_increase_index_length(self):
+        es = self.client
+        previous_length = get_length_of_index(es)
+        insert_data_to_index(es, "Coconut", True, 1, 2)
+        insert_data_to_index(es, "Coconut", True, 1, 2)
+        next_length = get_length_of_index(es)
+        self.assertEqual(previous_length, next_length - 1)
+        es.delete(index=INDEX_NAME,
+                  doc_type=DOC_TYPE,
+                  id=next_length - 1)
+        es.indices.refresh(index=INDEX_NAME)
+        length = get_length_of_index(es)
+        self.assertEqual(previous_length, length)
+
+    def test_different_insertion_increase_index_length(self):
+        es = self.client
+        previous_length = get_length_of_index(es)
+        insert_data_to_index(es, "Coconut", True, 1, 2)
+        insert_data_to_index(es, "Coconuts are good", False, 2, 2)
+        next_length = get_length_of_index(es)
+        self.assertEqual(previous_length, next_length - 2)
+        es.delete(index=INDEX_NAME,
+                  doc_type=DOC_TYPE,
+                  id=next_length - 1)
+        es.delete(index=INDEX_NAME,
+                  doc_type=DOC_TYPE,
+                  id=next_length - 2)
+        es.indices.refresh(index=INDEX_NAME)
+        length = get_length_of_index(es)
+        self.assertEqual(previous_length, length)
