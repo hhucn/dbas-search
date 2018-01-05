@@ -178,35 +178,7 @@ def query_string_synonym_text_search(text, synonym_analyzer="synonyms_english"):
     return {
 
         "query": {
-            "bool": {
-                "should": [
-                    {
-                        "match_phrase": {
-                            "content": {
-                                "query": text,
-                                "analyzer": synonym_analyzer
-                            }
-                        }
-                    },
-
-                    {
-                        "query_string": {
-                            "analyzer": synonym_analyzer,
-                            "query": "*" + text + "*",
-                            "fields": ["content"],
-                        }
-                    },
-                    {
-                        "match": {
-                            "content": {
-                                "query": text,
-                                "fuzziness": 2,
-                                "prefix_length": 1
-                            }
-                        }
-                    }
-                ]
-            }
+            search_query(text, synonym_analyzer)
         },
 
         "highlight": {
@@ -216,38 +188,44 @@ def query_string_synonym_text_search(text, synonym_analyzer="synonyms_english"):
                 "content": {
                     "force_source": "true",
                     "highlight_query": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "match_phrase": {
-                                        "content": {
-                                            "query": text,
-                                            "analyzer": synonym_analyzer
-                                        }
-                                    }
-                                },
-
-                                {
-                                    "query_string": {
-                                        "analyzer": synonym_analyzer,
-                                        "query": "*" + text + "*",
-                                        "fields": ["content"],
-                                    }
-                                },
-                                {
-                                    "match": {
-                                        "content": {
-                                            "query": text,
-                                            "fuzziness": 2,
-                                            "prefix_length": 1
-                                        }
-                                    }
-                                }
-                            ]
-                        }
+                        search_query(text, synonym_analyzer)
                     }
                 }
             }
+        }
+    }
+
+
+def search_query(text, synonym_analyzer):
+    return {
+        "bool": {
+            "should": [
+                {
+                    "match_phrase": {
+                        "content": {
+                            "query": text,
+                            "analyzer": synonym_analyzer
+                        }
+                    }
+                },
+
+                {
+                    "query_string": {
+                        "analyzer": synonym_analyzer,
+                        "query": "*" + text + "*",
+                        "fields": ["content"],
+                    }
+                },
+                {
+                    "match": {
+                        "content": {
+                            "query": text,
+                            "fuzziness": 2,
+                            "prefix_length": 1
+                        }
+                    }
+                }
+            ]
         }
     }
 
