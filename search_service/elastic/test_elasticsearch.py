@@ -1,15 +1,15 @@
 import unittest
 
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
-from search_service.elastic.elastic_search import create_elastic_search_client, INDEX_NAME, DOC_TYPE, \
-    get_all_matching_statements_by_uid_and_synonyms, get_strings_for_suggestion_with_synonyms, \
+from search_service.elastic.elastic_search import create_connection, INDEX_NAME, DOC_TYPE, \
+    get_matching_statements, get_suggestions, \
     search_result_length, get_existence, get_length_of_index, insert_data_to_index
 from search_service.elastic.elastic_search_helper import is_elastic_search_available
 
 
 class TestConnection(unittest.TestCase):
     def setUp(self):
-        self.client = create_elastic_search_client()
+        self.client = create_connection()
 
     def test_connection_is_alive(self):
         self.assertTrue(self.client.ping())
@@ -18,7 +18,7 @@ class TestConnection(unittest.TestCase):
 class TestElasticDB(unittest.TestCase):
     def setUp(self):
         # by starting the service the database should be filled
-        self.client = create_elastic_search_client()
+        self.client = create_connection()
 
     def test_database_has_filled(self):
         data1 = self.client.get(index=INDEX_NAME, doc_type="json", id=0)
@@ -28,7 +28,7 @@ class TestElasticDB(unittest.TestCase):
 
 class TestElasticResults(unittest.TestCase):
     def setUp(self):
-        self.client = create_elastic_search_client()
+        self.client = create_connection()
 
     def test_find_swimming_pool_in_town_has_to_cut_spending(self):
         uid = get_uid_of_issue("town-has-to-cut-spending")
@@ -37,11 +37,11 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], True))
+                              get_matching_statements(es, uid, search_words[0], True))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
+                search_results = get_matching_statements(es, uid, search_word, True)
                 self.assertIsNotNone(search_results)
 
                 for res in search_results:
@@ -58,11 +58,11 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], False))
+                              get_matching_statements(es, uid, search_words[0], False))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, False)
+                search_results = get_matching_statements(es, uid, search_word, False)
                 self.assertIsNotNone(search_results)
 
                 for res in search_results:
@@ -79,11 +79,11 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], False))
+                              get_matching_statements(es, uid, search_words[0], False))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, False)
+                search_results = get_matching_statements(es, uid, search_word, False)
                 self.assertIsNotNone(search_results)
 
                 for res in search_results:
@@ -100,11 +100,11 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], False))
+                              get_matching_statements(es, uid, search_words[0], False))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, False)
+                search_results = get_matching_statements(es, uid, search_word, False)
                 self.assertIsNotNone(search_results)
 
                 self.assertIn("every <em>street</em> <em>festival</em> is funded by large companies", search_results)
@@ -124,11 +124,11 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], True))
+                              get_matching_statements(es, uid, search_words[0], True))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
+                search_results = get_matching_statements(es, uid, search_word, True)
                 self.assertIsNotNone(search_results)
                 self.assertIn("we should close public <em>swimming</em> <em>pools</em>", search_results)
 
@@ -138,18 +138,18 @@ class TestElasticResults(unittest.TestCase):
         es = self.client
         if not is_elastic_search_available():
             self.assertRaises(Exception("Elastic is not available"),
-                              get_all_matching_statements_by_uid_and_synonyms(es, uid, search_words[0], True))
+                              get_matching_statements(es, uid, search_words[0], True))
 
         else:
             for search_word in search_words:
-                search_results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search_word, True)
+                search_results = get_matching_statements(es, uid, search_word, True)
                 self.assertIsNotNone(search_results)
                 self.assertIn("das <em>Huhn</em> gewinnen w\u00fcrde", search_results)
 
 
 class TestElasticSuggestions(unittest.TestCase):
     def setUp(self):
-        self.client = create_elastic_search_client()
+        self.client = create_connection()
 
     def test_suggestions_for_swimming_pool_in_town_has_to_cut_spending(self):
         uid = get_uid_of_issue("town-has-to-cut-spending")
@@ -159,14 +159,14 @@ class TestElasticSuggestions(unittest.TestCase):
             raise Exception("These are not the results you are looking for")
         else:
             for search_word in search_words:
-                search_results = get_strings_for_suggestion_with_synonyms(es, uid, search_word, True)
+                search_results = get_suggestions(es, uid, search_word, True)
                 for result in search_results:
                     self.assertIn("we should close public <em>swimming</em> <em>pools</em>", result.get("text"))
 
 
 class TestInsertion(unittest.TestCase):
     def setUp(self):
-        self.client = create_elastic_search_client()
+        self.client = create_connection()
 
     def test_single_result(self):
         es = self.client

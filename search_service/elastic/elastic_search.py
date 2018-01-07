@@ -3,11 +3,11 @@ from elasticsearch import Elasticsearch
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database_handling.query_with_graphql import graphql_query, query_every_datas_from_active_issue, \
-    query_language_of_issue_by_uid, query_all_uids, pretty_print
+    query_language_of_issue_by_uid, query_all_uids
 from search_service.elastic.elastic_search_helper import setting_string, query_search, query_exact_term, data_mapping
 
 
-def create_elastic_search_client():
+def create_connection():
     """
 
     :return: new instance of the elastic client
@@ -16,8 +16,8 @@ def create_elastic_search_client():
     return Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
 
 
-def get_strings_for_suggestion_with_synonyms(es, uid, search, is_startpoint):
-    results = get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoint)
+def get_suggestions(es, uid, search, is_startpoint):
+    results = get_matching_statements(es, uid, search, is_startpoint)
     content_to_show = []
     for result in results:
         filling = {"text": result}
@@ -25,7 +25,7 @@ def get_strings_for_suggestion_with_synonyms(es, uid, search, is_startpoint):
     return content_to_show
 
 
-def get_all_issue_uids():
+def get_every_issue_id():
     issue_ids = []
     uids = graphql_query(query_all_uids())
 
@@ -36,10 +36,10 @@ def get_all_issue_uids():
     return issue_ids
 
 
-def get_all_data_of_active_issues():
+def get_data_of_issues():
     statements = []
 
-    issue_ids = get_all_issue_uids()
+    issue_ids = get_every_issue_id()
     for id in issue_ids:
         content = graphql_query(query_every_datas_from_active_issue(id))
         content = content.get("statements")
@@ -50,7 +50,7 @@ def get_all_data_of_active_issues():
     return statements
 
 
-def create_elastic_search_connection():
+def init_database():
     """
 
     :return: new instance of the elastic client
@@ -66,7 +66,7 @@ def create_elastic_search_connection():
         es.indices.create(index=INDEX_NAME,
                           body=setting_string())
 
-    content = get_all_data_of_active_issues()
+    content = get_data_of_issues()
     for i in range(len(content)):
         es.index(index=INDEX_NAME,
                  doc_type=DOC_TYPE,
@@ -78,10 +78,13 @@ def create_elastic_search_connection():
 
 
 def get_language_of_issue(uid):
-    return graphql_query(query_language_of_issue_by_uid(uid)).get("issue").get("languages").get("uiLocales")
+    query = query_language_of_issue_by_uid(uid)
+    result = graphql_query(query)
+    language = result.get("issue").get("languages").get("uiLocales")
+    return language
 
 
-def get_all_matching_statements_by_uid_and_synonyms(es, uid, search, is_startpoint):
+def get_matching_statements(es, uid, search, is_startpoint):
     results = []
 
     language = get_language_of_issue(uid)
@@ -127,16 +130,3 @@ def insert_data_to_index(es, text, is_startpoint, uid, langUid):
         es.indices.refresh(index=INDEX_NAME)
     else:
         print("Already in Database")
-
-"""
-from search_service.elastic.elastic_search_helper import data_mapping
-
-es = create_elastic_search_client()
-
-insert_data_to_index(es, "coconut", True, 1, 2)
-
-pretty_print(es.get(index=INDEX_NAME,
-                    doc_type=DOC_TYPE,
-                    id=get_length_of_index(es)-1))
-print(get_length_of_index(es))
-"""

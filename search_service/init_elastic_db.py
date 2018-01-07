@@ -1,13 +1,13 @@
 from search_service import INDEX_NAME, DOC_TYPE
-from search_service.elastic.elastic_search import create_elastic_search_client
-from search_service.elastic.elastic_search import create_elastic_search_connection
+from search_service.elastic.elastic_search import create_connection
+from search_service.elastic.elastic_search import init_database
 
 print(":: Test connection to elastic search is active")
-es = create_elastic_search_client()
+es = create_connection()
 print("Connection is established: {0}".format(es.ping()))
 
 print(":: Fill elasticsearch database")
-es = create_elastic_search_connection()
+es = init_database()
 print("Connection is established: {0}".format(es.ping()))
 content = es.get(index=INDEX_NAME, doc_type=DOC_TYPE, id=0)
 print("Content is set: {0}".format(content is not None))
