@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
-from search_service.database_handling.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
+from search_service.database_handling.query_with_graphql import send_request_to_graph_ql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
 from search_service.elastic.elastic_search_helper import setting_string, query_search, query_exact_term, data_mapping
 
@@ -16,8 +16,8 @@ def create_connection():
     return Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
 
 
-def get_suggestions(es, uid, search, is_startpoint):
-    results = get_matching_statements(es, uid, search, is_startpoint)
+def get_suggestions(es, uid, search, start_point):
+    results = get_matching_statements(es, uid, search, start_point)
     content_to_show = []
     for result in results:
         filling = {"text": result}
@@ -27,7 +27,7 @@ def get_suggestions(es, uid, search, is_startpoint):
 
 def get_every_issue_id():
     issue_ids = []
-    uids = send_request_to_graphql(query_all_uid())
+    uids = send_request_to_graph_ql(query_all_uid())
 
     for id in uids.get("issues"):
         if id not in issue_ids:
@@ -41,7 +41,7 @@ def get_data_of_issues():
 
     issue_ids = get_every_issue_id()
     for id in issue_ids:
-        content = send_request_to_graphql(query_data_of_issue(id))
+        content = send_request_to_graph_ql(query_data_of_issue(id))
         content = content.get("statements")
         if content:
             for data in content:
@@ -79,12 +79,12 @@ def init_database():
 
 def get_language_of_issue(uid):
     query = query_language_of_issue(uid)
-    result = send_request_to_graphql(query)
+    result = send_request_to_graph_ql(query)
     language = result.get("issue").get("languages").get("uiLocales")
     return language
 
 
-def get_matching_statements(es, uid, search, is_startpoint):
+def get_matching_statements(es, uid, search, start_point):
     results = []
 
     language = get_language_of_issue(uid)
@@ -93,7 +93,7 @@ def get_matching_statements(es, uid, search, is_startpoint):
     if es.ping() is False:
         raise Exception("Elastic is not available")
     else:
-        query = query_search(search, uid, is_startpoint, synonym_analyzer)
+        query = query_search(search, uid, start_point, synonym_analyzer)
         search_results = es.search(index=INDEX_NAME, body=query)
         for result in search_results.get("hits").get("hits"):
             if "highlight" in result:
@@ -119,14 +119,14 @@ def get_length_of_index(es):
     return length
 
 
-def insert_data_to_index(es, text, is_startpoint, uid, langUid):
+def insert_data_to_index(es, text, start_point, uid, lang_id):
     exists = get_existence(es, text)
     if not exists:
         length = get_length_of_index(es)
         es.index(index=INDEX_NAME,
                  doc_type=DOC_TYPE,
                  id=length,
-                 body=data_mapping(text, is_startpoint, uid, langUid))
+                 body=data_mapping(text, start_point, uid, lang_id))
         es.indices.refresh(index=INDEX_NAME)
     else:
         print("Already in Database")

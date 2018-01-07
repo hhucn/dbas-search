@@ -233,7 +233,7 @@ def query_exact_term(term, where):
     }
 
 
-def data_mapping(text, start_point, uid, langUid):
+def data_mapping(text, start_point, uid, lang_id):
     return (
         {
             "isStartpoint": start_point,
@@ -242,7 +242,7 @@ def data_mapping(text, start_point, uid, langUid):
             },
             "issues": {
                 "uid": uid,
-                "langUid": langUid
+                "langUid": lang_id
             }
         }
     )

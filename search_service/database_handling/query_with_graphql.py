@@ -23,7 +23,7 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def send_request_to_graphql(query) -> dict:
+def send_request_to_graph_ql(query) -> dict:
     """
 
     :param query: query_string for the db request
@@ -74,7 +74,7 @@ def get_uid_of_issue(issue_slug):
     """
 
     query = query_issue_id(issue_slug)
-    response = send_request_to_graphql(query)
+    response = send_request_to_graph_ql(query)
     return int(response.get("issue").get("uid"))
 
 
