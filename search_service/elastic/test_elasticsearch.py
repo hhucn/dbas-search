@@ -3,8 +3,7 @@ import unittest
 from search_service.database_handling.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_connection, INDEX_NAME, DOC_TYPE, \
     get_matching_statements, get_suggestions, \
-    search_result_length, get_existence, get_length_of_index, insert_data_to_index
-from search_service.elastic.elastic_search_helper import is_elastic_search_available
+    search_result_length, get_existence, get_length_of_index, insert_data_to_index, get_availability
 
 
 class TestConnection(unittest.TestCase):
@@ -35,7 +34,7 @@ class TestElasticResults(unittest.TestCase):
         search_words = ["swimming pools", "SWIMMING POOLS", "SWIMIng Ploos", "swimming poos", "swimming", "swim",
                         "pool", "poo"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], True))
 
@@ -56,7 +55,7 @@ class TestElasticResults(unittest.TestCase):
         search_words = ["street festival", "StreEt FestiVal", "SSTREET FFESTIVAL", "STREET", "FESTIVAL",
                         "STRIIT FASTIVEL"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], False))
 
@@ -77,7 +76,7 @@ class TestElasticResults(unittest.TestCase):
         uid = get_uid_of_issue("town-has-to-cut-spending")
         search_words = ["$50.000"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], False))
 
@@ -98,7 +97,7 @@ class TestElasticResults(unittest.TestCase):
         uid = get_uid_of_issue("town-has-to-cut-spending")
         search_words = ["street festival", "StreEt FestiVal", "SSTREET FFESTIVAL"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], False))
 
@@ -122,7 +121,7 @@ class TestElasticResults(unittest.TestCase):
         uid = get_uid_of_issue("town-has-to-cut-spending")
         search_words = ["yakusie"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], True))
 
@@ -136,7 +135,7 @@ class TestElasticResults(unittest.TestCase):
         uid = get_uid_of_issue("pferdehuhn")
         search_words = ["fogel"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             self.assertRaises(Exception("Elastic is not available"),
                               get_matching_statements(es, uid, search_words[0], True))
 
@@ -155,7 +154,7 @@ class TestElasticSuggestions(unittest.TestCase):
         uid = get_uid_of_issue("town-has-to-cut-spending")
         search_words = ["swimming pools", "SWIMMING POOLS", "SWIMIng Ploos", "swimming poos"]
         es = self.client
-        if not is_elastic_search_available():
+        if not get_availability():
             raise Exception("These are not the results you are looking for")
         else:
             for search_word in search_words:

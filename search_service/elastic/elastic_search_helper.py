@@ -1,11 +1,4 @@
-from elasticsearch import Elasticsearch
-
-from search_service import ELASTIC_SEARCH_PORT, ELASTIC_SEARCH_ADDRESS, FILTER
-
-
-def is_elastic_search_available():
-    es = Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
-    return es.ping()
+from search_service import FILTER
 
 
 def setting_string():
@@ -39,7 +32,7 @@ def setting_string():
     }
 
 
-def query_search(text, uid, startpoint, synonym_analyzer=FILTER.get("en")):
+def query_search(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
     return {
         "query": {
             "bool": {
@@ -78,7 +71,7 @@ def query_search(text, uid, startpoint, synonym_analyzer=FILTER.get("en")):
                     },
                     {
                         "match": {
-                            "isStartpoint": startpoint
+                            "isStartpoint": start_point
                         }
                     }
                 ]
@@ -240,10 +233,10 @@ def query_exact_term(term, where):
     }
 
 
-def data_mapping(text, is_startpoint, uid, langUid):
+def data_mapping(text, start_point, uid, langUid):
     return (
         {
-            "isStartpoint": is_startpoint,
+            "isStartpoint": start_point,
             "textversions": {
                 "content": text
             },

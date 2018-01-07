@@ -130,3 +130,8 @@ def insert_data_to_index(es, text, is_startpoint, uid, langUid):
         es.indices.refresh(index=INDEX_NAME)
     else:
         print("Already in Database")
+
+
+def get_availability():
+    es = Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
+    return es.ping()
