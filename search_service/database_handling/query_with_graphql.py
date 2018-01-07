@@ -23,7 +23,7 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def graphql_query(query) -> dict:
+def send_request_to_graphql(query) -> dict:
     """
 
     :param query: query_string for the db request
@@ -73,12 +73,12 @@ def get_uid_of_issue(issue_slug):
     :return: the uid of the issue
     """
 
-    query = query_issue_id_by_issue_slug(issue_slug)
-    response = graphql_query(query)
+    query = query_issue_id(issue_slug)
+    response = send_request_to_graphql(query)
     return int(response.get("issue").get("uid"))
 
 
-def query_issue_id_by_issue_slug(slug):
+def query_issue_id(slug):
     """
 
     :param slug: the slug of the issue
@@ -94,34 +94,7 @@ def query_issue_id_by_issue_slug(slug):
                 ''') % slug
 
 
-def query_all_data_by_uid(uid, is_startpoint):
-    """
-
-    :param uid: uid of the issue
-    :param is_startpoint: for filtering the correct strings from db
-    :return: the data requested for a suggestion
-    """
-
-    return ('''
-                query{
-                    statements(issueUid: %d, isStartpoint: %s){
-                        isStartpoint
-                        textversions{
-                            content
-                            authorUid
-                            users{
-                                publicNickname
-                            }
-                        }
-                        issues{
-                            langUid
-                        }
-                    }
-                }
-               ''') % (uid, str(is_startpoint).lower())
-
-
-def query_language_of_issue_by_uid(uid):
+def query_language_of_issue(uid):
     return ('''
                query{
                    issue(uid: %d){
@@ -133,7 +106,7 @@ def query_language_of_issue_by_uid(uid):
                ''') % uid
 
 
-def query_all_uids():
+def query_all_uid():
     return ('''
             query{
                 issues{
@@ -143,7 +116,7 @@ def query_all_uids():
             ''')
 
 
-def query_every_datas_from_active_issue(uid):
+def query_data_of_issue(uid):
     return ('''
                query{
                    statements(issueUid: %d){

@@ -2,8 +2,8 @@ from elasticsearch import Elasticsearch
 
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
-from search_service.database_handling.query_with_graphql import graphql_query, query_every_datas_from_active_issue, \
-    query_language_of_issue_by_uid, query_all_uids
+from search_service.database_handling.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
+    query_language_of_issue, query_all_uid
 from search_service.elastic.elastic_search_helper import setting_string, query_search, query_exact_term, data_mapping
 
 
@@ -27,7 +27,7 @@ def get_suggestions(es, uid, search, is_startpoint):
 
 def get_every_issue_id():
     issue_ids = []
-    uids = graphql_query(query_all_uids())
+    uids = send_request_to_graphql(query_all_uid())
 
     for id in uids.get("issues"):
         if id not in issue_ids:
@@ -41,7 +41,7 @@ def get_data_of_issues():
 
     issue_ids = get_every_issue_id()
     for id in issue_ids:
-        content = graphql_query(query_every_datas_from_active_issue(id))
+        content = send_request_to_graphql(query_data_of_issue(id))
         content = content.get("statements")
         if content:
             for data in content:
@@ -78,8 +78,8 @@ def init_database():
 
 
 def get_language_of_issue(uid):
-    query = query_language_of_issue_by_uid(uid)
-    result = graphql_query(query)
+    query = query_language_of_issue(uid)
+    result = send_request_to_graphql(query)
     language = result.get("issue").get("languages").get("uiLocales")
     return language
 
