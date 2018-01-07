@@ -8,7 +8,7 @@ function lets_go {
         sleep 1;
     done
 
-    python3.6 /code/search_service/init_elastic_db.py
+    python3.6 /code/search_service/create_database.py
 }
 
 while ! echo exit | nc $DBAS_HOST $DBAS_PORT > /dev/null 2>&1; do
