@@ -1,7 +1,13 @@
 from search_service import FILTER
 
 
-def setting_string():
+def settings():
+    """
+    The setting string for the client.
+    Notice: the synonym files are stored in config/.
+
+    :return:
+    """
     return {
         "settings": {
             "index": {
@@ -32,7 +38,23 @@ def setting_string():
     }
 
 
-def query_search(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
+def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
+    """
+    The search query uses synonyms and fuzzy search in regard to a full text search.
+    Notice that there are three parts.
+        (1) The synonym part to work with synonyms. They are stored in config.
+        (2) The text search part to find a word or substring in a text.
+            (* is to ignore previous or following words etc.)
+        (3) Fuzzi part to add a fuzziness the the search
+
+    force_source forces the output to highlight by every of the three parts mentioned above.
+
+    :param text: the text to be searched (text)
+    :param uid: the uid of the current issue (int)
+    :param start_point: is the text a start point or not (boolean)
+    :param synonym_analyzer: the analyzer to be used for the synonyms (english or german)
+    :return:
+    """
     return {
         "query": {
             "bool": {
@@ -118,112 +140,14 @@ def query_search(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
     }
 
 
-def query_string_by_whitespace(text):
-    """
-
-    Searches for a word in field content.
-    "*" means start with or end with.
-    Therefore ("*" + text + "*") search for text in content.
-
-    :param text: search word
-    :return: query for the string
-    """
-
-    return {
-        "query": {
-            "query_string": {
-                "analyzer": "whitespace",
-                "query": "*" + text + "*",
-                "fields": ["content"],
-            }
-        },
-        "_source": ["content"],
-        "highlight": {
-            "fields": {
-                "content": {}
-            }
-        }
-    }
-
-
-def query_string_synonyms_search(text):
-    return {
-        "query": {
-            "match_phrase": {
-                "content": {
-                    "query": text,
-                    "analyzer": "synonyms_english"
-                }
-            }
-        },
-        '_source': ['content'],
-        'highlight': {
-            'fields': {
-                'content': {}
-            }
-        }
-    }
-
-
-def query_string_synonym_text_search(text, synonym_analyzer="synonyms_english"):
-    # change analyzer in query_string to the same in match_phrase
-    # whitespace or my_synonyms
-    return {
-
-        "query": {
-            search_query(text, synonym_analyzer)
-        },
-
-        "highlight": {
-            "number_of_fragments": 0,
-            "require_field_match": "false",
-            "fields": {
-                "content": {
-                    "force_source": "true",
-                    "highlight_query": {
-                        search_query(text, synonym_analyzer)
-                    }
-                }
-            }
-        }
-    }
-
-
-def search_query(text, synonym_analyzer):
-    return {
-        "bool": {
-            "should": [
-                {
-                    "match_phrase": {
-                        "content": {
-                            "query": text,
-                            "analyzer": synonym_analyzer
-                        }
-                    }
-                },
-
-                {
-                    "query_string": {
-                        "analyzer": synonym_analyzer,
-                        "query": "*" + text + "*",
-                        "fields": ["content"],
-                    }
-                },
-                {
-                    "match": {
-                        "content": {
-                            "query": text,
-                            "fuzziness": 2,
-                            "prefix_length": 1
-                        }
-                    }
-                }
-            ]
-        }
-    }
-
-
 def query_exact_term(term, where):
+    """
+    Query exact terms.
+
+    :param term: to be searched
+    :param where: which field (e.g. "textversions.content")
+    :return:
+    """
     return {
         "query": {
             "match_phrase": {
@@ -234,6 +158,15 @@ def query_exact_term(term, where):
 
 
 def data_mapping(text, start_point, uid, lang_id):
+    """
+    The data format used in the database
+
+    :param text: text to be added
+    :param start_point: is the text a start point
+    :param uid: in which id should the text be added
+    :param lang_id: which language is used
+    :return:
+    """
     return (
         {
             "isStartpoint": start_point,

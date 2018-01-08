@@ -4,7 +4,7 @@ from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graph_ql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import setting_string, query_search, query_exact_term, data_mapping
+from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping
 
 
 def create_connection():
@@ -28,7 +28,7 @@ def init_database(es):
 
     if not es.indices.exists(index=INDEX_NAME):
         es.indices.create(index=INDEX_NAME,
-                          body=setting_string())
+                          body=settings())
 
     content = get_data_of_issues()
     for i in range(len(content)):
@@ -147,7 +147,7 @@ def get_matching_statements(es, uid, search, start_point):
     if es.ping() is False:
         raise Exception("Elastic is not available")
     else:
-        query = query_search(search, uid, start_point, synonym_analyzer)
+        query = search_query(search, uid, start_point, synonym_analyzer)
         search_results = es.search(index=INDEX_NAME, body=query)
         for result in search_results.get("hits").get("hits"):
             if "highlight" in result:
