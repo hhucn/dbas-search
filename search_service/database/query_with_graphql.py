@@ -25,6 +25,7 @@ def json_to_dict(col):
 
 def send_request_to_graph_ql(query) -> dict:
     """
+    Send a requerst to GraphQl V2 and returns response as json.
 
     :param query: query_string for the db request
     :return: response of the db to query
@@ -33,37 +34,25 @@ def send_request_to_graph_ql(query) -> dict:
     API = "{}://{}:{}/api/v2/".format(DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT)
     # API = "https://dbas.cs.uni-duesseldorf.de/api/v2/"
     url = "{}query?q={}".format(API, query)
-
     try:
         response = requests.get(url)
     except requests.exceptions.ConnectionError:
         print("Connection Error")
         return {}
 
-    # assert_is_not_none(response)
     ret = json_to_dict(response.content)
-    # assert_is_not_none(ret)
     return ret
 
 
 def pretty_print(text):
     """
+    Pretty prints json.
 
     :param text: input to be pretty printed
     :return: pretty printed text
     """
 
     print(json.dumps(text, indent=2))
-
-
-def get_length_of_json(json_data):
-    """
-
-    :param json_data:
-    :return: the length of a json object
-    """
-
-    return len(json_data)
 
 
 def get_uid_of_issue(issue_slug):
@@ -85,17 +74,23 @@ def query_issue_id(slug):
     :return: the query string for finding the uid of a issue
     """
 
-    return ('''
+    return ("""
                 query{
                     issue(slug: "%s"){
                         uid
                     }
                 }
-                ''') % slug
+                """) % slug
 
 
 def query_language_of_issue(uid):
-    return ('''
+    """
+    Returns the language of an issue.
+
+    :param uid: current issue id
+    :return:
+    """
+    return ("""
                query{
                    issue(uid: %d){
                         languages{
@@ -103,21 +98,21 @@ def query_language_of_issue(uid):
                         }
                    }
                }
-               ''') % uid
+               """) % uid
 
 
 def query_all_uid():
-    return ('''
+    return ("""
             query{
                 issues{
                     uid
                 }
             }
-            ''')
+            """)
 
 
 def query_data_of_issue(uid):
-    return ('''
+    return ("""
                query{
                    statements(issueUid: %d){
                        isStartpoint
@@ -130,4 +125,4 @@ def query_data_of_issue(uid):
                        }
                    }
                }
-               ''') % int(uid)
+               """) % int(uid)

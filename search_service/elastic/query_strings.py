@@ -1,3 +1,6 @@
+"""
+.. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
+"""
 from search_service import FILTER
 
 

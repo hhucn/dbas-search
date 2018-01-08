@@ -1,3 +1,6 @@
+"""
+.. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
+"""
 from elasticsearch import Elasticsearch
 
 from search_service import ELASTIC_SEARCH_ADDRESS, ELASTIC_SEARCH_PORT

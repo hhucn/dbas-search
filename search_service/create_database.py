@@ -1,3 +1,6 @@
+"""
+.. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
+"""
 from search_service import INDEX_NAME, DOC_TYPE
 from search_service.elastic.elastic_search import create_connection
 from search_service.elastic.elastic_search import init_database

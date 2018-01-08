@@ -1,3 +1,6 @@
+"""
+.. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
+"""
 import unittest
 
 from search_service.database.query_with_graphql import get_uid_of_issue
