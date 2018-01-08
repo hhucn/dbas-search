@@ -16,6 +16,25 @@ def create_connection():
     return Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
 
 
+def init_database(es):
+
+    if es.indices.exists(index=INDEX_NAME):
+        es.indices.delete(index=INDEX_NAME)
+
+    # indexing part
+    if not es.indices.exists(index=INDEX_NAME):
+        es.indices.create(index=INDEX_NAME,
+                          body=setting_string())
+
+    content = get_data_of_issues()
+    for i in range(len(content)):
+        es.index(index=INDEX_NAME,
+                 doc_type=DOC_TYPE,
+                 id=i,
+                 body=content[i])
+    es.indices.refresh(index=INDEX_NAME)
+
+
 def get_suggestions(es, uid, search, start_point):
     results = get_matching_statements(es, uid, search, start_point)
     content_to_show = []
@@ -48,33 +67,6 @@ def get_data_of_issues():
                 statements.append(data)
 
     return statements
-
-
-def init_database():
-    """
-
-    :return: new instance of the elastic client
-    """
-
-    es = Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
-
-    if es.indices.exists(index=INDEX_NAME):
-        es.indices.delete(index=INDEX_NAME)
-
-    # indexing part
-    if not es.indices.exists(index=INDEX_NAME):
-        es.indices.create(index=INDEX_NAME,
-                          body=setting_string())
-
-    content = get_data_of_issues()
-    for i in range(len(content)):
-        es.index(index=INDEX_NAME,
-                 doc_type=DOC_TYPE,
-                 id=i,
-                 body=content[i])
-    es.indices.refresh(index=INDEX_NAME)
-
-    return es
 
 
 def get_language_of_issue(uid):

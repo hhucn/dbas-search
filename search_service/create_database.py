@@ -7,7 +7,7 @@ es = create_connection()
 print("Connection is established: {0}".format(es.ping()))
 
 print(":: Fill elastic_search database")
-es = init_database()
+init_database(es)
 print("Connection is established: {0}".format(es.ping()))
 content = es.get(index=INDEX_NAME, doc_type=DOC_TYPE, id=0)
 print("Content is set: {0}".format(content is not None))
