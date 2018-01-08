@@ -183,7 +183,7 @@ def get_existence(es, search):
     :return: the existence of a search text
     """
     res = get_result_length(es, search)
-    return True if res is 1 else False
+    return res is 1
 
 
 def get_index_length(es):
