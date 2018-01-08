@@ -1,6 +1,6 @@
 import os
 
-INDEX_NAME = "test_index"
+INDEX_NAME = "database"
 DOC_TYPE = "json"
 
 ELASTIC_SEARCH_ADDRESS = "localhost"
