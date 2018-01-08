@@ -4,7 +4,7 @@
 import unittest
 
 from search_service.database.query_with_graphql import get_uid_of_issue
-from search_service.elastic.elastic_search import create_connection, INDEX_NAME, DOC_TYPE, \
+from search_service.elastic.search import create_connection, INDEX_NAME, DOC_TYPE, \
     get_matching_statements, get_suggestions, \
     get_result_length, get_existence, get_index_length, append_data, get_availability
 
