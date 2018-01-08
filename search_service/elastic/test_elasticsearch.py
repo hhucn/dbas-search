@@ -1,6 +1,6 @@
 import unittest
 
-from search_service.database_handling.query_with_graphql import get_uid_of_issue
+from search_service.database.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_connection, INDEX_NAME, DOC_TYPE, \
     get_matching_statements, get_suggestions, \
     search_result_length, get_existence, get_length_of_index, insert_data_to_index, get_availability

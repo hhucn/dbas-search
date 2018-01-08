@@ -1,6 +1,6 @@
 import unittest
 
-from search_service.database_handling.query_with_graphql import send_request_to_graph_ql, query_issue_id, \
+from search_service.database.query_with_graphql import send_request_to_graph_ql, query_issue_id, \
     query_all_uid, query_language_of_issue, \
     query_data_of_issue
 
