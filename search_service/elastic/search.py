@@ -22,7 +22,6 @@ def init_database(es):
     """
     Fills the elasticsaerch database with all data of active issues.
 
-
     :param es: active client of elasticsearch
     :return:
     """
