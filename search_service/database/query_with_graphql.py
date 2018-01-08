@@ -23,9 +23,9 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def send_request_to_graph_ql(query) -> dict:
+def send_request_to_graphql(query) -> dict:
     """
-    Send a requerst to GraphQl V2 and returns response as json.
+    Send a request to GraphQl V2 and returns response as json.
 
     :param query: query_string for the db request
     :return: response of the db to query
