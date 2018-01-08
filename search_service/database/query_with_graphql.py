@@ -2,6 +2,7 @@
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
 import json
+import logging
 
 import requests
 
@@ -37,7 +38,7 @@ def send_request_to_graphql(query) -> dict:
     try:
         response = requests.get(url)
     except requests.exceptions.ConnectionError:
-        print("Connection Error")
+        logging.info("Connection Error")
         return {}
 
     ret = json_to_dict(response.content)
@@ -76,11 +77,11 @@ def query_issue_id(slug):
 
     return ("""
                 query{
-                    issue(slug: "%s"){
+                    issue(slug: "var"){
                         uid
                     }
                 }
-                """) % slug
+                """).replace("var", slug)
 
 
 def query_language_of_issue(uid):
@@ -92,13 +93,13 @@ def query_language_of_issue(uid):
     """
     return ("""
                query{
-                   issue(uid: %d){
+                   issue(uid: var){
                         languages{
                             uiLocales
                         }
                    }
                }
-               """) % uid
+               """).replace("var", str(uid))
 
 
 def query_all_uid():
@@ -114,7 +115,7 @@ def query_all_uid():
 def query_data_of_issue(uid):
     return ("""
                query{
-                   statements(issueUid: %d){
+                   statements(issueUid: var){
                        isStartpoint
                        textversions{
                             content
@@ -125,4 +126,4 @@ def query_data_of_issue(uid):
                        }
                    }
                }
-               """) % int(uid)
+               """).replace("var", uid)

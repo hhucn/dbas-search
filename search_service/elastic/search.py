@@ -8,6 +8,7 @@ from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
 from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping
+import logging
 
 
 def create_connection():
@@ -55,7 +56,6 @@ def append_data(es, text, uid, start_point):
     """
     language = get_used_language(uid)
     lang_id = 1 if language is "en" else 2
-    print(lang_id)
     exists = get_existence(es, text)
     if not exists:
         length = get_index_length(es)
@@ -65,7 +65,7 @@ def append_data(es, text, uid, start_point):
                  body=data_mapping(text, start_point, uid, lang_id))
         es.indices.refresh(index=INDEX_NAME)
     else:
-        print("Already in Database")
+        logging.info("Already in Database")
 
 
 def get_suggestions(es, uid, search, start_point):
