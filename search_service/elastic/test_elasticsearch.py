@@ -3,7 +3,7 @@ import unittest
 from search_service.database.query_with_graphql import get_uid_of_issue
 from search_service.elastic.elastic_search import create_connection, INDEX_NAME, DOC_TYPE, \
     get_matching_statements, get_suggestions, \
-    search_result_length, get_existence, get_length_of_index, insert_data_to_index, get_availability
+    get_result_length, get_existence, get_index_length, append_data, get_availability
 
 
 class TestConnection(unittest.TestCase):
@@ -170,19 +170,19 @@ class TestInsertion(unittest.TestCase):
     def test_single_result(self):
         es = self.client
         term = "jeder Mensch eine Chance verdient"
-        res = search_result_length(es, term)
+        res = get_result_length(es, term)
         self.assertEqual(res, 1)
 
     def test_multi_result(self):
         es = self.client
         term = "Mensch"
-        res = search_result_length(es, term)
+        res = get_result_length(es, term)
         self.assertEqual(res, 2)
 
     def test_no_result(self):
         es = self.client
         term = "foo bar"
-        res = search_result_length(es, term)
+        res = get_result_length(es, term)
         self.assertEqual(res, 0)
 
     def test_exists_unique(self):
@@ -205,42 +205,42 @@ class TestInsertion(unittest.TestCase):
 
     def test_length_of_index_is_greater_equals_625(self):
         es = self.client
-        length = get_length_of_index(es)
+        length = get_index_length(es)
         self.assertGreaterEqual(length, 625)
 
     def test_insertion_increases_index_length(self):
         es = self.client
-        previous_length = get_length_of_index(es)
-        insert_data_to_index(es, "Coconut", True, 1, 2)
-        next_length = get_length_of_index(es)
+        previous_length = get_index_length(es)
+        append_data(es, "Coconut", 1, True, 2)
+        next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 1)
         es.delete(index=INDEX_NAME,
                   doc_type=DOC_TYPE,
                   id=next_length - 1)
         es.indices.refresh(index=INDEX_NAME)
-        length = get_length_of_index(es)
+        length = get_index_length(es)
         self.assertEqual(previous_length, length)
 
     def test_same_insertion_dont_increase_index_length(self):
         es = self.client
-        previous_length = get_length_of_index(es)
-        insert_data_to_index(es, "Coconut", True, 1, 2)
-        insert_data_to_index(es, "Coconut", True, 1, 2)
-        next_length = get_length_of_index(es)
+        previous_length = get_index_length(es)
+        append_data(es, "Coconut", 1, True, 2)
+        append_data(es, "Coconut", 1, True, 2)
+        next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 1)
         es.delete(index=INDEX_NAME,
                   doc_type=DOC_TYPE,
                   id=next_length - 1)
         es.indices.refresh(index=INDEX_NAME)
-        length = get_length_of_index(es)
+        length = get_index_length(es)
         self.assertEqual(previous_length, length)
 
     def test_different_insertion_increase_index_length(self):
         es = self.client
-        previous_length = get_length_of_index(es)
-        insert_data_to_index(es, "Coconut", True, 1, 2)
-        insert_data_to_index(es, "Coconuts are good", False, 2, 2)
-        next_length = get_length_of_index(es)
+        previous_length = get_index_length(es)
+        append_data(es, "Coconut", 1, True, 2)
+        append_data(es, "Coconuts are good", 2, False, 2)
+        next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 2)
         es.delete(index=INDEX_NAME,
                   doc_type=DOC_TYPE,
@@ -249,5 +249,5 @@ class TestInsertion(unittest.TestCase):
                   doc_type=DOC_TYPE,
                   id=next_length - 2)
         es.indices.refresh(index=INDEX_NAME)
-        length = get_length_of_index(es)
+        length = get_index_length(es)
         self.assertEqual(previous_length, length)

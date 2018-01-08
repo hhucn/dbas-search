@@ -10,18 +10,22 @@ from search_service.elastic.query_strings import setting_string, query_search, q
 def create_connection():
     """
 
-    :return: new instance of the elastic client
+    :return: connection to elasticsearch-client
     """
-
     return Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
 
 
 def init_database(es):
+    """
+    Fills the elasticsaerch database with all data of active issues.
 
+
+    :param es: active client of elasticsearch
+    :return:
+    """
     if es.indices.exists(index=INDEX_NAME):
         es.indices.delete(index=INDEX_NAME)
 
-    # indexing part
     if not es.indices.exists(index=INDEX_NAME):
         es.indices.create(index=INDEX_NAME,
                           body=setting_string())
@@ -35,7 +39,41 @@ def init_database(es):
     es.indices.refresh(index=INDEX_NAME)
 
 
+def append_data(es, text, uid, start_point, lang_id):
+    """
+    Append to the database.
+    The data_mapping is the common used data format of the database.
+
+    :param es: active client of elasticsearch
+    :param text: the text to be appended (text)
+    :param uid: the uid of the current issue (int)
+    :param start_point: is the text a start point or not (boolean)
+    :param lang_id: the id of the language (int)
+    :return:
+    """
+    exists = get_existence(es, text)
+    if not exists:
+        length = get_index_length(es)
+        es.index(index=INDEX_NAME,
+                 doc_type=DOC_TYPE,
+                 id=length,
+                 body=data_mapping(text, start_point, uid, lang_id))
+        es.indices.refresh(index=INDEX_NAME)
+    else:
+        print("Already in Database")
+
+
 def get_suggestions(es, uid, search, start_point):
+    """
+    Returns a dictionary with suggestions.
+    Notice that the content strings are already customized with highlighting strings.
+
+    :param es: active client of elasticsearch
+    :param uid: the uid of the current issue (int)
+    :param search: the text to be looked up (string)
+    :param start_point: look up in start points or not (boolean)
+    :return:
+    """
     results = get_matching_statements(es, uid, search, start_point)
     content_to_show = []
     for result in results:
@@ -45,6 +83,10 @@ def get_suggestions(es, uid, search, start_point):
 
 
 def get_every_issue_id():
+    """
+
+    :return: every uid in the D-BAS database
+    """
     issue_ids = []
     uids = send_request_to_graph_ql(query_all_uid())
 
@@ -56,6 +98,10 @@ def get_every_issue_id():
 
 
 def get_data_of_issues():
+    """
+
+    :return: every data in the D-BAS database
+    """
     statements = []
 
     issue_ids = get_every_issue_id()
@@ -69,7 +115,13 @@ def get_data_of_issues():
     return statements
 
 
-def get_language_of_issue(uid):
+def get_used_language(uid):
+    """
+    Determine the language of a issue.
+
+    :param uid: current issue id (int)
+    :return: determined language of the current issue
+    """
     query = query_language_of_issue(uid)
     result = send_request_to_graph_ql(query)
     language = result.get("issue").get("languages").get("uiLocales")
@@ -77,9 +129,19 @@ def get_language_of_issue(uid):
 
 
 def get_matching_statements(es, uid, search, start_point):
+    """
+    Returns a dictionary with suggestions.
+    Notice that the content strings are already customized with highlighting strings.
+
+    :param es: active client of elasticsearch
+    :param uid: current issue id (int)
+    :param search: the text to be looked up (string)
+    :param start_point: look up in start points or not (boolean)
+    :return:
+    """
     results = []
 
-    language = get_language_of_issue(uid)
+    language = get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
 
     if es.ping() is False:
@@ -93,7 +155,14 @@ def get_matching_statements(es, uid, search, start_point):
     return results
 
 
-def search_result_length(es, search):
+def get_result_length(es, search):
+    """
+    Used to determine the existence of a text.
+
+    :param es: active client of elasticsearch
+    :param search: the text to be looked up (string)
+    :return: length of the search results to check existence of search
+    """
     where = "textversions.content"
     query = query_exact_term(search, where)
     res = es.search(index=INDEX_NAME, body=query)
@@ -101,29 +170,33 @@ def search_result_length(es, search):
 
 
 def get_existence(es, search):
-    res = search_result_length(es, search)
+    """
+    Determine the existence of a text which should be inserted to the database.
+
+    :param es: active client of elasticseach
+    :param search: the text to be looked up (string)
+    :return: the existence of a search text
+    """
+    res = get_result_length(es, search)
     return True if res is 1 else False
 
 
-def get_length_of_index(es):
+def get_index_length(es):
+    """
+    The length of the database to append new data.
+
+    :param es: active client of elasticsearch
+    :return: length of database
+    """
     dump = es.search(index=[INDEX_NAME], doc_type=[DOC_TYPE], size=10000)
     length = dump.get('hits').get('total')
     return length
 
 
-def insert_data_to_index(es, text, start_point, uid, lang_id):
-    exists = get_existence(es, text)
-    if not exists:
-        length = get_length_of_index(es)
-        es.index(index=INDEX_NAME,
-                 doc_type=DOC_TYPE,
-                 id=length,
-                 body=data_mapping(text, start_point, uid, lang_id))
-        es.indices.refresh(index=INDEX_NAME)
-    else:
-        print("Already in Database")
-
-
 def get_availability():
-    es = Elasticsearch([{"host": ELASTIC_SEARCH_ADDRESS, "port": ELASTIC_SEARCH_PORT}])
+    """
+
+    :return: the availability of elasticsearch
+    """
+    es = create_connection()
     return es.ping()
