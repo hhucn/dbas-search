@@ -63,7 +63,7 @@ def get_uid_of_issue(issue_slug):
     """
 
     query = query_issue_id(issue_slug)
-    response = send_request_to_graph_ql(query)
+    response = send_request_to_graphql(query)
     return int(response.get("issue").get("uid"))
 
 
