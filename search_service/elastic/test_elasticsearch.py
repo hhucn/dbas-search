@@ -214,7 +214,7 @@ class TestInsertion(unittest.TestCase):
     def test_insertion_increases_index_length(self):
         es = self.client
         previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True, 2)
+        append_data(es, "Coconut", 1, True)
         next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 1)
         es.delete(index=INDEX_NAME,
@@ -227,8 +227,8 @@ class TestInsertion(unittest.TestCase):
     def test_same_insertion_dont_increase_index_length(self):
         es = self.client
         previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True, 2)
-        append_data(es, "Coconut", 1, True, 2)
+        append_data(es, "Coconut", 1, True)
+        append_data(es, "Coconut", 1, True)
         next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 1)
         es.delete(index=INDEX_NAME,
@@ -241,8 +241,8 @@ class TestInsertion(unittest.TestCase):
     def test_different_insertion_increase_index_length(self):
         es = self.client
         previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True, 2)
-        append_data(es, "Coconuts are good", 2, False, 2)
+        append_data(es, "Coconut", 1, True)
+        append_data(es, "Coconuts are good", 2, False)
         next_length = get_index_length(es)
         self.assertEqual(previous_length, next_length - 2)
         es.delete(index=INDEX_NAME,

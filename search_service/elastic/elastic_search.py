@@ -42,7 +42,7 @@ def init_database(es):
     es.indices.refresh(index=INDEX_NAME)
 
 
-def append_data(es, text, uid, start_point, lang_id):
+def append_data(es, text, uid, start_point):
     """
     Append to the database.
     The data_mapping is the common used data format of the database.
@@ -54,6 +54,9 @@ def append_data(es, text, uid, start_point, lang_id):
     :param lang_id: the id of the language (int)
     :return:
     """
+    language = get_used_language(uid)
+    lang_id = 1 if language is "en" else 2
+    print(lang_id)
     exists = get_existence(es, text)
     if not exists:
         length = get_index_length(es)
