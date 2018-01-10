@@ -1,5 +1,0 @@
-cat,kitty
-kitty,cat
-NewYork, NY
-both, trololol
-dog, doggy

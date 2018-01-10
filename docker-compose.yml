@@ -1,0 +1,16 @@
+version: '3'
+services:
+  elasticsearch:
+    build: .
+    ports:
+      - "9200:9200"
+
+    environment:
+      - DBAS_HOST=dbas.cs.uni-duesseldorf.de
+      - DBAS_PORT=443
+      - DBAS_PROTOCOL=https
+
+    volumes:
+      - ./search_service/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
+      - ./search_service/analysis/synonyms_german.txt:/usr/share/elasticsearch/config/synonyms_german.txt
+      - .:/code/

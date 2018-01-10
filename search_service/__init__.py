@@ -1,6 +1,8 @@
 import os
 
-# todo rename address to host
+INDEX_NAME = "database"
+DOC_TYPE = "json"
+
 ELASTIC_SEARCH_ADDRESS = "localhost"
 ELASTIC_SEARCH_PORT = 9200
 
