@@ -1,0 +1,7 @@
+cat,kitty, kadse
+kitty,cat
+NewYork, NY
+both, trololol
+dog, doggy, bello
+swimming pools, yakusie
+street festivals, party, parade
