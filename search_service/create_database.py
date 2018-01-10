@@ -14,15 +14,15 @@ def seed_database():
     :return:
     """
 
-    logging.info(":: Test connection to elastic search is active")
+    logging.debug(":: Test connection to elastic search is active")
     es = create_connection()
-    logging.info("Connection is established: {0}".format(es.ping()))
+    logging.debug("Connection is established: {0}".format(es.ping()))
 
-    logging.info(":: Fill elastic_search database")
+    logging.debug(":: Fill elastic_search database")
     init_database(es)
-    logging.info("Connection is established: {0}".format(es.ping()))
+    logging.debug("Connection is established: {0}".format(es.ping()))
     content = es.get(index=INDEX_NAME, doc_type=DOC_TYPE, id=0)
-    logging.info("Content is set: {0}".format(content is not None))
+    logging.debug("Content is set: {0}".format(content is not None))
 
 
 if __name__ == "__main__":
