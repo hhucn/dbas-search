@@ -38,7 +38,7 @@ def send_request_to_graphql(query) -> dict:
     try:
         response = requests.get(url)
     except requests.exceptions.ConnectionError:
-        logging.info("Connection Error")
+        logging.debug("Connection Error")
         return {}
 
     ret = json_to_dict(response.content)

@@ -65,7 +65,7 @@ def append_data(es, text, uid, start_point):
                  body=data_mapping(text, start_point, uid, lang_id))
         es.indices.refresh(index=INDEX_NAME)
     else:
-        logging.info("Already in Database")
+        logging.debug("Already in Database")
 
 
 def get_suggestions(es, uid, search, start_point):
