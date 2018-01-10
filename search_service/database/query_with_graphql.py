@@ -76,12 +76,12 @@ def query_issue_id(slug):
     """
 
     return ("""
-                query{
-                    issue(slug: "var"){
+                query{{
+                    issue(slug: "{0}"){{
                         uid
-                    }
-                }
-                """).replace("var", slug)
+                    }}
+                }}
+                """).format(slug)
 
 
 def query_language_of_issue(uid):
@@ -92,14 +92,14 @@ def query_language_of_issue(uid):
     :return:
     """
     return ("""
-               query{
-                   issue(uid: var){
-                        languages{
+               query{{
+                   issue(uid: {0}){{
+                        languages{{
                             uiLocales
-                        }
-                   }
-               }
-               """).replace("var", str(uid))
+                        }}
+                   }}
+               }}
+               """).format(uid)
 
 
 def query_all_uid():
@@ -114,16 +114,16 @@ def query_all_uid():
 
 def query_data_of_issue(uid):
     return ("""
-               query{
-                   statements(issueUid: var){
+               query{{
+                   statements(issueUid: {0}){{
                        isStartpoint
-                       textversions{
+                       textversions{{
                             content
-                       }
-                       issues{
+                       }}
+                       issues{{
                             uid
                             langUid
-                       }
-                   }
-               }
-               """).replace("var", uid)
+                       }}
+                   }}
+               }}
+               """).format(uid)
