@@ -10,8 +10,10 @@ services:
       - DBAS_HOST=web #dbas.cs.uni-duesseldorf.de
       - DBAS_PORT=4284 #443
       - DBAS_PROTOCOL=http
-      - ELASTIC_HOST=localhost
+      - ELASTIC_HOST=0.0.0.0
       - ELASTIC_PORT=9200
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5000
 
     volumes:
       - ./search_service/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
