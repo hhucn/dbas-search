@@ -4,13 +4,23 @@ services:
     build: .
     ports:
       - "9200:9200"
+      - "5000:5000"
 
     environment:
-      - DBAS_HOST=dbas.cs.uni-duesseldorf.de
-      - DBAS_PORT=443
-      - DBAS_PROTOCOL=https
+      - DBAS_HOST=web #dbas.cs.uni-duesseldorf.de
+      - DBAS_PORT=4284 #443
+      - DBAS_PROTOCOL=http
+      - ELASTIC_HOST=0.0.0.0
+      - ELASTIC_PORT=9200
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5000
 
     volumes:
       - ./search_service/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
       - ./search_service/analysis/synonyms_german.txt:/usr/share/elasticsearch/config/synonyms_german.txt
       - .:/code/
+
+networks:
+  default:
+    external:
+      name: dbas_default
