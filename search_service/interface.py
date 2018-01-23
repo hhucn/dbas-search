@@ -6,7 +6,7 @@ from search_service.elastic.search import create_connection, get_suggestions
 app = Flask(__name__)
 
 
-@app.route('/get_suggestions')
+@app.route('/suggestions')
 def suggest():
 
     id = request.args.get('id', default=1, type=int)
