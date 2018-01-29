@@ -1,6 +1,5 @@
 from flask import Flask, request
 import json
-from search_service import HOST, API_PORT
 from search_service.elastic.search import create_connection, get_suggestions
 
 app = Flask(__name__)
@@ -23,4 +22,4 @@ def suggest():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host=HOST, port=int(API_PORT))
+    app.run(debug=True, host="0.0.0.0", port=5000)
