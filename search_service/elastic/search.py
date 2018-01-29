@@ -3,7 +3,7 @@
 """
 from elasticsearch import Elasticsearch
 
-from search_service import ELASTIC_HOST, ELASTIC_PORT
+from search_service import HOST, ELASTIC_PORT
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
@@ -16,7 +16,7 @@ def create_connection():
 
     :return: connection to elasticsearch-client
     """
-    return Elasticsearch([{"host": ELASTIC_HOST, "port": ELASTIC_PORT}])
+    return Elasticsearch([{"host": HOST, "port": ELASTIC_PORT}])
 
 
 def init_database(es):

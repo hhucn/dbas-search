@@ -9,11 +9,11 @@ function setup_data {
 }
 
 function wait_for_elastic {
-    while ! echo exit | nc $ELASTIC_HOST $ELASTIC_PORT > /dev/null 2>&1; do
-        echo ":: Waiting for elasticsearch on ${ELASTIC_HOST}:${ELASTIC_PORT}"
+    while ! echo exit | nc 0.0.0.0 9200 > /dev/null 2>&1; do
+        echo ":: Waiting for elasticsearch on 0.0.0.0:9200"
         sleep 1;
     done
-    echo ":: Elastic launched on ${DBAS_HOST}:${DBAS_PORT}"
+    echo ":: Elastic launched on 0.0.0.0:9200"
 
     setup_data &
 }
