@@ -6,7 +6,7 @@ from elasticsearch import Elasticsearch
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping
+from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping, edits_query
 import logging
 
 
@@ -79,6 +79,10 @@ def get_suggestions(es, uid, search, start_point):
     :return:
     """
     results = get_matching_statements(es, uid, search, start_point)
+    return prepare_content_list(results)
+
+
+def prepare_content_list(results):
     content_to_show = []
     for result in results:
         filling = {"text": result}
@@ -143,15 +147,19 @@ def get_matching_statements(es, uid, search, start_point):
     :param start_point: look up in start points or not (boolean)
     :return:
     """
-    results = []
 
     language = get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
+
+
+def search_with_query(es, query_string):
+    results = []
 
     if es.ping() is False:
         raise Exception("Elastic is not available")
     else:
-        query = search_query(search, uid, start_point, synonym_analyzer)
+        query = query_string
         search_results = es.search(index=INDEX_NAME, body=query)
         for result in search_results.get("hits").get("hits"):
             if "highlight" in result:

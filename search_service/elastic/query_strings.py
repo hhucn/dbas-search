@@ -143,6 +143,87 @@ def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
     }
 
 
+def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
+    return {
+        "query": {
+            "bool": {
+
+                "should": [
+                    {
+                        "match_phrase": {
+                            "textversions.content": {
+                                "query": text,
+                                "analyzer": synonym_analyzer
+                            }
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyzer": synonym_analyzer,
+                            "query": "*" + text + "*",
+                            "fields": ["textversions.content"],
+                        }
+                    },
+                    {
+                        "match": {
+                            "textversions.content": {
+                                "query": text,
+                                "fuzziness": 2,
+                                "prefix_length": 1
+                            }
+                        }
+                    }
+                ],
+                "must": [
+                    {
+                        "match": {
+                            "issues.uid": uid
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['textversions.content'],
+        'highlight': {
+            'fields': {
+                'textversions.content': {
+                    "force_source": "true",
+                    "highlight_query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "match_phrase": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "analyzer": synonym_analyzer
+                                        }
+                                    }
+                                },
+                                {
+                                    "query_string": {
+                                        "analyzer": synonym_analyzer,
+                                        "query": "*" + text + "*",
+                                        "fields": ["textversions.content"],
+                                    }
+                                },
+                                {
+                                    "match": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "fuzziness": 2,
+                                            "prefix_length": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 def query_exact_term(term, where):
     """
     Query exact terms.
