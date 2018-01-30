@@ -1,6 +1,6 @@
 from flask import Flask, request
 import json
-from search_service.elastic.search import create_connection, get_suggestions
+from search_service.elastic.search import create_connection, get_suggestions, get_edits
 
 app = Flask(__name__)
 
@@ -17,6 +17,16 @@ def suggest():
     start = (start.lower() == "true")
     es = create_connection()
     res = get_suggestions(es, id, search, start)
+
+    return json.dumps(res)
+
+
+@app.route('/edits')
+def edits():
+    id = request.args.get('id', default=1, type=int)
+    search = request.args.get('search', default='', type=str)
+    es = create_connection()
+    res = get_edits(es, id, search)
 
     return json.dumps(res)
 

@@ -82,7 +82,28 @@ def get_suggestions(es, uid, search, start_point):
     return prepare_content_list(results)
 
 
+def get_edits(es, uid, search):
+    """
+    Returns a dictionary with suggestions for the edit popup.
+    Notice that the content strings are already customized with highlighting strings.
+
+    :param es: active client of elasticsearch
+    :param uid: the uid of the current issue (int)
+    :param search: the text to be looked up (string)
+    :param start_point: look up in start points or not (boolean)
+    :return:
+    """
+    results = get_matching_edits(es, uid, search)
+    return prepare_content_list(results)
+
+
 def prepare_content_list(results):
+    """
+    Returns a prepared list to use it at the frontend.
+
+    :param results:
+    :return:
+    """
     content_to_show = []
     for result in results:
         filling = {"text": result}
@@ -138,7 +159,7 @@ def get_used_language(uid):
 
 def get_matching_statements(es, uid, search, start_point):
     """
-    Returns a dictionary with suggestions.
+    Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
 
     :param es: active client of elasticsearch
@@ -151,6 +172,20 @@ def get_matching_statements(es, uid, search, start_point):
     language = get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
     return search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
+
+
+def get_matching_edits(es, uid, search):
+    """
+    Returns a list with suggestions for edit statements.
+
+    :param es: active client of elasticsearch
+    :param uid: current issue id (int)
+    :param search: the text to be looked up (string)
+    :return:
+    """
+    language = get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, edits_query(search, uid, synonym_analyzer))
 
 
 def search_with_query(es, query_string):
