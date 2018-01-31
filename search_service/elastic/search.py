@@ -38,10 +38,12 @@ def init_database(es):
                  doc_type=DOC_TYPE,
                  id=i,
                  body=content[i])
+        import json
+        print(json.dumps(content[i], indent=3))
     es.indices.refresh(index=INDEX_NAME)
 
 
-def append_data(es, text, uid, start_point):
+def append_data(es, text, uid, start_point, stat_uid):
     """
     Append to the database.
     The data_mapping is the common used data format of the database.
@@ -61,7 +63,7 @@ def append_data(es, text, uid, start_point):
         es.index(index=INDEX_NAME,
                  doc_type=DOC_TYPE,
                  id=length,
-                 body=data_mapping(text, start_point, uid, lang_id))
+                 body=data_mapping(text, start_point, uid, lang_id, statement_uid=stat_uid))
         es.indices.refresh(index=INDEX_NAME)
     else:
         logging.debug("Already in Database")
@@ -82,7 +84,7 @@ def get_suggestions(es, uid, search, start_point):
     return prepare_content_list(results)
 
 
-def get_edits(es, uid, search):
+def get_edits(es, uid, statement_uid, search):
     """
     Returns a dictionary with suggestions for the edit popup.
     Notice that the content strings are already customized with highlighting strings.
@@ -90,10 +92,10 @@ def get_edits(es, uid, search):
     :param es: active client of elasticsearch
     :param uid: the uid of the current issue (int)
     :param search: the text to be looked up (string)
-    :param start_point: look up in start points or not (boolean)
+    :param statement_uid: is the statementUid
     :return:
     """
-    results = get_matching_edits(es, uid, search)
+    results = get_matching_edits(es, uid, statement_uid, search)
     return prepare_content_list(results)
 
 
@@ -174,18 +176,19 @@ def get_matching_statements(es, uid, search, start_point):
     return search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
 
 
-def get_matching_edits(es, uid, search):
+def get_matching_edits(es, uid, statement_uid, search):
     """
     Returns a list with suggestions for edit statements.
 
     :param es: active client of elasticsearch
     :param uid: current issue id (int)
     :param search: the text to be looked up (string)
+    :param statement_uid: to determine the language of the current issue
     :return:
     """
     language = get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
-    return search_with_query(es, edits_query(search, uid, synonym_analyzer))
+    return search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
 
 
 def search_with_query(es, query_string):

@@ -177,7 +177,7 @@ def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
                 "must": [
                     {
                         "match": {
-                            "issues.uid": uid
+                            "textversions.statementUid": uid
                         }
                     }
                 ]
@@ -241,7 +241,7 @@ def query_exact_term(term, where):
     }
 
 
-def data_mapping(text, start_point, uid, lang_id):
+def data_mapping(text, start_point, uid, lang_id, statement_uid):
     """
     The data format used in the database
 
@@ -249,13 +249,15 @@ def data_mapping(text, start_point, uid, lang_id):
     :param start_point: is the text a start point
     :param uid: in which id should the text be added
     :param lang_id: which language is used
+    :param statement_uid: to determine the language of the current issue
     :return:
     """
     return (
         {
             "isStartpoint": start_point,
             "textversions": {
-                "content": text
+                "content": text,
+                "satementUid": statement_uid
             },
             "issues": {
                 "uid": uid,

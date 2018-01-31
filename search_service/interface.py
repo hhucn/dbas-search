@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route('/suggestions')
 def suggest():
-    id = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', default=1, type=int)
     search = request.args.get('search', default='', type=str)
     start = request.args.get('start', default='false', type=str)
 
@@ -16,17 +16,18 @@ def suggest():
 
     start = (start.lower() == "true")
     es = create_connection()
-    res = get_suggestions(es, id, search, start)
+    res = get_suggestions(es, uid, search, start)
 
     return json.dumps(res)
 
 
 @app.route('/edits')
 def edits():
-    id = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', default=1, type=int)
+    statement_uid = request.args.get('statement_uid', default=1, type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
-    res = get_edits(es, id, search)
+    res = get_edits(es, uid, statement_uid, search)
 
     return json.dumps(res)
 

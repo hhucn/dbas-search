@@ -119,6 +119,7 @@ def query_data_of_issue(uid):
                        isStartpoint
                        textversions{{
                             content
+                            statementUid
                        }}
                        issues{{
                             uid
