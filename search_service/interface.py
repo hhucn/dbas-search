@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
-from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons
+from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
+    get_all_statements_with_value
 
 app = Flask(__name__)
 
@@ -39,6 +40,16 @@ def duplicates_reasons():
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_duplicates_or_reasons(es, search, uid, statement_uid)
+
+    return json.dumps(res)
+
+
+@app.route('/statements')
+def statements_with_value():
+    uid = request.args.get('id', default=1, type=int)
+    search = request.args.get('search', default='', type=str)
+    es = create_connection()
+    res = get_all_statements_with_value(es, search, uid)
 
     return json.dumps(res)
 

@@ -7,7 +7,7 @@ from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
 from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping, edits_query, \
-    duplicates_or_reasons_query
+    duplicates_or_reasons_query, all_statements_with_value_query
 import logging
 
 
@@ -105,6 +105,11 @@ def get_duplicates_or_reasons(es, uid, statement_uid, search):
     return prepare_content_list(results)
 
 
+def get_all_statements_with_value(es, search, uid):
+    results = get_matching_statements_with_value(es, uid, search)
+    return prepare_content_list(results)
+
+
 def prepare_content_list(results):
     """
     Returns a prepared list to use it at the frontend.
@@ -163,6 +168,12 @@ def get_used_language(uid):
     result = send_request_to_graphql(query)
     language = result.get("issue").get("languages").get("uiLocales")
     return language
+
+
+def get_matching_statements_with_value(es, uid, search):
+    language = get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
 
 
 def get_matching_duplicates_or_reasons(es, search, uid, statement_uid):
