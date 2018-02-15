@@ -1,6 +1,6 @@
 from flask import Flask, request
 import json
-from search_service.elastic.search import create_connection, get_suggestions, get_edits
+from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons
 
 app = Flask(__name__)
 
@@ -28,6 +28,17 @@ def edits():
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_edits(es, uid, statement_uid, search)
+
+    return json.dumps(res)
+
+
+@app.route('/duplicates_reasons')
+def duplicates_reasons():
+    uid = request.args.get('id', default=1, type=int)
+    statement_uid = request.args.get('statement_uid', default=1, type=int)
+    search = request.args.get('search', default='', type=str)
+    es = create_connection()
+    res = get_duplicates_or_reasons(es, search, uid, statement_uid)
 
     return json.dumps(res)
 
