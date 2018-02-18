@@ -1,6 +1,8 @@
 """
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
+import logging
+
 from elasticsearch import Elasticsearch
 
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
@@ -8,7 +10,6 @@ from search_service.database.query_with_graphql import send_request_to_graphql, 
     query_language_of_issue, query_all_uid
 from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping, edits_query, \
     duplicates_or_reasons_query, all_statements_with_value_query
-import logging
 
 
 def create_connection():
@@ -115,12 +116,19 @@ def prepare_content_list(results):
     Returns a prepared list to use it at the frontend.
 
     :param results:
+    :param statement_uid:
     :return:
     """
     content_to_show = []
     for result in results:
-        filling = {"text": result}
+        filling = {
+            "text": result[0],
+            "statement_uid": result[1],
+            "content": result[2],
+            "score": result[3]
+        }
         content_to_show.append(filling)
+
     return content_to_show
 
 
@@ -223,8 +231,14 @@ def search_with_query(es, query_string):
         query = query_string
         search_results = es.search(index=INDEX_NAME, body=query)
         for result in search_results.get("hits").get("hits"):
-            if "highlight" in result:
-                results.append(result.get("highlight").get("textversions.content")[0])
+            current = []
+            if "_source" and "highlight" in result:
+                current.append(result.get("highlight").get("textversions.content")[0])
+                current.append(result.get("_source").get("textversions").get("statementUid"))
+                current.append(result.get("_source").get("textversions").get("content"))
+                current.append(result.get("_score"))
+                results.append(current)
+
     return results
 
 
