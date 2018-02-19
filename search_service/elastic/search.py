@@ -1,13 +1,15 @@
 """
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
+import logging
+
 from elasticsearch import Elasticsearch
 
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping
-import logging
+from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping, edits_query, \
+    duplicates_or_reasons_query, all_statements_with_value_query
 
 
 def create_connection():
@@ -38,10 +40,12 @@ def init_database(es):
                  doc_type=DOC_TYPE,
                  id=i,
                  body=content[i])
+        import json
+        print(json.dumps(content[i], indent=3))
     es.indices.refresh(index=INDEX_NAME)
 
 
-def append_data(es, text, uid, start_point):
+def append_data(es, text, uid, start_point, stat_uid):
     """
     Append to the database.
     The data_mapping is the common used data format of the database.
@@ -61,7 +65,7 @@ def append_data(es, text, uid, start_point):
         es.index(index=INDEX_NAME,
                  doc_type=DOC_TYPE,
                  id=length,
-                 body=data_mapping(text, start_point, uid, lang_id))
+                 body=data_mapping(text, start_point, uid, lang_id, statement_uid=stat_uid))
         es.indices.refresh(index=INDEX_NAME)
     else:
         logging.debug("Already in Database")
@@ -79,10 +83,52 @@ def get_suggestions(es, uid, search, start_point):
     :return:
     """
     results = get_matching_statements(es, uid, search, start_point)
+    return prepare_content_list(results)
+
+
+def get_edits(es, uid, statement_uid, search):
+    """
+    Returns a dictionary with suggestions for the edit popup.
+    Notice that the content strings are already customized with highlighting strings.
+
+    :param es: active client of elasticsearch
+    :param uid: the uid of the current issue (int)
+    :param search: the text to be looked up (string)
+    :param statement_uid: is the statementUid
+    :return:
+    """
+    results = get_matching_edits(es, uid, statement_uid, search)
+    return prepare_content_list(results)
+
+
+def get_duplicates_or_reasons(es, uid, statement_uid, search):
+    results = get_matching_duplicates_or_reasons(es, uid, statement_uid, search)
+    return prepare_content_list(results)
+
+
+def get_all_statements_with_value(es, search, uid):
+    results = get_matching_statements_with_value(es, uid, search)
+    return prepare_content_list(results)
+
+
+def prepare_content_list(results):
+    """
+    Returns a prepared list to use it at the frontend.
+
+    :param results:
+    :param statement_uid:
+    :return:
+    """
     content_to_show = []
     for result in results:
-        filling = {"text": result}
+        filling = {
+            "text": result[0],
+            "statement_uid": result[1],
+            "content": result[2],
+            "score": result[3]
+        }
         content_to_show.append(filling)
+
     return content_to_show
 
 
@@ -132,9 +178,21 @@ def get_used_language(uid):
     return language
 
 
+def get_matching_statements_with_value(es, uid, search):
+    language = get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
+
+
+def get_matching_duplicates_or_reasons(es, search, uid, statement_uid):
+    language = get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, duplicates_or_reasons_query(search, uid, statement_uid, synonym_analyzer))
+
+
 def get_matching_statements(es, uid, search, start_point):
     """
-    Returns a dictionary with suggestions.
+    Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
 
     :param es: active client of elasticsearch
@@ -143,19 +201,46 @@ def get_matching_statements(es, uid, search, start_point):
     :param start_point: look up in start points or not (boolean)
     :return:
     """
-    results = []
 
     language = get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
+
+
+def get_matching_edits(es, uid, statement_uid, search):
+    """
+    Returns a list with suggestions for edit statements.
+
+    :param es: active client of elasticsearch
+    :param uid: current issue id (int)
+    :param search: the text to be looked up (string)
+    :param statement_uid: to determine the language of the current issue
+    :return:
+    """
+    language = get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
+
+
+# Todo rewrite the if part
+def search_with_query(es, query_string):
+    results = []
 
     if es.ping() is False:
         raise Exception("Elastic is not available")
-    else:
-        query = search_query(search, uid, start_point, synonym_analyzer)
-        search_results = es.search(index=INDEX_NAME, body=query)
-        for result in search_results.get("hits").get("hits"):
-            if "highlight" in result:
-                results.append(result.get("highlight").get("textversions.content")[0])
+
+    query = query_string
+    search_results = es.search(index=INDEX_NAME, body=query)
+    for result in search_results.get("hits").get("hits"):
+        current = []
+        if "_source" and "highlight" in result:
+
+            current.append(result["highlight"]["textversions.content"][0])
+            current.append(result["_source"]["textversions"]["statementUid"])
+            current.append(result["_source"]["textversions"]["content"])
+            current.append(result["_score"])
+            results.append(current)
+
     return results
 
 

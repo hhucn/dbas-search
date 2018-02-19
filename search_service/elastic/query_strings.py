@@ -102,7 +102,255 @@ def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
                 ]
             }
         },
-        '_source': ['textversions.content'],
+        '_source': ['textversions.content', 'textversions.statementUid'],
+        'highlight': {
+            'fields': {
+                'textversions.content': {
+                    "force_source": "true",
+                    "highlight_query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "match_phrase": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "analyzer": synonym_analyzer
+                                        }
+                                    }
+                                },
+                                {
+                                    "query_string": {
+                                        "analyzer": synonym_analyzer,
+                                        "query": "*" + text + "*",
+                                        "fields": ["textversions.content"],
+                                    }
+                                },
+                                {
+                                    "match": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "fuzziness": 2,
+                                            "prefix_length": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
+    return {
+        "query": {
+            "bool": {
+
+                "should": [
+                    {
+                        "match_phrase": {
+                            "textversions.content": {
+                                "query": text,
+                                "analyzer": synonym_analyzer
+                            }
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyzer": synonym_analyzer,
+                            "query": "*" + text + "*",
+                            "fields": ["textversions.content"],
+                        }
+                    },
+                    {
+                        "match": {
+                            "textversions.content": {
+                                "query": text,
+                                "fuzziness": 2,
+                                "prefix_length": 1
+                            }
+                        }
+                    }
+                ],
+                "must": [
+                    {
+                        "match": {
+                            "textversions.statementUid": uid
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['textversions.content', 'textversions.statementUid'],
+        'highlight': {
+            'fields': {
+                'textversions.content': {
+                    "force_source": "true",
+                    "highlight_query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "match_phrase": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "analyzer": synonym_analyzer
+                                        }
+                                    }
+                                },
+                                {
+                                    "query_string": {
+                                        "analyzer": synonym_analyzer,
+                                        "query": "*" + text + "*",
+                                        "fields": ["textversions.content"],
+                                    }
+                                },
+                                {
+                                    "match": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "fuzziness": 2,
+                                            "prefix_length": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FILTER.get("en")):
+    return {
+        "query": {
+            "bool": {
+                "should": [
+                    {
+                        "match_phrase": {
+                            "textversions.content": {
+                                "query": text,
+                                "analyzer": synonym_analyzer
+                            }
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyzer": synonym_analyzer,
+                            "query": "*" + text + "*",
+                            "fields": ["textversions.content"],
+                        }
+                    },
+                    {
+                        "match": {
+                            "textversions.content": {
+                                "query": text,
+                                "fuzziness": 2,
+                                "prefix_length": 1
+                            }
+                        }
+                    }
+                ],
+                "must": [
+                    {
+                        "match": {
+                            "issues.uid": issue_uid
+                        }
+                    }
+                ],
+                "must_not": [
+                    {
+                        "match": {
+                            "textversions.statementUid": value_uid
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['textversions.content', 'textversions.statementUid'],
+        'highlight': {
+            'fields': {
+                'textversions.content': {
+                    "force_source": "true",
+                    "highlight_query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "match_phrase": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "analyzer": synonym_analyzer
+                                        }
+                                    }
+                                },
+                                {
+                                    "query_string": {
+                                        "analyzer": synonym_analyzer,
+                                        "query": "*" + text + "*",
+                                        "fields": ["textversions.content"],
+                                    }
+                                },
+                                {
+                                    "match": {
+                                        "textversions.content": {
+                                            "query": text,
+                                            "fuzziness": 2,
+                                            "prefix_length": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")):
+    return {
+        "query": {
+            "bool": {
+                "should": [
+                    {
+                        "match_phrase": {
+                            "textversions.content": {
+                                "query": text,
+                                "analyzer": synonym_analyzer
+                            }
+                        }
+                    },
+                    {
+                        "query_string": {
+                            "analyzer": synonym_analyzer,
+                            "query": "*" + text + "*",
+                            "fields": ["textversions.content"],
+                        }
+                    },
+                    {
+                        "match": {
+                            "textversions.content": {
+                                "query": text,
+                                "fuzziness": 2,
+                                "prefix_length": 1
+                            }
+                        }
+                    }
+                ],
+                "must": [
+                    {
+                        "match": {
+                            "issues.uid": uid
+                        }
+                    }
+                ]
+            }
+        },
+        '_source': ['textversions.content', 'textversions.statementUid'],
         'highlight': {
             'fields': {
                 'textversions.content': {
@@ -160,7 +408,7 @@ def query_exact_term(term, where):
     }
 
 
-def data_mapping(text, start_point, uid, lang_id):
+def data_mapping(text, start_point, uid, lang_id, statement_uid):
     """
     The data format used in the database
 
@@ -168,13 +416,15 @@ def data_mapping(text, start_point, uid, lang_id):
     :param start_point: is the text a start point
     :param uid: in which id should the text be added
     :param lang_id: which language is used
+    :param statement_uid: to determine the language of the current issue
     :return:
     """
     return (
         {
             "isStartpoint": start_point,
             "textversions": {
-                "content": text
+                "content": text,
+                "satementUid": statement_uid
             },
             "issues": {
                 "uid": uid,
