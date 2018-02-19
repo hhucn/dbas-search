@@ -222,22 +222,24 @@ def get_matching_edits(es, uid, statement_uid, search):
     return search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
 
 
+# Todo rewrite the if part
 def search_with_query(es, query_string):
     results = []
 
     if es.ping() is False:
         raise Exception("Elastic is not available")
-    else:
-        query = query_string
-        search_results = es.search(index=INDEX_NAME, body=query)
-        for result in search_results.get("hits").get("hits"):
-            current = []
-            if "_source" and "highlight" in result:
-                current.append(result.get("highlight").get("textversions.content")[0])
-                current.append(result.get("_source").get("textversions").get("statementUid"))
-                current.append(result.get("_source").get("textversions").get("content"))
-                current.append(result.get("_score"))
-                results.append(current)
+
+    query = query_string
+    search_results = es.search(index=INDEX_NAME, body=query)
+    for result in search_results.get("hits").get("hits"):
+        current = []
+        if "_source" and "highlight" in result:
+
+            current.append(result["highlight"]["textversions.content"][0])
+            current.append(result["_source"]["textversions"]["statementUid"])
+            current.append(result["_source"]["textversions"]["content"])
+            current.append(result["_score"])
+            results.append(current)
 
     return results
 
