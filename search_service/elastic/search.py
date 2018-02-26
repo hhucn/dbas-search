@@ -1,14 +1,13 @@
 """
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
-import logging
 
 from elasticsearch import Elasticsearch
 
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import settings, search_query, query_exact_term, data_mapping, edits_query, \
+from search_service.elastic.query_strings import settings, search_query, edits_query, \
     duplicates_or_reasons_query, all_statements_with_value_query
 
 
@@ -36,39 +35,8 @@ def init_database(es):
 
     content = get_data_of_issues()
     for i in range(len(content)):
-        es.index(index=INDEX_NAME,
-                 doc_type=DOC_TYPE,
-                 id=i,
-                 body=content[i])
-        import json
-        print(json.dumps(content[i], indent=3))
+        index_new_element(es, content[i])
     es.indices.refresh(index=INDEX_NAME)
-
-
-def append_data(es, text, uid, start_point, stat_uid):
-    """
-    Append to the database.
-    The data_mapping is the common used data format of the database.
-
-    :param es: active client of elasticsearch
-    :param text: the text to be appended (text)
-    :param uid: the uid of the current issue (int)
-    :param start_point: is the text a start point or not (boolean)
-    :param lang_id: the id of the language (int)
-    :return:
-    """
-    language = get_used_language(uid)
-    lang_id = 1 if language is "en" else 2
-    exists = get_existence(es, text)
-    if not exists:
-        length = get_index_length(es)
-        es.index(index=INDEX_NAME,
-                 doc_type=DOC_TYPE,
-                 id=length,
-                 body=data_mapping(text, start_point, uid, lang_id, statement_uid=stat_uid))
-        es.indices.refresh(index=INDEX_NAME)
-    else:
-        logging.debug("Already in Database")
 
 
 def get_suggestions(es, uid, search, start_point):
@@ -222,7 +190,6 @@ def get_matching_edits(es, uid, statement_uid, search):
     return search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
 
 
-# Todo rewrite the if part
 def search_with_query(es, query_string):
     results = []
 
@@ -234,7 +201,6 @@ def search_with_query(es, query_string):
     for result in search_results.get("hits").get("hits"):
         current = []
         if "_source" and "highlight" in result:
-
             current.append(result["highlight"]["textversions.content"][0])
             current.append(result["_source"]["textversions"]["statementUid"])
             current.append(result["_source"]["textversions"]["content"])
@@ -244,44 +210,6 @@ def search_with_query(es, query_string):
     return results
 
 
-def get_result_length(es, search):
-    """
-    Used to determine the existence of a text.
-
-    :param es: active client of elasticsearch
-    :param search: the text to be looked up (string)
-    :return: length of the search results to check existence of search
-    """
-    where = "textversions.content"
-    query = query_exact_term(search, where)
-    res = es.search(index=INDEX_NAME, body=query)
-    return len(res.get("hits").get("hits"))
-
-
-def get_existence(es, search):
-    """
-    Determine the existence of a text which should be inserted to the database.
-
-    :param es: active client of elasticseach
-    :param search: the text to be looked up (string)
-    :return: the existence of a search text
-    """
-    res = get_result_length(es, search)
-    return res is 1
-
-
-def get_index_length(es):
-    """
-    The length of the database to append new data.
-
-    :param es: active client of elasticsearch
-    :return: length of database
-    """
-    dump = es.search(index=[INDEX_NAME], doc_type=[DOC_TYPE], size=10000)
-    length = dump.get('hits').get('total')
-    return length
-
-
 def get_availability():
     """
 
@@ -289,3 +217,9 @@ def get_availability():
     """
     es = create_connection()
     return es.ping()
+
+
+def index_new_element(es, content):
+    es.index(index=INDEX_NAME,
+             doc_type=DOC_TYPE,
+             body=content)
