@@ -23,10 +23,7 @@ def listen_to_db():
             notify = conn.notifies.pop(0)
             notification = json.loads(notify.payload)
 
-            if notification["event"] == "update_textversions":
-                print(">>>>>>>>UPDATE")
             if notification["event"] == "insert_textversions":
-                print(">>>>>>>>INSERT")
                 insert_new_data(notification)
 
 
