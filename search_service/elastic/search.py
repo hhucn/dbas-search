@@ -33,8 +33,8 @@ def init_database(es):
         es.indices.create(index=INDEX_NAME,
                           body=settings())
 
-    content = get_data_of_issues()
-    [index_new_element(es, element) for element in content]
+    for content in get_data_of_issues():
+        index_new_element(es, content)
     es.indices.refresh(index=INDEX_NAME)
 
 
@@ -86,17 +86,12 @@ def prepare_content_list(results):
     :param statement_uid:
     :return:
     """
-    content_to_show = []
-    for result in results:
-        filling = {
-            "text": result[0],
-            "statement_uid": result[1],
-            "content": result[2],
-            "score": result[3]
-        }
-        content_to_show.append(filling)
-
-    return content_to_show
+    return list(map(lambda x: {
+        "text": x[0],
+        "statement_uid": x[1],
+        "content": x[2],
+        "score": x[3]
+    }, results))
 
 
 def get_every_issue_id():
