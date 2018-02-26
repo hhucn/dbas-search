@@ -1,10 +1,10 @@
 """
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
-from search_service import INDEX_NAME, DOC_TYPE
+import logging
+
 from search_service.elastic.search import create_connection
 from search_service.elastic.search import init_database
-import logging
 
 
 def seed_database():
@@ -21,8 +21,6 @@ def seed_database():
     logging.debug("Fill elastic_search database")
     init_database(es)
     logging.debug("Connection is established after seeding: {0}".format(es.ping()))
-    content = es.get(index=INDEX_NAME, doc_type=DOC_TYPE, id=0)
-    logging.debug("Content is set: {0}".format(content is not None))
 
 
 if __name__ == "__main__":
