@@ -424,7 +424,7 @@ def data_mapping(text, start_point, uid, lang_id, statement_uid):
             "isStartpoint": start_point,
             "textversions": {
                 "content": text,
-                "satementUid": statement_uid
+                "statementUid": statement_uid
             },
             "issues": {
                 "uid": uid,

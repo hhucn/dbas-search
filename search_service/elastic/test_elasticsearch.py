@@ -4,9 +4,8 @@
 import unittest
 
 from search_service.database.query_with_graphql import get_uid_of_issue
-from search_service.elastic.search import create_connection, INDEX_NAME, DOC_TYPE, \
-    get_matching_statements, get_suggestions, \
-    get_result_length, get_existence, get_index_length, append_data, get_availability
+from search_service.elastic.search import create_connection, INDEX_NAME, \
+    get_matching_statements, get_suggestions, get_availability
 
 
 class TestConnection(unittest.TestCase):
@@ -164,93 +163,3 @@ class TestElasticSuggestions(unittest.TestCase):
                 search_results = get_suggestions(es, uid, search_word, True)
                 for result in search_results:
                     self.assertIn("we should close public <em>swimming</em> <em>pools</em>", result.get("text"))
-
-
-class TestInsertion(unittest.TestCase):
-    def setUp(self):
-        self.client = create_connection()
-
-    def test_single_result(self):
-        es = self.client
-        term = "jeder Mensch eine Chance verdient"
-        res = get_result_length(es, term)
-        self.assertEqual(res, 1)
-
-    def test_multi_result(self):
-        es = self.client
-        term = "Mensch"
-        res = get_result_length(es, term)
-        self.assertEqual(res, 2)
-
-    def test_no_result(self):
-        es = self.client
-        term = "foo bar"
-        res = get_result_length(es, term)
-        self.assertEqual(res, 0)
-
-    def test_exists_unique(self):
-        es = self.client
-        term = "jeder Mensch eine Chance verdient"
-        res = get_existence(es, term)
-        self.assertTrue(res)
-
-    def test_exists_multiple(self):
-        es = self.client
-        term = "Mensch"
-        res = get_existence(es, term)
-        self.assertFalse(res)
-
-    def test_dont_exists(self):
-        es = self.client
-        term = "foo bar"
-        res = get_existence(es, term)
-        self.assertFalse(res)
-
-    def test_length_of_index_is_greater_equals_625(self):
-        es = self.client
-        length = get_index_length(es)
-        self.assertGreaterEqual(length, 625)
-
-    def test_insertion_increases_index_length(self):
-        es = self.client
-        previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True)
-        next_length = get_index_length(es)
-        self.assertEqual(previous_length, next_length - 1)
-        es.delete(index=INDEX_NAME,
-                  doc_type=DOC_TYPE,
-                  id=next_length - 1)
-        es.indices.refresh(index=INDEX_NAME)
-        length = get_index_length(es)
-        self.assertEqual(previous_length, length)
-
-    def test_same_insertion_dont_increase_index_length(self):
-        es = self.client
-        previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True)
-        append_data(es, "Coconut", 1, True)
-        next_length = get_index_length(es)
-        self.assertEqual(previous_length, next_length - 1)
-        es.delete(index=INDEX_NAME,
-                  doc_type=DOC_TYPE,
-                  id=next_length - 1)
-        es.indices.refresh(index=INDEX_NAME)
-        length = get_index_length(es)
-        self.assertEqual(previous_length, length)
-
-    def test_different_insertion_increase_index_length(self):
-        es = self.client
-        previous_length = get_index_length(es)
-        append_data(es, "Coconut", 1, True)
-        append_data(es, "Coconuts are good", 2, False)
-        next_length = get_index_length(es)
-        self.assertEqual(previous_length, next_length - 2)
-        es.delete(index=INDEX_NAME,
-                  doc_type=DOC_TYPE,
-                  id=next_length - 1)
-        es.delete(index=INDEX_NAME,
-                  doc_type=DOC_TYPE,
-                  id=next_length - 2)
-        es.indices.refresh(index=INDEX_NAME)
-        length = get_index_length(es)
-        self.assertEqual(previous_length, length)

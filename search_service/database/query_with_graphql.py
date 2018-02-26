@@ -128,3 +128,17 @@ def query_data_of_issue(uid):
                    }}
                }}
                """).format(uid)
+
+
+def query_start_point_issue_of_statement(uid):
+    return ("""
+                query{{
+                    statement(uid: {0}){{
+                        isStartpoint
+                        issues{{
+                            uid
+                            langUid
+                        }}
+                    }}
+                }}
+            """).format(uid)
