@@ -34,8 +34,7 @@ def init_database(es):
                           body=settings())
 
     content = get_data_of_issues()
-    for i in range(len(content)):
-        index_new_element(es, content[i])
+    [index_new_element(es, element) for element in content]
     es.indices.refresh(index=INDEX_NAME)
 
 
