@@ -6,10 +6,8 @@ services:
       - "9200:9200"
       - "5000:5000"
 
-    environment:
-      - DBAS_HOST=web
-      - DBAS_PORT=4284
-      - PROTOCOL=http
+    env_file:
+      - development.env
 
     volumes:
       - ./search_service/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
