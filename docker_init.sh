@@ -30,6 +30,7 @@ wait_for_dbas
 
 wait_for_elastic & disown
 
+python3.6 /code/search_service/elastic/listener.py & disown
 
 echo ":: Start elasticsearch"
 

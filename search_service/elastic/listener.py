@@ -6,8 +6,8 @@ import time
 import psycopg2
 
 from search_service.database.query_with_graphql import query_start_point_issue_of_statement, send_request_to_graphql
+from search_service.elastic.query_strings import data_mapping
 from search_service.elastic.search import create_connection, index_new_element
-from search_service.elastic.search import data_mapping
 
 
 def listen_to_db():
