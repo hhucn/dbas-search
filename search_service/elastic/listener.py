@@ -41,10 +41,5 @@ def insert_new_data(notification):
 
 
 def start_listening():
-    t1 = threading.Thread(target=listen_to_db())
+    t1 = threading.Thread(target=listen_to_db)
     t1.start()
-    t1.join()
-
-
-if __name__ == "__main__":
-    start_listening()
