@@ -19,10 +19,13 @@ def create_connection():
     return Elasticsearch([{"host": "0.0.0.0", "port": 9200}])
 
 
-def init_database(es):
+def init_database(es, protocol, host, port):
     """
     Fills the elasticsaerch database with all data of active issues.
 
+    :param port:
+    :param host:
+    :param protocol:
     :param es: active client of elasticsearch
     :return:
     """
@@ -33,7 +36,7 @@ def init_database(es):
         es.indices.create(index=INDEX_NAME,
                           body=settings())
 
-    for content in get_data_of_issues():
+    for content in get_data_of_issues(protocol, host, port):
         index_new_element(es, content)
     es.indices.refresh(index=INDEX_NAME)
 
@@ -94,13 +97,13 @@ def prepare_content_list(results):
     }, results))
 
 
-def get_every_issue_id():
+def get_every_issue_id(protocol, host, port):
     """
 
     :return: every uid in the D-BAS database
     """
     issue_ids = []
-    uids = send_request_to_graphql(query_all_uid())
+    uids = send_request_to_graphql(query_all_uid(), protocol, host, port)
 
     for id in uids.get("issues"):
         if id not in issue_ids:
@@ -109,16 +112,16 @@ def get_every_issue_id():
     return issue_ids
 
 
-def get_data_of_issues():
+def get_data_of_issues(protocol, host, port):
     """
 
     :return: every data in the D-BAS database
     """
     statements = []
 
-    issue_ids = get_every_issue_id()
+    issue_ids = get_every_issue_id(protocol, host, port)
     for id in issue_ids:
-        content = send_request_to_graphql(query_data_of_issue(id))
+        content = send_request_to_graphql(query_data_of_issue(id), protocol, host, port)
         content = content.get("statements")
         if content:
             for data in content:

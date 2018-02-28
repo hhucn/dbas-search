@@ -24,15 +24,18 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def send_request_to_graphql(query) -> dict:
+def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT) -> dict:
     """
     Send a request to GraphQl V2 and returns response as json.
 
+    :param port:
+    :param host:
+    :param protocol:
     :param query: query_string for the db request
     :return: response of the db to query
     """
     # localhost or web
-    API = "{}://{}:{}/api/v2/".format(DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT)
+    API = "{}://{}:{}/api/v2/".format(protocol, host, port)
     # API = "https://dbas.cs.uni-duesseldorf.de/api/v2/"
     url = "{}query?q={}".format(API, query)
     try:
