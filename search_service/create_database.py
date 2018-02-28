@@ -11,10 +11,14 @@ from search_service.elastic.search import init_database
 
 def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT):
     """
-    Seeds the database with the datas of D-BAS.
+    Seeds elastic index with data at (host, port).
+
+    :param protocol: protocol used in to send requests to GraphQl.
+    :param host: Host of GraphQl
+    :param port: Port to access GraphQl
     :return:
     """
-    if check_if_env_is_set():
+    if __are_envs_set():
         logging.debug("Test connection to elastic search is active")
         es = create_connection()
         logging.debug("Connection is established: {0}".format(es.ping()))
@@ -29,7 +33,12 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT):
                       .format(host, port, protocol))
 
 
-def check_if_env_is_set():
+def __are_envs_set():
+    """
+    Checks if the environment variables are set.
+
+    :return:
+    """
     host = os.getenv("DBAS_HOST", "")
     port = os.getenv("DBAS_PORT", "")
     protocol = os.getenv("DBAS_PROTOCOL", "")

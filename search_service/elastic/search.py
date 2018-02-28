@@ -31,7 +31,6 @@ def init_database(es, protocol, host, port):
     """
     if es.indices.exists(index=INDEX_NAME):
         es.indices.delete(index=INDEX_NAME)
-
     if not es.indices.exists(index=INDEX_NAME):
         es.indices.create(index=INDEX_NAME,
                           body=settings())
@@ -86,7 +85,6 @@ def prepare_content_list(results):
     Returns a prepared list to use it at the frontend.
 
     :param results:
-    :param statement_uid:
     :return:
     """
     return list(map(lambda x: {
