@@ -11,12 +11,18 @@ from search_service.elastic.search import create_connection, index_new_element
 
 
 def listen_to_db():
+    """
+    Listen to the postgresql database of DBAS.
+    List in especially to textversions_changes and index the incoming data to the elastic search index.
+
+    :return:
+    """
     conn = psycopg2.connect(user=os.environ["DB_USER"], password=os.environ["DB_PWD"],
                             database=os.environ["DB_NAME"], host=os.environ["DB_HOST"])
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     curs = conn.cursor()
     curs.execute("LISTEN textversions_changes;")
-    while 1:
+    while True:
         conn.poll()
         time.sleep(1)
         while conn.notifies:
@@ -28,6 +34,14 @@ def listen_to_db():
 
 
 def insert_new_data(notification):
+    """
+    Insert and index the data delivered in notification to the elastic search index.
+    Add additional information to the insertion datas.
+    Additional information are: statement.isStartpoint, issue.uid, issue.langUid .
+
+    :param notification: incoming notification containing the inserted data
+    :return:
+    """
     statement_uid = notification["data"]["statement_uid"]
     content = notification["data"]["content"]
     query = query_start_point_issue_of_statement(statement_uid)
@@ -41,5 +55,11 @@ def insert_new_data(notification):
 
 
 def start_listening():
+    """
+    Start the postgresql database listener of the DBAS database in background.
+    This listener will also insert incoming data to the elastic search index.
+
+    :return:
+    """
     t1 = threading.Thread(target=listen_to_db)
     t1.start()
