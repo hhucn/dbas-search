@@ -10,6 +10,11 @@ app = Flask(__name__)
 
 @app.route('/suggestions')
 def suggest():
+    """
+    This route returns suggestions to a given search word.
+
+    :return: results for suggestions to a given search word as a list of json objects
+    """
     uid = request.args.get('id', default=1, type=int)
     search = request.args.get('search', default='', type=str)
     start = request.args.get('start', default='false', type=str)
@@ -26,6 +31,11 @@ def suggest():
 
 @app.route('/edits')
 def edits():
+    """
+    This route returns search results for edited textversions.
+
+    :return: results for edited textversions ad a list of as a list of json objects
+    """
     uid = request.args.get('id', default=1, type=int)
     statement_uid = request.args.get('statement_uid', default=1, type=int)
     search = request.args.get('search', default='', type=str)
@@ -37,6 +47,11 @@ def edits():
 
 @app.route('/duplicates_reasons')
 def duplicates_reasons():
+    """
+    This route returns search results of textversions for duplicates or reasons.
+
+    :return: results for duplicated or reasoned textversions as a list of json objects
+    """
     uid = request.args.get('id', default=1, type=int)
     statement_uid = request.args.get('statement_uid', default=1, type=int)
     search = request.args.get('search', default='', type=str)
@@ -48,6 +63,11 @@ def duplicates_reasons():
 
 @app.route('/statements')
 def statements_with_value():
+    """
+    This route returns search results for textversions of statements matching a given value.
+
+    :return: results for textversions of statements matching a given value
+    """
     uid = request.args.get('id', default=1, type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
@@ -58,6 +78,12 @@ def statements_with_value():
 
 @app.route('/init', methods=['POST'])
 def init():
+    """
+    This route seeds the elastic search index and starts the insertion-listener for the DBAS database.
+    This route takes the arguments DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT.
+
+    :return: list of json-objects of the delivered arguments
+    """
     app.logger.info("foo")
     results = request.get_json(force=True)
 
