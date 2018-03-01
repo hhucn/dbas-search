@@ -38,7 +38,7 @@ def __insert_new_data(notification):
     Insert and index the data delivered in notification to the elastic search index.
     Add additional information to the insertion datas.
     Additional information are: statement.isStartpoint, issue.uid, issue.langUid .
-
+    
     :param notification: incoming notification containing the inserted data
     :return:
     """

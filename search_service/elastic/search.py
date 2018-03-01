@@ -82,7 +82,7 @@ def get_all_statements_with_value(es, search, uid):
 
 def get_availability():
     """
-
+    
     :return: the availability of elasticsearch
     """
     es = create_connection()
@@ -93,7 +93,7 @@ def get_matching_statements(es, uid, search, start_point):
     """
     Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
-
+    
     :param es: active client of elasticsearch
     :param uid: current issue id (int)
     :param search: the text to be looked up (string)
