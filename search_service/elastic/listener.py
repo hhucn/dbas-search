@@ -17,7 +17,7 @@ def __listen_to_db():
 
     :return:
     """
-    conn = psycopg2.connect(user=os.environ["DB_USER"], password=os.environ["DB_PWD"],
+    conn = psycopg2.connect(user=os.environ["DB_USER"], password=os.environ["DB_PW"],
                             database=os.environ["DB_NAME"], host=os.environ["DB_HOST"])
     conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     curs = conn.cursor()
