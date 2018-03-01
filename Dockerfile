@@ -26,4 +26,6 @@ RUN pip3.6 install -r /code/search_service/requirements.txt && \
 
 USER elasticsearch
 
+EXPOSE 5000, 9200
+
 CMD ["/code/docker_init.sh"]
