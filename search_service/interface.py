@@ -84,7 +84,6 @@ def init():
 
     :return: list of json-objects of the delivered arguments
     """
-    app.logger.info("foo")
     results = request.get_json(force=True)
 
     protocol = results["DBAS_PROTOCOL"]
