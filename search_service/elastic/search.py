@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 from search_service import INDEX_NAME, DOC_TYPE, FILTER
 from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import settings, search_query, edits_query, \
+from search_service.elastic.query_strings import settings, edits_query, search_query, \
     duplicates_or_reasons_query, all_statements_with_value_query
 
 
@@ -35,7 +35,7 @@ def init_database(es, protocol, host, port):
         es.indices.create(index=INDEX_NAME,
                           body=settings())
 
-    for content in get_data_of_issues(protocol, host, port):
+    for content in __get_data_of_issues(protocol, host, port):
         index_new_element(es, content)
     es.indices.refresh(index=INDEX_NAME)
 
@@ -52,7 +52,7 @@ def get_suggestions(es, uid, search, start_point):
     :return:
     """
     results = get_matching_statements(es, uid, search, start_point)
-    return prepare_content_list(results)
+    return __prepare_content_list(results)
 
 
 def get_edits(es, uid, statement_uid, search):
@@ -66,36 +66,53 @@ def get_edits(es, uid, statement_uid, search):
     :param statement_uid: is the statementUid
     :return:
     """
-    results = get_matching_edits(es, uid, statement_uid, search)
-    return prepare_content_list(results)
+    results = __get_matching_edits(es, uid, statement_uid, search)
+    return __prepare_content_list(results)
 
 
 def get_duplicates_or_reasons(es, uid, statement_uid, search):
-    results = get_matching_duplicates_or_reasons(es, uid, statement_uid, search)
-    return prepare_content_list(results)
+    results = __get_matching_duplicates_or_reasons(es, uid, statement_uid, search)
+    return __prepare_content_list(results)
 
 
 def get_all_statements_with_value(es, search, uid):
-    results = get_matching_statements_with_value(es, uid, search)
-    return prepare_content_list(results)
+    results = __get_matching_statements_with_value(es, uid, search)
+    return __prepare_content_list(results)
 
 
-def prepare_content_list(results):
+def get_availability():
     """
-    Returns a prepared list to use it at the frontend.
+    
+    :return: the availability of elasticsearch
+    """
+    es = create_connection()
+    return es.ping()
 
-    :param results:
+
+def get_matching_statements(es, uid, search, start_point):
+    """
+    Returns a list with suggestions.
+    Notice that the content strings are already customized with highlighting strings.
+    
+    :param es: active client of elasticsearch
+    :param uid: current issue id (int)
+    :param search: the text to be looked up (string)
+    :param start_point: look up in start points or not (boolean)
     :return:
     """
-    return list(map(lambda x: {
-        "text": x[0],
-        "statement_uid": x[1],
-        "content": x[2],
-        "score": x[3]
-    }, results))
+
+    language = __get_used_language(uid)
+    synonym_analyzer = FILTER.get(language)
+    return __search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
 
 
-def get_every_issue_id(protocol, host, port):
+def index_new_element(es, content):
+    es.index(index=INDEX_NAME,
+             doc_type=DOC_TYPE,
+             body=content)
+
+
+def __get_every_issue_id(protocol, host, port):
     """
 
     :return: every uid in the D-BAS database
@@ -110,14 +127,14 @@ def get_every_issue_id(protocol, host, port):
     return issue_ids
 
 
-def get_data_of_issues(protocol, host, port):
+def __get_data_of_issues(protocol, host, port):
     """
 
     :return: every data in the D-BAS database
     """
     statements = []
 
-    issue_ids = get_every_issue_id(protocol, host, port)
+    issue_ids = __get_every_issue_id(protocol, host, port)
     for id in issue_ids:
         content = send_request_to_graphql(query_data_of_issue(id), protocol, host, port)
         content = content.get("statements")
@@ -128,7 +145,7 @@ def get_data_of_issues(protocol, host, port):
     return statements
 
 
-def get_used_language(uid):
+def __get_used_language(uid):
     """
     Determine the language of a issue.
 
@@ -141,36 +158,19 @@ def get_used_language(uid):
     return language
 
 
-def get_matching_statements_with_value(es, uid, search):
-    language = get_used_language(uid)
+def __get_matching_statements_with_value(es, uid, search):
+    language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
-    return search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
+    return __search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
 
 
-def get_matching_duplicates_or_reasons(es, search, uid, statement_uid):
-    language = get_used_language(uid)
+def __get_matching_duplicates_or_reasons(es, search, uid, statement_uid):
+    language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
-    return search_with_query(es, duplicates_or_reasons_query(search, uid, statement_uid, synonym_analyzer))
+    return __search_with_query(es, duplicates_or_reasons_query(search, uid, statement_uid, synonym_analyzer))
 
 
-def get_matching_statements(es, uid, search, start_point):
-    """
-    Returns a list with suggestions.
-    Notice that the content strings are already customized with highlighting strings.
-
-    :param es: active client of elasticsearch
-    :param uid: current issue id (int)
-    :param search: the text to be looked up (string)
-    :param start_point: look up in start points or not (boolean)
-    :return:
-    """
-
-    language = get_used_language(uid)
-    synonym_analyzer = FILTER.get(language)
-    return search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
-
-
-def get_matching_edits(es, uid, statement_uid, search):
+def __get_matching_edits(es, uid, statement_uid, search):
     """
     Returns a list with suggestions for edit statements.
 
@@ -180,12 +180,12 @@ def get_matching_edits(es, uid, statement_uid, search):
     :param statement_uid: to determine the language of the current issue
     :return:
     """
-    language = get_used_language(uid)
+    language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
-    return search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
+    return __search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
 
 
-def search_with_query(es, query_string):
+def __search_with_query(es, query_string):
     results = []
 
     if es.ping() is False:
@@ -205,16 +205,16 @@ def search_with_query(es, query_string):
     return results
 
 
-def get_availability():
+def __prepare_content_list(results):
     """
+    Returns a prepared list to use it at the frontend.
 
-    :return: the availability of elasticsearch
+    :param results:
+    :return:
     """
-    es = create_connection()
-    return es.ping()
-
-
-def index_new_element(es, content):
-    es.index(index=INDEX_NAME,
-             doc_type=DOC_TYPE,
-             body=content)
+    return list(map(lambda x: {
+        "text": x[0],
+        "statement_uid": x[1],
+        "content": x[2],
+        "score": x[3]
+    }, results))
