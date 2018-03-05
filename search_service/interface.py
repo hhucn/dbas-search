@@ -15,7 +15,7 @@ def suggest():
 
     :return: results for suggestions to a given search word as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
     start = request.args.get('start', default='false', type=str)
 
@@ -36,8 +36,8 @@ def edits():
 
     :return: results for edited textversions ad a list of as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
-    statement_uid = request.args.get('statement_uid', default=1, type=int)
+    uid = request.args.get('id', type=int)
+    statement_uid = request.args.get('statement_uid', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_edits(es, uid, statement_uid, search)
@@ -52,8 +52,8 @@ def duplicates_reasons():
 
     :return: results for duplicated or reasoned textversions as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
-    statement_uid = request.args.get('statement_uid', default=1, type=int)
+    uid = request.args.get('id', type=int)
+    statement_uid = request.args.get('statement_uid', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_duplicates_or_reasons(es, search, uid, statement_uid)
@@ -68,7 +68,7 @@ def statements_with_value():
 
     :return: results for textversions of statements matching a given value
     """
-    uid = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_all_statements_with_value(es, search, uid)
