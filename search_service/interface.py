@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify
 
 from search_service.create_database import seed_database
@@ -84,11 +86,14 @@ def init():
 
     :return: list of json-objects of the delivered arguments
     """
-    results = request.get_json(force=True)
-
+    results = request.get_json(silent=False)
     protocol = results["DBAS_PROTOCOL"]
     host = results["DBAS_HOST"]
     port = results["DBAS_PORT"]
+
+    os.environ["DBAS_PROTOCOL"] = protocol
+    os.environ["DBAS_HOST"] = host
+    os.environ["DBAS_PORT"] = port
 
     seed_database(protocol, host, port)
     start_listening()
