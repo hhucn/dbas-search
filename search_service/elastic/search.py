@@ -119,10 +119,10 @@ def __get_every_issue_id(protocol, host, port):
     """
     issue_ids = []
     uids = send_request_to_graphql(query_all_uid(), protocol, host, port)
-
-    for id in uids.get("issues"):
-        if id not in issue_ids:
-            issue_ids.append(id.get("uid"))
+    if uids:
+        for id in uids.get("issues"):
+            if id not in issue_ids:
+                issue_ids.append(id.get("uid"))
 
     return issue_ids
 
