@@ -18,7 +18,7 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT):
     :param port: Port to access GraphQl
     :return:
     """
-    if __are_envs_set() or __check_parameters_set(protocol, host, port):
+    if __are_envs_set() or __are_injection_parametes_not_empty(protocol, host, port):
         logging.debug("Test connection to elastic search is active")
         es = create_connection()
         logging.debug("Connection is established: {0}".format(es.ping()))
@@ -45,7 +45,7 @@ def __are_envs_set():
     return "" not in [host, port, protocol]
 
 
-def __check_parameters_set(protocol, host, port):
+def __are_injection_parametes_not_empty(protocol, host, port):
     """
     Check if the parameters are set if the environment variables aren't set, because
     the injection doesn't overwrite them.
