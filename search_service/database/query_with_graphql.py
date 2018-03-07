@@ -3,6 +3,7 @@
 """
 import json
 import logging
+import os
 
 import requests
 
@@ -34,6 +35,11 @@ def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=
     :param query: query_string for the db request
     :return: response of the db to query
     """
+    if "" in [protocol, host, port]:
+        protocol = os.environ["DBAS_PROTOCOL"]
+        host = os.environ["DBAS_HOST"]
+        port = os.environ["DBAS_PORT"]
+
     API = "{}://{}:{}/api/v2/".format(protocol, host, port)
     url = "{}query?q={}".format(API, query)
     try:
