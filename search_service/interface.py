@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, request, jsonify
 
+from search_service.create_database import are_envs_set
 from search_service.create_database import seed_database
 from search_service.elastic.listener import start_listening
 from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
@@ -83,6 +84,7 @@ def init():
     """
     This route seeds the elastic search index and starts the insertion-listener for the DBAS database.
     This route takes the arguments DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT.
+    If the environment variables are not set initialize the elastic index and start the database listener.
 
     :return: list of json-objects of the delivered arguments
     """
@@ -91,14 +93,17 @@ def init():
     host = results["DBAS_HOST"]
     port = results["DBAS_PORT"]
 
-    os.environ["DBAS_PROTOCOL"] = protocol
-    os.environ["DBAS_HOST"] = host
-    os.environ["DBAS_PORT"] = port
+    if not are_envs_set():
+        os.environ["DBAS_PROTOCOL"] = protocol
+        os.environ["DBAS_HOST"] = host
+        os.environ["DBAS_PORT"] = port
 
-    seed_database(protocol, host, port)
-    start_listening()
+        seed_database(protocol, host, port)
+        start_listening()
 
-    return jsonify(result=results)
+        return jsonify(result=results)
+    else:
+        return "Database is already filled\n"
 
 
 if __name__ == '__main__':
