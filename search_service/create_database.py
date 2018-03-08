@@ -53,3 +53,7 @@ def __check_parameters_set(protocol, host, port):
     :return:
     """
     return "" not in [host, port, protocol]
+
+
+if __name__ == "__main__":
+    seed_database()
