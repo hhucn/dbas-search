@@ -112,19 +112,16 @@ def index_new_element(es, content):
              body=content)
 
 
-def __get_every_issue_id(protocol, host, port):
+def __get_issue_ids(protocol, host, port):
     """
 
     :return: every uid in the D-BAS database
     """
-    issue_ids = []
     uids = send_request_to_graphql(query_all_uid(), protocol, host, port)
     if uids:
-        for id in uids.get("issues"):
-            if id not in issue_ids:
-                issue_ids.append(id.get("uid"))
+        return [id.get("uid") for id in uids.get("issues")]
 
-    return issue_ids
+    return []
 
 
 def __get_data_of_issues(protocol, host, port):
@@ -134,7 +131,7 @@ def __get_data_of_issues(protocol, host, port):
     """
     statements = []
 
-    issue_ids = __get_every_issue_id(protocol, host, port)
+    issue_ids = __get_issue_ids(protocol, host, port)
     for id in issue_ids:
         content = send_request_to_graphql(query_data_of_issue(id), protocol, host, port)
         content = content.get("statements")
@@ -213,8 +210,8 @@ def __prepare_content_list(results):
     :return:
     """
     return list(map(lambda x: {
-        "text": x[0],
+        "html": x[0],
         "statement_uid": x[1],
-        "content": x[2],
+        "text": x[2],
         "score": x[3]
     }, results))
