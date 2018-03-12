@@ -104,6 +104,8 @@ def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
         },
         '_source': ['textversions.content', 'textversions.statementUid'],
         'highlight': {
+            "pre_tags": ["<strong>"],
+            "post_tags": ["</strong>"],
             'fields': {
                 'textversions.content': {
                     "force_source": "true",
@@ -193,6 +195,8 @@ def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
         },
         '_source': ['textversions.content', 'textversions.statementUid'],
         'highlight': {
+            "pre_tags": ["<strong>"],
+            "post_tags": ["</strong>"],
             'fields': {
                 'textversions.content': {
                     "force_source": "true",
@@ -289,6 +293,8 @@ def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FIL
         },
         '_source': ['textversions.content', 'textversions.statementUid'],
         'highlight': {
+            "pre_tags": ["<strong>"],
+            "post_tags": ["</strong>"],
             'fields': {
                 'textversions.content': {
                     "force_source": "true",
@@ -377,6 +383,8 @@ def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")
         },
         '_source': ['textversions.content', 'textversions.statementUid'],
         'highlight': {
+            "pre_tags": ["<strong>"],
+            "post_tags": ["</strong>"],
             'fields': {
                 'textversions.content': {
                     "force_source": "true",
