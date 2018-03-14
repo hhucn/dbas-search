@@ -46,10 +46,10 @@ def __insert_new_data(notification):
     content = notification["data"]["content"]
     query = query_start_point_issue_of_statement(statement_uid)
     response = send_request_to_graphql(query)
-    is_start_point = response["statement"]["isPosition"]
+    position = response["statement"]["isPosition"]
     issue_uid = response["statement"]["issues"]["uid"]
     lang_uid = response["statement"]["issues"]["langUid"]
-    results = data_mapping(content, is_start_point, issue_uid, lang_uid, statement_uid)
+    results = data_mapping(content, position, issue_uid, lang_uid, statement_uid)
     es = create_connection()
     index_new_element(es, results)
 
