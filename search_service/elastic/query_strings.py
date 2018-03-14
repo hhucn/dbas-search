@@ -41,7 +41,7 @@ def settings():
     }
 
 
-def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
+def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
     """
     The search query uses synonyms and fuzzy search in regard to a full text search.
     Notice that there are three parts.
@@ -54,7 +54,7 @@ def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
 
     :param text: the text to be searched (text)
     :param uid: uid of the issue to be looked up
-    :param start_point: is the text a start point or not (boolean)
+    :param position: is the text a start point or not (boolean)
     :param synonym_analyzer: the analyzer to be used for the synonyms (english or german)
     :return: search query for searching specific elements filtered by uid, and start_point
     """
@@ -96,7 +96,7 @@ def search_query(text, uid, start_point, synonym_analyzer=FILTER.get("en")):
                     },
                     {
                         "match": {
-                            "isStartpoint": start_point
+                            "isPosition": position
                         }
                     }
                 ]
@@ -437,7 +437,7 @@ def data_mapping(text, start_point, uid, lang_id, statement_uid):
     """
     return (
         {
-            "isStartpoint": start_point,
+            "isPosition": start_point,
             "textversions": {
                 "content": text,
                 "statementUid": statement_uid

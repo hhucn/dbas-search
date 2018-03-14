@@ -20,14 +20,14 @@ def suggest():
     """
     uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
-    start = request.args.get('start', default='false', type=str)
+    position = request.args.get('position', default='false', type=str)
 
-    if start.lower() not in ["true", "false"]:
+    if position.lower() not in ["true", "false"]:
         return "Error: Startpoint must be boolean"
 
-    start = (start.lower() == "true")
+    position = (position.lower() == "true")
     es = create_connection()
-    res = get_suggestions(es, uid, search, start)
+    res = get_suggestions(es, uid, search, position)
 
     return jsonify(result=res)
 

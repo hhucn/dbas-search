@@ -133,7 +133,7 @@ def query_data_of_issue(uid):
     return ("""
                query{{
                    statements(issueUid: {0}){{
-                       isStartpoint
+                       isPosition
                        textversions{{
                             content
                             statementUid
@@ -158,7 +158,7 @@ def query_start_point_issue_of_statement(uid):
     return ("""
                 query{{
                     statement(uid: {0}){{
-                        isStartpoint
+                        isPosition
                         issues{{
                             uid
                             langUid

@@ -18,9 +18,9 @@ class TestInterface(unittest.TestCase):
         self.assertIsNotNone(response.json())
 
     def test_flask_send_json3(self):
-        response = requests.get('http://0.0.0.0:5000/suggestions?id=2&search=hi&start=false')
+        response = requests.get('http://0.0.0.0:5000/suggestions?id=2&search=hi&position=false')
         self.assertIsNotNone(response.json())
 
     def test_flask_send_json4(self):
-        response = requests.get('http://0.0.0.0:5000/suggestions?search=&start=true&id=1')
+        response = requests.get('http://0.0.0.0:5000/suggestions?search=&position=true&id=1')
         self.assertIsNotNone(response.json())

@@ -89,7 +89,7 @@ def get_availability():
     return es.ping()
 
 
-def get_matching_statements(es, uid, search, start_point):
+def get_matching_statements(es, uid, search, position):
     """
     Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
@@ -97,13 +97,13 @@ def get_matching_statements(es, uid, search, start_point):
     :param es: active client of elasticsearch
     :param uid: current issue id (int)
     :param search: the text to be looked up (string)
-    :param start_point: look up in start points or not (boolean)
+    :param position: look up in start points or not (boolean)
     :return:
     """
 
     language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
-    return __search_with_query(es, search_query(search, uid, start_point, synonym_analyzer))
+    return __search_with_query(es, search_query(search, uid, position, synonym_analyzer))
 
 
 def index_new_element(es, content):
