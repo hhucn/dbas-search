@@ -1,5 +1,8 @@
+import os
+
 from flask import Flask, request, jsonify
 
+from search_service.create_database import are_envs_set
 from search_service.create_database import seed_database
 from search_service.elastic.listener import start_listening
 from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
@@ -15,7 +18,7 @@ def suggest():
 
     :return: results for suggestions to a given search word as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
     start = request.args.get('start', default='false', type=str)
 
@@ -36,8 +39,8 @@ def edits():
 
     :return: results for edited textversions ad a list of as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
-    statement_uid = request.args.get('statement_uid', default=1, type=int)
+    uid = request.args.get('id', type=int)
+    statement_uid = request.args.get('statement_uid', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_edits(es, uid, statement_uid, search)
@@ -52,8 +55,8 @@ def duplicates_reasons():
 
     :return: results for duplicated or reasoned textversions as a list of json objects
     """
-    uid = request.args.get('id', default=1, type=int)
-    statement_uid = request.args.get('statement_uid', default=1, type=int)
+    uid = request.args.get('id', type=int)
+    statement_uid = request.args.get('statement_uid', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_duplicates_or_reasons(es, search, uid, statement_uid)
@@ -68,7 +71,7 @@ def statements_with_value():
 
     :return: results for textversions of statements matching a given value
     """
-    uid = request.args.get('id', default=1, type=int)
+    uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
     res = get_all_statements_with_value(es, search, uid)
@@ -81,19 +84,26 @@ def init():
     """
     This route seeds the elastic search index and starts the insertion-listener for the DBAS database.
     This route takes the arguments DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT.
+    If the environment variables are not set initialize the elastic index and start the database listener.
 
     :return: list of json-objects of the delivered arguments
     """
-    results = request.get_json(force=True)
-
+    results = request.get_json(silent=False)
     protocol = results["DBAS_PROTOCOL"]
     host = results["DBAS_HOST"]
     port = results["DBAS_PORT"]
 
-    seed_database(protocol, host, port)
-    start_listening()
+    if not are_envs_set():
+        os.environ["DBAS_PROTOCOL"] = protocol
+        os.environ["DBAS_HOST"] = host
+        os.environ["DBAS_PORT"] = port
 
-    return jsonify(result=results)
+        seed_database(protocol, host, port)
+        start_listening()
+
+        return jsonify(result=results)
+    else:
+        return "Database is already filled\n"
 
 
 if __name__ == '__main__':
