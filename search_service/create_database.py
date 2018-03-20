@@ -5,6 +5,7 @@ import logging
 import os
 
 from search_service import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST
+from search_service.elastic.listener import start_listening
 from search_service.elastic.search import create_connection
 from search_service.elastic.search import init_database
 
@@ -25,6 +26,7 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT):
         logging.debug("Connection is established: {0}".format(es.ping()))
         logging.debug("Fill elastic_search database")
         init_database(es, protocol, host, port)
+        start_listening()
         logging.debug("Connection is established after seeding: {0}".format(es.ping()))
     else:
         host = os.getenv("DBAS_HOST", "")
