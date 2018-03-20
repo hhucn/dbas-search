@@ -82,7 +82,7 @@ def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
                         "match": {
                             "textversions.content": {
                                 "query": text,
-                                "fuzziness": 2,
+                                "fuzziness": "AUTO",
                                 "prefix_length": 1
                             }
                         }
@@ -131,7 +131,7 @@ def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
                                     "match": {
                                         "textversions.content": {
                                             "query": text,
-                                            "fuzziness": 2,
+                                            "fuzziness": "AUTO",
                                             "prefix_length": 1
                                         }
                                     }
@@ -178,7 +178,7 @@ def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
                         "match": {
                             "textversions.content": {
                                 "query": text,
-                                "fuzziness": 2,
+                                "fuzziness": "AUTO",
                                 "prefix_length": 1
                             }
                         }
@@ -222,7 +222,7 @@ def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
                                     "match": {
                                         "textversions.content": {
                                             "query": text,
-                                            "fuzziness": 2,
+                                            "fuzziness": "AUTO",
                                             "prefix_length": 1
                                         }
                                     }
@@ -269,7 +269,7 @@ def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FIL
                         "match": {
                             "textversions.content": {
                                 "query": text,
-                                "fuzziness": 2,
+                                "fuzziness": "AUTO",
                                 "prefix_length": 1
                             }
                         }
@@ -320,7 +320,7 @@ def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FIL
                                     "match": {
                                         "textversions.content": {
                                             "query": text,
-                                            "fuzziness": 2,
+                                            "fuzziness": "AUTO",
                                             "prefix_length": 1
                                         }
                                     }
@@ -366,7 +366,7 @@ def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")
                         "match": {
                             "textversions.content": {
                                 "query": text,
-                                "fuzziness": 2,
+                                "fuzziness": "AUTO",
                                 "prefix_length": 1
                             }
                         }
@@ -410,7 +410,7 @@ def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")
                                     "match": {
                                         "textversions.content": {
                                             "query": text,
-                                            "fuzziness": 2,
+                                            "fuzziness": "AUTO",
                                             "prefix_length": 1
                                         }
                                     }
