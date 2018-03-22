@@ -17,20 +17,24 @@ def settings():
                 "analysis": {
                     "analyzer": {
                         "synonyms_english": {
+                            "expand": True,
                             "tokenizer": "whitespace",
-                            "filter": ["synonyms_english"]
+                            "filter": ["synonyms_english", "lowercase"]
                         },
                         "synonyms_german": {
+                            "expand": True,
                             "tokenizer": "whitespace",
-                            "filter": ["synonyms_german"]
+                            "filter": ["synonyms_german", "lowercase"]
                         }
                     },
                     "filter": {
                         "synonyms_english": {
+                            "expand": True,
                             "type": "synonym",
                             "synonyms_path": "synonyms_english.txt"
                         },
                         "synonyms_german": {
+                            "expand": True,
                             "type": "synonym",
                             "synonyms_path": "synonyms_german.txt"
                         }
