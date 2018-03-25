@@ -18,12 +18,12 @@ def settings():
                     "analyzer": {
                         "synonyms_english": {
                             "expand": True,
-                            "tokenizer": "whitespace",
+                            "tokenizer": "keyword",
                             "filter": ["synonyms_english", "lowercase"]
                         },
                         "synonyms_german": {
                             "expand": True,
-                            "tokenizer": "whitespace",
+                            "tokenizer": "keyword",
                             "filter": ["synonyms_german", "lowercase"]
                         }
                     },
