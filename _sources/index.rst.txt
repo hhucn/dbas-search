@@ -10,7 +10,12 @@ Welcome to SEARCH's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   Installation
+   About
+   Setting
+   search_service
+   search_service.database
+   search_service.elastic
 
 Indices and tables
 ==================

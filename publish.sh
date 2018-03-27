@@ -25,7 +25,7 @@ if [ $current_branch = "gh-pages" ]; then
     git commit -a -m "publish the docs"
     git push origin gh-pages
 
-    git checkout Add/Sphinx-Documentation-to-GitHub-Pages
+    git checkout master
     else
     echo "Did not successfully checkout gh-pages branch."
     echo "Do you have uncommitted changes on your current branch?"
