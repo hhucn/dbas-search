@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=dbas-search
+set SPHINXPROJ=SEARCH
 
 if "%1" == "" goto help
 
