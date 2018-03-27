@@ -9,10 +9,11 @@ The latest version of the development branch will be available at [Docker Hub](h
 
 ## Preperation
 Because this service regards to D-BAS it is necessary to add those parameters used in D-BAS.
-Add them to your **development.env**.
+Add them to your ***.env**-file (e.g. the development.env).
+
 Those parameters are:
 
-````
+```
 DBAS_HOST=web
 DBAS_PORT=4284
 DBAS_PROTOCOL=http
@@ -20,8 +21,9 @@ DB_USER=postgres
 DB_NAME=discussion
 DB_HOST=db
 DB_PW=<secret>
-````
-D-BAS itself must add those parameters to its **development.env** along with:
+```
+
+D-BAS itself must add those parameters to its ***.env**-file along with:
 ```
 DBAS_PROTOCOL=http
 SEARCH_NAME=search
@@ -35,7 +37,7 @@ SEARCH_PORT=5000
 2. Navigate to the directory where this repository is stored
 3. Build the image by running
 ````
-$docker-compose up --build
+$ docker-compose up --build
 ````
 
 ## Run Search parallel to D-BAS
@@ -48,7 +50,7 @@ $docker-compose up
 ## Run Search as an service of D-BAS
 1. Simply run:
 ```
-$docker-compose up
+$ docker-compose up
 ```
 
 ## Missing Parameters
