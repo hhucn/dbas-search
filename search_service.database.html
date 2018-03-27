@@ -1,0 +1,289 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>search_service.database package &#8212; SEARCH 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="search-service-database-package">
+<h1>search_service.database package<a class="headerlink" href="#search-service-database-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-search_service.database.query_with_graphql">
+<span id="search-service-database-query-with-graphql-module"></span><h2>search_service.database.query_with_graphql module<a class="headerlink" href="#module-search_service.database.query_with_graphql" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.get_uid_of_issue">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">get_uid_of_issue</code><span class="sig-paren">(</span><em>issue_slug</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#get_uid_of_issue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.get_uid_of_issue" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>issue_slug</strong> – The slug of the issue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the uid of the issue</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.json_to_dict">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">json_to_dict</code><span class="sig-paren">(</span><em>col</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#json_to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.json_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a json object as bytes, convert it to a Python dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>col</strong> (<em>bytes</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.pretty_print">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">pretty_print</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#pretty_print"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.pretty_print" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints json.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> – input to be pretty printed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">pretty printed text</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.query_all_uid">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">query_all_uid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#query_all_uid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.query_all_uid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query to get all issue uid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a query to get all issue uid</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.query_data_of_issue">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">query_data_of_issue</code><span class="sig-paren">(</span><em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#query_data_of_issue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.query_data_of_issue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query to get all data of a specific issue.
+This the structure of this query is like the data_mapping in query_strings.py used in search.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uid</strong> – issue.uid of the issue to be looked up</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">query to get all data of a specific issue</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.query_issue_id">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">query_issue_id</code><span class="sig-paren">(</span><em>slug</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#query_issue_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.query_issue_id" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>slug</strong> – the slug of the issue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the query string for finding the uid of a issue</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.query_language_of_issue">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">query_language_of_issue</code><span class="sig-paren">(</span><em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#query_language_of_issue"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.query_language_of_issue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the language of an issue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uid</strong> – current issue id</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.query_start_point_issue_of_statement">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">query_start_point_issue_of_statement</code><span class="sig-paren">(</span><em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#query_start_point_issue_of_statement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.query_start_point_issue_of_statement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Additional information for a new insertion in the elastic search index if the listener notices an
+update in the DBAS database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>uid</strong> – issue.uid of the issue to be looked up</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">query for the additional information for the insertion to the elastic search index.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.database.query_with_graphql.send_request_to_graphql">
+<code class="descclassname">search_service.database.query_with_graphql.</code><code class="descname">send_request_to_graphql</code><span class="sig-paren">(</span><em>query</em>, <em>protocol='http'</em>, <em>host=''</em>, <em>port=''</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/search_service/database/query_with_graphql.html#send_request_to_graphql"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.query_with_graphql.send_request_to_graphql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a request to GraphQl V2 and returns response as json.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>port</strong> – </li>
+<li><strong>host</strong> – </li>
+<li><strong>protocol</strong> – </li>
+<li><strong>query</strong> – query_string for the db request</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">response of the db to query</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.database.test_graphql">
+<span id="search-service-database-test-graphql-module"></span><h2>search_service.database.test_graphql module<a class="headerlink" href="#module-search_service.database.test_graphql" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="search_service.database.test_graphql.TestRequest">
+<em class="property">class </em><code class="descclassname">search_service.database.test_graphql.</code><code class="descname">TestRequest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_empty_query_has_response">
+<code class="descname">test_empty_query_has_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_empty_query_has_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_empty_query_has_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_if_there_are_five_issues">
+<code class="descname">test_if_there_are_five_issues</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_if_there_are_five_issues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_if_there_are_five_issues" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_language_of_town_has_to_cut_spending_is_english">
+<code class="descname">test_language_of_town_has_to_cut_spending_is_english</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_language_of_town_has_to_cut_spending_is_english"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_language_of_town_has_to_cut_spending_is_english" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_language_pferdehuhn_is_german">
+<code class="descname">test_language_pferdehuhn_is_german</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_language_pferdehuhn_is_german"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_language_pferdehuhn_is_german" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_len_of_town_has_to_cut_spending_is_greater_or_equals_29">
+<code class="descname">test_len_of_town_has_to_cut_spending_is_greater_or_equals_29</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_len_of_town_has_to_cut_spending_is_greater_or_equals_29"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_len_of_town_has_to_cut_spending_is_greater_or_equals_29" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_query_all_ids_has_response">
+<code class="descname">test_query_all_ids_has_response</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_query_all_ids_has_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_query_all_ids_has_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.database.test_graphql.TestRequest.test_query_id_of_issue_by_slug_returns_id">
+<code class="descname">test_query_id_of_issue_by_slug_returns_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/database/test_graphql.html#TestRequest.test_query_id_of_issue_by_slug_returns_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.database.test_graphql.TestRequest.test_query_id_of_issue_by_slug_returns_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.database">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-search_service.database" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Marc Feger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/search_service.database.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

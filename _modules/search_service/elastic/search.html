@@ -1,0 +1,301 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>search_service.elastic.search &#8212; SEARCH 1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for search_service.elastic.search</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. codeauthor:: Marc Feger &lt;marc.feger@uni-duesseldorf.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">elasticsearch</span> <span class="k">import</span> <span class="n">Elasticsearch</span>
+
+<span class="kn">from</span> <span class="nn">search_service</span> <span class="k">import</span> <span class="n">INDEX_NAME</span><span class="p">,</span> <span class="n">DOC_TYPE</span><span class="p">,</span> <span class="n">FILTER</span>
+<span class="kn">from</span> <span class="nn">search_service.database.query_with_graphql</span> <span class="k">import</span> <span class="n">send_request_to_graphql</span><span class="p">,</span> <span class="n">query_data_of_issue</span><span class="p">,</span> \
+    <span class="n">query_language_of_issue</span><span class="p">,</span> <span class="n">query_all_uid</span>
+<span class="kn">from</span> <span class="nn">search_service.elastic.query_strings</span> <span class="k">import</span> <span class="n">settings</span><span class="p">,</span> <span class="n">edits_query</span><span class="p">,</span> <span class="n">search_query</span><span class="p">,</span> \
+    <span class="n">duplicates_or_reasons_query</span><span class="p">,</span> <span class="n">all_statements_with_value_query</span>
+
+
+<div class="viewcode-block" id="create_connection"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.create_connection">[docs]</a><span class="k">def</span> <span class="nf">create_connection</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :return: connection to elasticsearch-client</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Elasticsearch</span><span class="p">([{</span><span class="s2">&quot;host&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;port&quot;</span><span class="p">:</span> <span class="mi">9200</span><span class="p">}])</span></div>
+
+
+<div class="viewcode-block" id="init_database"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.init_database">[docs]</a><span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fills the elasticsaerch database with all data of active issues.</span>
+
+<span class="sd">    :param port:</span>
+<span class="sd">    :param host:</span>
+<span class="sd">    :param protocol:</span>
+<span class="sd">    :param es: active client of elasticsearch</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">es</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">):</span>
+        <span class="n">es</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">es</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">):</span>
+        <span class="n">es</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">,</span>
+                          <span class="n">body</span><span class="o">=</span><span class="n">settings</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">__get_data_of_issues</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="n">index_new_element</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="n">es</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_suggestions"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_suggestions">[docs]</a><span class="k">def</span> <span class="nf">get_suggestions</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">start_point</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dictionary with suggestions.</span>
+<span class="sd">    Notice that the content strings are already customized with highlighting strings.</span>
+
+<span class="sd">    :param es: active client of elasticsearch</span>
+<span class="sd">    :param uid: the uid of the current issue (int)</span>
+<span class="sd">    :param search: the text to be looked up (string)</span>
+<span class="sd">    :param start_point: look up in start points or not (boolean)</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">get_matching_statements</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">start_point</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__prepare_content_list</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_edits"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_edits">[docs]</a><span class="k">def</span> <span class="nf">get_edits</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">search</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dictionary with suggestions for the edit popup.</span>
+<span class="sd">    Notice that the content strings are already customized with highlighting strings.</span>
+
+<span class="sd">    :param es: active client of elasticsearch</span>
+<span class="sd">    :param uid: the uid of the current issue (int)</span>
+<span class="sd">    :param search: the text to be looked up (string)</span>
+<span class="sd">    :param statement_uid: is the statementUid</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">__get_matching_edits</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__prepare_content_list</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_duplicates_or_reasons"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_duplicates_or_reasons">[docs]</a><span class="k">def</span> <span class="nf">get_duplicates_or_reasons</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">search</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">__get_matching_duplicates_or_reasons</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__prepare_content_list</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_all_statements_with_value"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_all_statements_with_value">[docs]</a><span class="k">def</span> <span class="nf">get_all_statements_with_value</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">__get_matching_statements_with_value</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">search</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__prepare_content_list</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_availability"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_availability">[docs]</a><span class="k">def</span> <span class="nf">get_availability</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    </span>
+<span class="sd">    :return: the availability of elasticsearch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">es</span> <span class="o">=</span> <span class="n">create_connection</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">es</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="get_matching_statements"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.get_matching_statements">[docs]</a><span class="k">def</span> <span class="nf">get_matching_statements</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list with suggestions.</span>
+<span class="sd">    Notice that the content strings are already customized with highlighting strings.</span>
+<span class="sd">    </span>
+<span class="sd">    :param es: active client of elasticsearch</span>
+<span class="sd">    :param uid: current issue id (int)</span>
+<span class="sd">    :param search: the text to be looked up (string)</span>
+<span class="sd">    :param position: look up in start points or not (boolean)</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">language</span> <span class="o">=</span> <span class="n">__get_used_language</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+    <span class="n">synonym_analyzer</span> <span class="o">=</span> <span class="n">FILTER</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__search_with_query</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">search_query</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">synonym_analyzer</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="index_new_element"><a class="viewcode-back" href="../../../search_service.elastic.html#search_service.elastic.search.index_new_element">[docs]</a><span class="k">def</span> <span class="nf">index_new_element</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">content</span><span class="p">):</span>
+    <span class="n">es</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">,</span>
+             <span class="n">doc_type</span><span class="o">=</span><span class="n">DOC_TYPE</span><span class="p">,</span>
+             <span class="n">body</span><span class="o">=</span><span class="n">content</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">__get_issue_ids</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :return: every uid in the D-BAS database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uids</span> <span class="o">=</span> <span class="n">send_request_to_graphql</span><span class="p">(</span><span class="n">query_all_uid</span><span class="p">(),</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">uids</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uid&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">uids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;issues&quot;</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="p">[]</span>
+
+
+<span class="k">def</span> <span class="nf">__get_data_of_issues</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :return: every data in the D-BAS database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">statements</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">issue_ids</span> <span class="o">=</span> <span class="n">__get_issue_ids</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nb">id</span> <span class="ow">in</span> <span class="n">issue_ids</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">send_request_to_graphql</span><span class="p">(</span><span class="n">query_data_of_issue</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statements&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="n">statements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">statements</span>
+
+
+<span class="k">def</span> <span class="nf">__get_used_language</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine the language of a issue.</span>
+
+<span class="sd">    :param uid: current issue id (int)</span>
+<span class="sd">    :return: determined language of the current issue</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query_language_of_issue</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">send_request_to_graphql</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">language</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;issue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;languages&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uiLocales&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">language</span>
+
+
+<span class="k">def</span> <span class="nf">__get_matching_statements_with_value</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">search</span><span class="p">):</span>
+    <span class="n">language</span> <span class="o">=</span> <span class="n">__get_used_language</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+    <span class="n">synonym_analyzer</span> <span class="o">=</span> <span class="n">FILTER</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__search_with_query</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">all_statements_with_value_query</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">synonym_analyzer</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">__get_matching_duplicates_or_reasons</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">):</span>
+    <span class="n">language</span> <span class="o">=</span> <span class="n">__get_used_language</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+    <span class="n">synonym_analyzer</span> <span class="o">=</span> <span class="n">FILTER</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__search_with_query</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">duplicates_or_reasons_query</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">synonym_analyzer</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">__get_matching_edits</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">search</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list with suggestions for edit statements.</span>
+
+<span class="sd">    :param es: active client of elasticsearch</span>
+<span class="sd">    :param uid: current issue id (int)</span>
+<span class="sd">    :param search: the text to be looked up (string)</span>
+<span class="sd">    :param statement_uid: to determine the language of the current issue</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">language</span> <span class="o">=</span> <span class="n">__get_used_language</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+    <span class="n">synonym_analyzer</span> <span class="o">=</span> <span class="n">FILTER</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">language</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">__search_with_query</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">edits_query</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">statement_uid</span><span class="p">,</span> <span class="n">synonym_analyzer</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">__search_with_query</span><span class="p">(</span><span class="n">es</span><span class="p">,</span> <span class="n">query_string</span><span class="p">):</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">es</span><span class="o">.</span><span class="n">ping</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Elastic is not available&quot;</span><span class="p">)</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query_string</span>
+    <span class="n">search_results</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">INDEX_NAME</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">search_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hits&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hits&quot;</span><span class="p">):</span>
+        <span class="n">current</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">&quot;_source&quot;</span> <span class="ow">and</span> <span class="s2">&quot;highlight&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;highlight&quot;</span><span class="p">][</span><span class="s2">&quot;textversions.content&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;_source&quot;</span><span class="p">][</span><span class="s2">&quot;textversions&quot;</span><span class="p">][</span><span class="s2">&quot;statementUid&quot;</span><span class="p">])</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;_source&quot;</span><span class="p">][</span><span class="s2">&quot;textversions&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">])</span>
+            <span class="n">current</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;_score&quot;</span><span class="p">])</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+
+
+<span class="k">def</span> <span class="nf">__prepare_content_list</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a prepared list to use it at the frontend.</span>
+
+<span class="sd">    :param results:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;html&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s2">&quot;statement_uid&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="p">},</span> <span class="n">results</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Marc Feger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,508 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>search_service.elastic package &#8212; SEARCH 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="search-service-elastic-package">
+<h1>search_service.elastic package<a class="headerlink" href="#search-service-elastic-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-search_service.elastic.listener">
+<span id="search-service-elastic-listener-module"></span><h2>search_service.elastic.listener module<a class="headerlink" href="#module-search_service.elastic.listener" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="search_service.elastic.listener.start_listening">
+<code class="descclassname">search_service.elastic.listener.</code><code class="descname">start_listening</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/listener.html#start_listening"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.listener.start_listening" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the postgresql database listener of the DBAS database in background.
+This listener will also insert incoming data to the elastic search index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.elastic.query_strings">
+<span id="search-service-elastic-query-strings-module"></span><h2>search_service.elastic.query_strings module<a class="headerlink" href="#module-search_service.elastic.query_strings" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="search_service.elastic.query_strings.all_statements_with_value_query">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">all_statements_with_value_query</code><span class="sig-paren">(</span><em>text</em>, <em>uid</em>, <em>synonym_analyzer='synonyms_english'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#all_statements_with_value_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.all_statements_with_value_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>This query works like search_query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – text to be searched</li>
+<li><strong>uid</strong> – uid of the issue to be looked up</li>
+<li><strong>synonym_analyzer</strong> – the analyzer to be used for the synonyms (english or german)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a search query for statements to a given value filtered by a issue.uid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.query_strings.data_mapping">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">data_mapping</code><span class="sig-paren">(</span><em>text</em>, <em>start_point</em>, <em>uid</em>, <em>lang_id</em>, <em>statement_uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#data_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.data_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>The data format used in the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – text to be added</li>
+<li><strong>start_point</strong> – is the text a start point</li>
+<li><strong>uid</strong> – in which id should the text be added</li>
+<li><strong>lang_id</strong> – which language is used</li>
+<li><strong>statement_uid</strong> – to determine the language of the current issue</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">data map of the data-format used in the elastic search index</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.query_strings.duplicates_or_reasons_query">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">duplicates_or_reasons_query</code><span class="sig-paren">(</span><em>text</em>, <em>issue_uid</em>, <em>value_uid</em>, <em>synonym_analyzer='synonyms_english'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#duplicates_or_reasons_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.duplicates_or_reasons_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>This query works like search_query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – text to be searched for</li>
+<li><strong>issue_uid</strong> – uid of the issue to be looked up</li>
+<li><strong>value_uid</strong> – uid of the statement which is a duplicate or a reason</li>
+<li><strong>synonym_analyzer</strong> – the analyzer to be used for the synonyms (english or german)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">search query for duplicates or reasons filtered by the issue.uid and a statement.uid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.query_strings.edits_query">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">edits_query</code><span class="sig-paren">(</span><em>text</em>, <em>uid</em>, <em>synonym_analyzer='synonyms_english'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#edits_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.edits_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>This query works like the search_query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – the text to be searched</li>
+<li><strong>uid</strong> – uid of the issue to be looked up</li>
+<li><strong>synonym_analyzer</strong> – the analyzer to be used for the synonyms (english or german)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">search query for edits filtered by the issue.uid</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.query_strings.search_query">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">search_query</code><span class="sig-paren">(</span><em>text</em>, <em>uid</em>, <em>position</em>, <em>synonym_analyzer='synonyms_english'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#search_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.search_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>The search query uses synonyms and fuzzy search in regard to a full text search.
+Notice that there are three parts.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>The synonym part to work with synonyms. They are stored in config.</li>
+<li>The text search part to find a word or substring in a text.
+(* is to ignore previous or following words etc.)</li>
+<li>Fuzzi part to add a fuzziness the the search</li>
+</ol>
+</div></blockquote>
+<p>force_source forces the output to highlight by every of the three parts mentioned above.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> – the text to be searched (text)</li>
+<li><strong>uid</strong> – uid of the issue to be looked up</li>
+<li><strong>position</strong> – is the text a start point or not (boolean)</li>
+<li><strong>synonym_analyzer</strong> – the analyzer to be used for the synonyms (english or german)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">search query for searching specific elements filtered by uid, and start_point</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.query_strings.settings">
+<code class="descclassname">search_service.elastic.query_strings.</code><code class="descname">settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/query_strings.html#settings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.query_strings.settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The setting string for the client.
+Notice: the synonym files are stored in config/.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">settings of the elastic search index</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.elastic.search">
+<span id="search-service-elastic-search-module"></span><h2>search_service.elastic.search module<a class="headerlink" href="#module-search_service.elastic.search" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="search_service.elastic.search.create_connection">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">create_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#create_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.create_connection" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">connection to elasticsearch-client</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_all_statements_with_value">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_all_statements_with_value</code><span class="sig-paren">(</span><em>es</em>, <em>search</em>, <em>uid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_all_statements_with_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_all_statements_with_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_availability">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_availability</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_availability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_availability" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the availability of elasticsearch</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_duplicates_or_reasons">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_duplicates_or_reasons</code><span class="sig-paren">(</span><em>es</em>, <em>uid</em>, <em>statement_uid</em>, <em>search</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_duplicates_or_reasons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_duplicates_or_reasons" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_edits">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_edits</code><span class="sig-paren">(</span><em>es</em>, <em>uid</em>, <em>statement_uid</em>, <em>search</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_edits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_edits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with suggestions for the edit popup.
+Notice that the content strings are already customized with highlighting strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>es</strong> – active client of elasticsearch</li>
+<li><strong>uid</strong> – the uid of the current issue (int)</li>
+<li><strong>search</strong> – the text to be looked up (string)</li>
+<li><strong>statement_uid</strong> – is the statementUid</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_matching_statements">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_matching_statements</code><span class="sig-paren">(</span><em>es</em>, <em>uid</em>, <em>search</em>, <em>position</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_matching_statements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_matching_statements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list with suggestions.
+Notice that the content strings are already customized with highlighting strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>es</strong> – active client of elasticsearch</li>
+<li><strong>uid</strong> – current issue id (int)</li>
+<li><strong>search</strong> – the text to be looked up (string)</li>
+<li><strong>position</strong> – look up in start points or not (boolean)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.get_suggestions">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">get_suggestions</code><span class="sig-paren">(</span><em>es</em>, <em>uid</em>, <em>search</em>, <em>start_point</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#get_suggestions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.get_suggestions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary with suggestions.
+Notice that the content strings are already customized with highlighting strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>es</strong> – active client of elasticsearch</li>
+<li><strong>uid</strong> – the uid of the current issue (int)</li>
+<li><strong>search</strong> – the text to be looked up (string)</li>
+<li><strong>start_point</strong> – look up in start points or not (boolean)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.index_new_element">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">index_new_element</code><span class="sig-paren">(</span><em>es</em>, <em>content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#index_new_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.index_new_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="search_service.elastic.search.init_database">
+<code class="descclassname">search_service.elastic.search.</code><code class="descname">init_database</code><span class="sig-paren">(</span><em>es</em>, <em>protocol</em>, <em>host</em>, <em>port</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/search.html#init_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.search.init_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fills the elasticsaerch database with all data of active issues.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>port</strong> – </li>
+<li><strong>host</strong> – </li>
+<li><strong>protocol</strong> – </li>
+<li><strong>es</strong> – active client of elasticsearch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.elastic.test_elasticsearch">
+<span id="search-service-elastic-test-elasticsearch-module"></span><h2>search_service.elastic.test_elasticsearch module<a class="headerlink" href="#module-search_service.elastic.test_elasticsearch" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="search_service.elastic.test_elasticsearch.TestConnection">
+<em class="property">class </em><code class="descclassname">search_service.elastic.test_elasticsearch.</code><code class="descname">TestConnection</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestConnection.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestConnection.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestConnection.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestConnection.test_connection_is_alive">
+<code class="descname">test_connection_is_alive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestConnection.test_connection_is_alive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestConnection.test_connection_is_alive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticDB">
+<em class="property">class </em><code class="descclassname">search_service.elastic.test_elasticsearch.</code><code class="descname">TestElasticDB</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticDB.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticDB.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticDB.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticDB.test_database_has_filled">
+<code class="descname">test_database_has_filled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticDB.test_database_has_filled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticDB.test_database_has_filled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults">
+<em class="property">class </em><code class="descclassname">search_service.elastic.test_elasticsearch.</code><code class="descname">TestElasticResults</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_correct_highlighting_in_town_has_to_cut_spending">
+<code class="descname">test_correct_highlighting_in_town_has_to_cut_spending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_correct_highlighting_in_town_has_to_cut_spending"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_correct_highlighting_in_town_has_to_cut_spending" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_english_synonyms_are_used">
+<code class="descname">test_english_synonyms_are_used</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_english_synonyms_are_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_english_synonyms_are_used" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_find_special_words">
+<code class="descname">test_find_special_words</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_find_special_words"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_find_special_words" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_find_street_festival_in_town_has_to_cut_spending">
+<code class="descname">test_find_street_festival_in_town_has_to_cut_spending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_find_street_festival_in_town_has_to_cut_spending"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_find_street_festival_in_town_has_to_cut_spending" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_find_swimming_pool_in_town_has_to_cut_spending">
+<code class="descname">test_find_swimming_pool_in_town_has_to_cut_spending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_find_swimming_pool_in_town_has_to_cut_spending"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_find_swimming_pool_in_town_has_to_cut_spending" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticResults.test_german_synonyms_are_used">
+<code class="descname">test_german_synonyms_are_used</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticResults.test_german_synonyms_are_used"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticResults.test_german_synonyms_are_used" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticSuggestions">
+<em class="property">class </em><code class="descclassname">search_service.elastic.test_elasticsearch.</code><code class="descname">TestElasticSuggestions</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticSuggestions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticSuggestions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticSuggestions.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticSuggestions.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticSuggestions.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_elasticsearch.TestElasticSuggestions.test_suggestions_for_swimming_pool_in_town_has_to_cut_spending">
+<code class="descname">test_suggestions_for_swimming_pool_in_town_has_to_cut_spending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_elasticsearch.html#TestElasticSuggestions.test_suggestions_for_swimming_pool_in_town_has_to_cut_spending"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_elasticsearch.TestElasticSuggestions.test_suggestions_for_swimming_pool_in_town_has_to_cut_spending" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.elastic.test_results_of_local_db">
+<span id="search-service-elastic-test-results-of-local-db-module"></span><h2>search_service.elastic.test_results_of_local_db module<a class="headerlink" href="#module-search_service.elastic.test_results_of_local_db" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="search_service.elastic.test_results_of_local_db.TestDuplicateReasons">
+<em class="property">class </em><code class="descclassname">search_service.elastic.test_results_of_local_db.</code><code class="descname">TestDuplicateReasons</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_results_of_local_db.html#TestDuplicateReasons"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_results_of_local_db.TestDuplicateReasons" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="method">
+<dt id="search_service.elastic.test_results_of_local_db.TestDuplicateReasons.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_results_of_local_db.html#TestDuplicateReasons.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_results_of_local_db.TestDuplicateReasons.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_results_of_local_db.TestDuplicateReasons.test_statement_not_in_results1">
+<code class="descname">test_statement_not_in_results1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_results_of_local_db.html#TestDuplicateReasons.test_statement_not_in_results1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_results_of_local_db.TestDuplicateReasons.test_statement_not_in_results1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="search_service.elastic.test_results_of_local_db.TestDuplicateReasons.test_statement_not_in_results2">
+<code class="descname">test_statement_not_in_results2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/search_service/elastic/test_results_of_local_db.html#TestDuplicateReasons.test_statement_not_in_results2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#search_service.elastic.test_results_of_local_db.TestDuplicateReasons.test_statement_not_in_results2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-search_service.elastic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-search_service.elastic" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Marc Feger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/search_service.elastic.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

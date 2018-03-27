@@ -1,0 +1,252 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>search_service.database.query_with_graphql &#8212; SEARCH 1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for search_service.database.query_with_graphql</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. codeauthor:: Marc Feger &lt;marc.feger@uni-duesseldorf.de&gt;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">search_service</span> <span class="k">import</span> <span class="n">DBAS_HOST</span><span class="p">,</span> <span class="n">DBAS_PORT</span><span class="p">,</span> <span class="n">DBAS_PROTOCOL</span>
+
+
+<div class="viewcode-block" id="json_to_dict"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.json_to_dict">[docs]</a><span class="k">def</span> <span class="nf">json_to_dict</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a json object as bytes, convert it to a Python dictionary.</span>
+
+<span class="sd">    :param col:</span>
+<span class="sd">    :type col: bytes</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">col</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+        <span class="n">col</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">col</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="send_request_to_graphql"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.send_request_to_graphql">[docs]</a><span class="k">def</span> <span class="nf">send_request_to_graphql</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="n">DBAS_PROTOCOL</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">DBAS_HOST</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">DBAS_PORT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Send a request to GraphQl V2 and returns response as json.</span>
+
+<span class="sd">    :param port:</span>
+<span class="sd">    :param host:</span>
+<span class="sd">    :param protocol:</span>
+<span class="sd">    :param query: query_string for the db request</span>
+<span class="sd">    :return: response of the db to query</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;&quot;</span> <span class="ow">in</span> <span class="p">[</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">]:</span>
+        <span class="n">protocol</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DBAS_PROTOCOL&quot;</span><span class="p">]</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DBAS_HOST&quot;</span><span class="p">]</span>
+        <span class="n">port</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DBAS_PORT&quot;</span><span class="p">]</span>
+
+    <span class="n">API</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">://</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">/api/v2/&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">query?q=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">API</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{}</span>
+
+    <span class="n">ret</span> <span class="o">=</span> <span class="n">json_to_dict</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="pretty_print"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.pretty_print">[docs]</a><span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Pretty prints json.</span>
+
+<span class="sd">    :param text: input to be pretty printed</span>
+<span class="sd">    :return: pretty printed text</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="get_uid_of_issue"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.get_uid_of_issue">[docs]</a><span class="k">def</span> <span class="nf">get_uid_of_issue</span><span class="p">(</span><span class="n">issue_slug</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param issue_slug: The slug of the issue</span>
+<span class="sd">    :return: the uid of the issue</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query_issue_id</span><span class="p">(</span><span class="n">issue_slug</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">send_request_to_graphql</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;issue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uid&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="query_issue_id"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.query_issue_id">[docs]</a><span class="k">def</span> <span class="nf">query_issue_id</span><span class="p">(</span><span class="n">slug</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param slug: the slug of the issue</span>
+<span class="sd">    :return: the query string for finding the uid of a issue</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                query{{</span>
+<span class="s2">                    issue(slug: &quot;</span><span class="si">{0}</span><span class="s2">&quot;){{</span>
+<span class="s2">                        uid</span>
+<span class="s2">                    }}</span>
+<span class="s2">                }}</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">slug</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="query_language_of_issue"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.query_language_of_issue">[docs]</a><span class="k">def</span> <span class="nf">query_language_of_issue</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the language of an issue.</span>
+
+<span class="sd">    :param uid: current issue id</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">               query{{</span>
+<span class="s2">                   issue(uid: </span><span class="si">{0}</span><span class="s2">){{</span>
+<span class="s2">                        languages{{</span>
+<span class="s2">                            uiLocales</span>
+<span class="s2">                        }}</span>
+<span class="s2">                   }}</span>
+<span class="s2">               }}</span>
+<span class="s2">               &quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="query_all_uid"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.query_all_uid">[docs]</a><span class="k">def</span> <span class="nf">query_all_uid</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Query to get all issue uid.</span>
+
+<span class="sd">    :return: a query to get all issue uid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            query{</span>
+<span class="s2">                issues{</span>
+<span class="s2">                    uid</span>
+<span class="s2">                }</span>
+<span class="s2">            }</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="query_data_of_issue"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.query_data_of_issue">[docs]</a><span class="k">def</span> <span class="nf">query_data_of_issue</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Query to get all data of a specific issue.</span>
+<span class="sd">    This the structure of this query is like the data_mapping in query_strings.py used in search.</span>
+
+<span class="sd">    :param uid: issue.uid of the issue to be looked up</span>
+<span class="sd">    :return: query to get all data of a specific issue</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">               query{{</span>
+<span class="s2">                   statements(issueUid: </span><span class="si">{0}</span><span class="s2">){{</span>
+<span class="s2">                       isPosition</span>
+<span class="s2">                       textversions{{</span>
+<span class="s2">                            content</span>
+<span class="s2">                            statementUid</span>
+<span class="s2">                       }}</span>
+<span class="s2">                       issues{{</span>
+<span class="s2">                            uid</span>
+<span class="s2">                            langUid</span>
+<span class="s2">                       }}</span>
+<span class="s2">                   }}</span>
+<span class="s2">               }}</span>
+<span class="s2">               &quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="query_start_point_issue_of_statement"><a class="viewcode-back" href="../../../search_service.database.html#search_service.database.query_with_graphql.query_start_point_issue_of_statement">[docs]</a><span class="k">def</span> <span class="nf">query_start_point_issue_of_statement</span><span class="p">(</span><span class="n">uid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Additional information for a new insertion in the elastic search index if the listener notices an</span>
+<span class="sd">    update in the DBAS database.</span>
+
+<span class="sd">    :param uid: issue.uid of the issue to be looked up</span>
+<span class="sd">    :return: query for the additional information for the insertion to the elastic search index.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                query{{</span>
+<span class="s2">                    statement(uid: </span><span class="si">{0}</span><span class="s2">){{</span>
+<span class="s2">                        isPosition</span>
+<span class="s2">                        issues{{</span>
+<span class="s2">                            uid</span>
+<span class="s2">                            langUid</span>
+<span class="s2">                        }}</span>
+<span class="s2">                    }}</span>
+<span class="s2">                }}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Marc Feger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
