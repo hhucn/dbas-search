@@ -1,10 +1,7 @@
-search\_service package
+search\_service
 =======================
 
-Submodules
-----------
-
-search\_service\.create\_database module
+search\_service\.create\_database
 ----------------------------------------
 
 .. automodule:: search_service.create_database
@@ -12,7 +9,7 @@ search\_service\.create\_database module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.interface module
+search\_service\.interface
 ---------------------------------
 
 .. automodule:: search_service.interface
@@ -20,11 +17,3 @@ search\_service\.interface module
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: search_service
-    :members:
-    :undoc-members:
-    :show-inheritance:

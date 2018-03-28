@@ -13,6 +13,13 @@ Welcome to SEARCH's documentation!
    Installation
    About
    Setting
+
+Code Documentation
+==================
+
+.. toctree::
+   :maxdepth: 2
+
    search_service
    search_service.database
    search_service.elastic
