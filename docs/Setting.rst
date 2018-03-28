@@ -36,16 +36,17 @@ More details about setting up a *analyzer* or *filter* can be found in:
 
 The data mapping looks like::
 
-	{
-        	"isStartpoint": <startpoint>,
-        	"textversions": {
-                	"content": <data>
-        	},
-        	"issues": {
-        		"uid": <uid>,
-                	"langUid": <lang_id>
-		}
-	}
+        {
+            "isPosition": start_point,
+            "textversions": {
+                "content": text,
+                "statementUid": statement_uid
+            },
+            "issues": {
+                "uid": uid,
+                "langUid": lang_id
+            }
+        }
 
 The equivalent query with *graphql* can be found in *query_with_graphql.py*.
 
@@ -73,7 +74,7 @@ The general structure of the search query looks like::
                     },
                     {
                         "match": {
-                            "isStartpoint": start_point
+                            "isPosition": start_point
                         }
                     }
                 ]
