@@ -14,7 +14,7 @@ A full text search query can be written like::
         }
 
 .. warning::
-	Datas for D-BAS-Search are stored in the <field> textversions.content.	
+	Data for D-BAS-Search are stored in the <field> textversions.content.
 
 Notice the "*" within the *query* field. 
 
