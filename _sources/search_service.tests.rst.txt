@@ -1,22 +1,10 @@
-search\_service\.tests package
+search\_service\.tests
 ==============================
 
-Submodules
-----------
-
-search\_service\.tests\.test\_interface module
+search\_service\.tests\.test\_interface
 ----------------------------------------------
 
 .. automodule:: search_service.tests.test_interface
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: search_service.tests
     :members:
     :undoc-members:
     :show-inheritance:

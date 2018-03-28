@@ -1,10 +1,8 @@
-search\_service\.elastic package
+search\_service\.elastic
 ================================
 
-Submodules
-----------
 
-search\_service\.elastic\.listener module
+search\_service\.elastic\.listener
 -----------------------------------------
 
 .. automodule:: search_service.elastic.listener
@@ -12,7 +10,7 @@ search\_service\.elastic\.listener module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.elastic\.query\_strings module
+search\_service\.elastic\.query\_strings
 -----------------------------------------------
 
 .. automodule:: search_service.elastic.query_strings
@@ -20,7 +18,7 @@ search\_service\.elastic\.query\_strings module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.elastic\.search module
+search\_service\.elastic\.search
 ---------------------------------------
 
 .. automodule:: search_service.elastic.search
@@ -28,7 +26,7 @@ search\_service\.elastic\.search module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.elastic\.test\_elasticsearch module
+search\_service\.elastic\.test\_elasticsearch
 ----------------------------------------------------
 
 .. automodule:: search_service.elastic.test_elasticsearch
@@ -36,19 +34,10 @@ search\_service\.elastic\.test\_elasticsearch module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.elastic\.test\_results\_of\_local\_db module
+search\_service\.elastic\.test\_results\_of\_local\_db
 -------------------------------------------------------------
 
 .. automodule:: search_service.elastic.test_results_of_local_db
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
-
-.. automodule:: search_service.elastic
     :members:
     :undoc-members:
     :show-inheritance:

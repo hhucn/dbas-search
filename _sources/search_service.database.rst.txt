@@ -1,10 +1,8 @@
-search\_service\.database package
+search\_service\.database
 =================================
 
-Submodules
-----------
 
-search\_service\.database\.query\_with\_graphql module
+search\_service\.database\.query\_with\_graphql
 ------------------------------------------------------
 
 .. automodule:: search_service.database.query_with_graphql
@@ -12,7 +10,7 @@ search\_service\.database\.query\_with\_graphql module
     :undoc-members:
     :show-inheritance:
 
-search\_service\.database\.test\_graphql module
+search\_service\.database\.test\_graphql
 -----------------------------------------------
 
 .. automodule:: search_service.database.test_graphql
@@ -20,11 +18,3 @@ search\_service\.database\.test\_graphql module
     :undoc-members:
     :show-inheritance:
 
-
-Module contents
----------------
-
-.. automodule:: search_service.database
-    :members:
-    :undoc-members:
-    :show-inheritance:
