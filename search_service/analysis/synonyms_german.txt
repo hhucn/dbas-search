@@ -1,3 +1,3 @@
-autonome, selber
-EAutos, Hybride
-huhn, fogel
+version https://git-lfs.github.com/spec/v1
+oid sha256:dacac1d0a4c7b556f868504594629f3371a274e30c350322c3056104557e4d5a
+size 4390576
