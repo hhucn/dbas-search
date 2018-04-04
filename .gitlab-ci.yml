@@ -1,0 +1,29 @@
+image: docker
+
+build_test_images:
+  stage: build
+  tags:
+    - 40c
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE --pull .
+    - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:experimental
+    - docker push $CI_REGISTRY_IMAGE:experimental
+
+search:
+  image: docker:dind
+  stage: test
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
+    - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
+    - docker network create -d bridge dbas_$CI_JOB_ID
+    - docker run --rm --name db_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
+    - sleep 8
+    - docker run --rm --name web_$CI_JOB_ID --net=dbas_$CI_JOB_ID ./development.env $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
+    - docker run --rm --name search_$CI_JOB_ID --net=dbas_$CI_JOB_ID ./development.env $CI_REGISTRY_IMAGE:experimental
+  script:
+    - docker exec search_$CI_JOB_ID nosetests --with-coverage --cover-package=search_service --cover-xml -w . search_service
+  after_script:
+    - docker kill db_$CI_JOB_ID web_$CI_JOB_ID search_$CI_JOB_ID
+    - docker network rm dbas_$CI_JOB_ID
