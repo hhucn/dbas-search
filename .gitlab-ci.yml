@@ -41,7 +41,7 @@ sonar:
   script:
     - sonar-scanner -D sonar.host.url=https://sonarqube.cs.uni-duesseldorf.de -D sonar.login=$SONARQUBE_LOGIN -D sonar.projectKey=$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME -D sonar.projectName=$CI_PROJECT_NAME -D sonar.projectVersion=1 -D sonar.sources=. -D sonar.python.coverage.reportPath=coverage.xml
   only:
-    - development
+    - develop
   when: always
 
 deploy_image:
@@ -61,4 +61,4 @@ deploy_dev_image:
     - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:development
     - docker push $CI_REGISTRY_IMAGE:development
   only:
-    - development
+    - develop
