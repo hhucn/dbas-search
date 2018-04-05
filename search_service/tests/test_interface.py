@@ -1,9 +1,14 @@
+import time
 import unittest
 
 import requests
 
 
 class TestInterface(unittest.TestCase):
+
+    def setUp(self):
+        time.sleep(8)
+
     def test_flask_send_response(self):
         # notice that flask must run for a passing test!
         response = requests.get('http://0.0.0.0:5000/suggestions?id=1')
