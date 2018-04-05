@@ -14,7 +14,6 @@ RUN pip3.6 install -U pip && \
     pip3.6 install -r /code/search_service/requirements.txt
 
 COPY . /code
-WORKDIR /code
 
 COPY search_service/config/elasticsearch.yml /usr/share/elasticsearch/config/
 COPY search_service/analysis/synonyms_english.txt /usr/share/elasticsearch/config/synonyms_english.txt
@@ -28,4 +27,4 @@ USER elasticsearch
 
 EXPOSE 5000 9200
 
-CMD ["docker_init.sh"]
+CMD ["/code/docker_init.sh"]
