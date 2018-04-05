@@ -29,3 +29,36 @@ search:
   after_script:
     - docker kill db_$CI_JOB_ID web_$CI_JOB_ID search_$CI_JOB_ID || true
     - docker network rm dbas_$CI_JOB_ID || true
+  coverage: '/^TOTAL\s*\d+\s*\d+\s*(\d+\%)\s*$/'
+  artifacts:
+    paths:
+      - coverage.xml
+    expire_in: 10 mins
+
+sonar:
+  image: hhucn/sonar-scanner
+  stage: deploy
+  script:
+    - sonar-scanner -D sonar.host.url=https://sonarqube.cs.uni-duesseldorf.de -D sonar.login=$SONARQUBE_LOGIN -D sonar.projectKey=$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME -D sonar.projectName=$CI_PROJECT_NAME -D sonar.projectVersion=1 -D sonar.sources=. -D sonar.python.coverage.reportPath=coverage.xml
+  only:
+    - development
+  when: always
+
+deploy_image:
+  stage: deploy
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
+  only:
+    - master
+
+deploy_dev_image:
+  stage: deploy
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:development
+    - docker push $CI_REGISTRY_IMAGE:development
+  only:
+    - development
