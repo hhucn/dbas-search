@@ -18,6 +18,7 @@ search:
     - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
     - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
     - docker network create -d bridge dbas_$CI_JOB_ID
+    - ls -ahl
     - docker run --rm --name db_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
     - sleep 8
     - docker run --rm --name web_$CI_JOB_ID --net=dbas_$CI_JOB_ID ./development.env $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
@@ -25,5 +26,5 @@ search:
   script:
     - docker exec search_$CI_JOB_ID nosetests --with-coverage --cover-package=search_service --cover-xml -w . search_service
   after_script:
-    - docker kill db_$CI_JOB_ID web_$CI_JOB_ID search_$CI_JOB_ID
-    - docker network rm dbas_$CI_JOB_ID
+    - docker kill db_$CI_JOB_ID web_$CI_JOB_ID search_$CI_JOB_ID || true
+    - docker network rm dbas_$CI_JOB_ID || true
