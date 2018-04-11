@@ -29,15 +29,11 @@ def init_database(es, protocol, host, port):
     :param es: active client of elasticsearch
     :return:
     """
-    if es.indices.exists(index=INDEX_NAME):
-        es.indices.delete(index=INDEX_NAME)
-    if not es.indices.exists(index=INDEX_NAME):
-        es.indices.create(index=INDEX_NAME,
-                          body=settings())
-
-    for content in __get_data_of_issues(protocol, host, port):
-        index_new_element(es, content)
-    es.indices.refresh(index=INDEX_NAME)
+    if not (es.indices.exists(index=INDEX_NAME)):
+        es.indices.create(index=INDEX_NAME, body=settings(), ignore=[400, 503])
+        for content in __get_data_of_issues(protocol, host, port):
+            index_new_element(es, content)
+        es.indices.refresh(index=INDEX_NAME)
 
 
 def get_suggestions(es, uid, search, start_point):
