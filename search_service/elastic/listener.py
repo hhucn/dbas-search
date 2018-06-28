@@ -1,9 +1,9 @@
-import json
-import os
-import threading
 import time
 
+import json
+import os
 import psycopg2
+import threading
 
 from search_service.database.query_with_graphql import query_start_point_issue_of_statement, send_request_to_graphql
 from search_service.elastic.query_strings import data_mapping
@@ -13,7 +13,7 @@ from search_service.elastic.search import create_connection, index_new_element
 def __listen_to_db():
     """
     Listen to the postgresql database of DBAS.
-    List in especially to textversions_changes and index the incoming data to the elastic search index.
+    Listen especially to textversions_changes and index the incoming data to the elastic search index.
 
     :return:
     """
