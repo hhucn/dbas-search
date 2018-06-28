@@ -2,6 +2,7 @@
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
 import logging
+from typing import List
 
 from search_service import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
 from search_service.elastic.listener import start_listening
@@ -46,7 +47,7 @@ def are_envs_set():
     return __are_strings_not_empty(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME)
 
 
-def __are_strings_not_empty(*strings):
+def __are_strings_not_empty(*strings: List[str]):
     """
     Check if the parameters are set if the environment variables aren't set, because
     the injection doesn't overwrite them.
