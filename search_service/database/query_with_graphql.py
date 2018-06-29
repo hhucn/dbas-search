@@ -138,10 +138,8 @@ def query_data_of_issue(uid):
                             content
                             statementUid
                        }}
-                       issues{{
-                            uid
-                            langUid
-                       }}
+                       issueUid
+                       lang
                    }}
                }}
                """).format(uid)
