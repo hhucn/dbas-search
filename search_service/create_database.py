@@ -1,28 +1,60 @@
 """
 .. codeauthor:: Marc Feger <marc.feger@uni-duesseldorf.de>
 """
-from search_service import INDEX_NAME, DOC_TYPE
+import logging
+from typing import List
+
+from search_service import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
+from search_service.elastic.listener import start_listening
 from search_service.elastic.search import create_connection
 from search_service.elastic.search import init_database
-import logging
 
 
-def seed_database():
+def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_name=DB_NAME):
     """
-    Seeds the database with the datas of D-BAS.
+    Seeds elastic index with data at (host, port).
+
+    :param protocol: protocol used in to send requests to GraphQl.
+    :param host: Host of GraphQl
+    :param port: Port to access GraphQl
+    :param db_name: Name of discussion-database, could be: discussion
+    :return:
+    """
+    if are_envs_set() or __are_strings_not_empty(protocol, host, port, db_name):
+        logging.debug("Test connection to elastic search is active")
+        es = create_connection()
+        logging.debug("Connection is established: {0}".format(es.ping()))
+        logging.debug("Fill elastic_search database")
+        init_database(es, protocol, host, port)
+        start_listening()
+        logging.debug("Connection is established after seeding: {0}".format(es.ping()))
+    else:
+        logging.error("""
+            (At least) one required environment variables is not set: 
+                DBAS_HOST={0}
+                DBAS_PORT={1}
+                DBAS_PROTOCOL={2}
+                DB_NAME={3}
+            """.format(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME))
+
+
+def are_envs_set():
+    """
+    Checks if the environment variables are set.
 
     :return:
     """
+    return __are_strings_not_empty(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME)
 
-    logging.debug("Test connection to elastic search is active")
-    es = create_connection()
-    logging.debug("Connection is established: {0}".format(es.ping()))
 
-    logging.debug("Fill elastic_search database")
-    init_database(es)
-    logging.debug("Connection is established after seeding: {0}".format(es.ping()))
-    content = es.get(index=INDEX_NAME, doc_type=DOC_TYPE, id=0)
-    logging.debug("Content is set: {0}".format(content is not None))
+def __are_strings_not_empty(*strings: List[str]):
+    """
+    Check if the parameters are set if the environment variables aren't set, because
+    the injection doesn't overwrite them.
+
+    :return:
+    """
+    return "" not in strings
 
 
 if __name__ == "__main__":

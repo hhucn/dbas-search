@@ -1,9 +1,14 @@
+import time
 import unittest
 
 import requests
 
 
 class TestInterface(unittest.TestCase):
+
+    def setUp(self):
+        time.sleep(8)
+
     def test_flask_send_response(self):
         # notice that flask must run for a passing test!
         response = requests.get('http://0.0.0.0:5000/suggestions?id=1')
@@ -11,16 +16,16 @@ class TestInterface(unittest.TestCase):
 
     def test_flask_send_json1(self):
         response = requests.get('http://0.0.0.0:5000/suggestions?id=1')
-        self.assertIsNotNone(response.json()[0])
+        self.assertIsNotNone(response.json())
 
     def test_flask_send_json2(self):
         response = requests.get('http://0.0.0.0:5000/suggestions?id=1&search=hi')
-        self.assertIsNotNone(response.json()[0])
+        self.assertIsNotNone(response.json())
 
     def test_flask_send_json3(self):
-        response = requests.get('http://0.0.0.0:5000/suggestions?id=2&search=hi&start=false')
-        self.assertIsNotNone(response.json()[0])
+        response = requests.get('http://0.0.0.0:5000/suggestions?id=2&search=hi&position=false')
+        self.assertIsNotNone(response.json())
 
     def test_flask_send_json4(self):
-        response = requests.get('http://0.0.0.0:5000/suggestions?search=&start=true')
-        self.assertIsNotNone(response.json()[0])
+        response = requests.get('http://0.0.0.0:5000/suggestions?search=&position=true&id=1')
+        self.assertIsNotNone(response.json())

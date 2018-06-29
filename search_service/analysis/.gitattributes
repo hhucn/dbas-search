@@ -1,0 +1,2 @@
+synonyms_german.txt filter=lfs diff=lfs merge=lfs -text
+synonyms_english.txt filter=lfs diff=lfs merge=lfs -text

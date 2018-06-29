@@ -3,6 +3,7 @@
 """
 import json
 import logging
+import os
 
 import requests
 
@@ -24,16 +25,22 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def send_request_to_graphql(query) -> dict:
+def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT) -> dict:
     """
     Send a request to GraphQl V2 and returns response as json.
 
+    :param port:
+    :param host:
+    :param protocol:
     :param query: query_string for the db request
     :return: response of the db to query
     """
-    # localhost or web
-    API = "{}://{}:{}/api/v2/".format(DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT)
-    # API = "https://dbas.cs.uni-duesseldorf.de/api/v2/"
+    if "" in [protocol, host, port]:
+        protocol = os.environ["DBAS_PROTOCOL"]
+        host = os.environ["DBAS_HOST"]
+        port = os.environ["DBAS_PORT"]
+
+    API = "{}://{}:{}/api/v2/".format(protocol, host, port)
     url = "{}query?q={}".format(API, query)
     try:
         response = requests.get(url)
@@ -52,7 +59,6 @@ def pretty_print(text):
     :param text: input to be pretty printed
     :return: pretty printed text
     """
-
     print(json.dumps(text, indent=2))
 
 
@@ -62,7 +68,6 @@ def get_uid_of_issue(issue_slug):
     :param issue_slug: The slug of the issue
     :return: the uid of the issue
     """
-
     query = query_issue_id(issue_slug)
     response = send_request_to_graphql(query)
     return int(response.get("issue").get("uid"))
@@ -103,6 +108,11 @@ def query_language_of_issue(uid):
 
 
 def query_all_uid():
+    """
+    Query to get all issue uid.
+
+    :return: a query to get all issue uid
+    """
     return ("""
             query{
                 issues{
@@ -113,17 +123,44 @@ def query_all_uid():
 
 
 def query_data_of_issue(uid):
+    """
+    Query to get all data of a specific issue.
+    This the structure of this query is like the data_mapping in query_strings.py used in search.
+
+    :param uid: issue.uid of the issue to be looked up
+    :return: query to get all data of a specific issue
+    """
     return ("""
                query{{
                    statements(issueUid: {0}){{
-                       isStartpoint
+                       isPosition
                        textversions{{
                             content
+                            statementUid
                        }}
-                       issues{{
-                            uid
-                            langUid
-                       }}
+                       issueUid
+                       lang
                    }}
                }}
                """).format(uid)
+
+
+def query_start_point_issue_of_statement(uid):
+    """
+    Additional information for a new insertion in the elastic search index if the listener notices an
+    update in the DBAS database.
+
+    :param uid: issue.uid of the issue to be looked up
+    :return: query for the additional information for the insertion to the elastic search index.
+    """
+    return ("""
+                query{{
+                    statement(uid: {0}){{
+                        isPosition
+                        issues{{
+                            uid
+                            langUid
+                        }}
+                    }}
+                }}
+            """).format(uid)
