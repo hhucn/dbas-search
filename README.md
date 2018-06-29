@@ -5,9 +5,9 @@ This service implements the basic search functions expected by D-BAS.
 
 At the core Search uses [Elasticsearch](https://www.elastic.co/de/).
 
-The latest version of the development branch will be available at [Docker Hub](https://hub.docker.com/r/hhucn/dbas-search/)
+The latest stable and development image will automatically be deployed to [Docker Hub](https://hub.docker.com/r/hhucn/dbas-search/)
 
-## Preperation
+## Preparation
 Because this service regards to D-BAS it is necessary to add those parameters used in D-BAS.
 Add them to your ***.env**-file (e.g. the development.env).
 
