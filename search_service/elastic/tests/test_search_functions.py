@@ -9,7 +9,7 @@ from search_service.elastic.search import create_connection, get_all_statements_
 class TestContentList(unittest.TestCase):
 
     def setUp(self):
-        time.sleep(6)
+        time.sleep(10)
         self.es = create_connection()
 
     def test_get_suggestions_not_empty(self):
