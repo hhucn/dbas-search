@@ -157,10 +157,8 @@ def query_start_point_issue_of_statement(uid):
                 query{{
                     statement(uid: {0}){{
                         isPosition
-                        issues{{
-                            uid
-                            langUid
-                        }}
+                        issueUid
+                        lang
                     }}
                 }}
             """).format(uid)

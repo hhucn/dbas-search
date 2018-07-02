@@ -1,9 +1,9 @@
-import time
-
 import json
 import os
-import psycopg2
 import threading
+import time
+
+import psycopg2
 
 from search_service.database.query_with_graphql import query_start_point_issue_of_statement, send_request_to_graphql
 from search_service.elastic.query_strings import data_mapping
@@ -47,8 +47,8 @@ def __insert_new_data(notification):
     query = query_start_point_issue_of_statement(statement_uid)
     response = send_request_to_graphql(query)
     position = response["statement"]["isPosition"]
-    issue_uid = response["statement"]["issues"]["uid"]
-    lang_uid = response["statement"]["issues"]["langUid"]
+    issue_uid = response["statement"]["issueUid"]
+    lang_uid = response["statement"]["lang"]
     results = data_mapping(content, position, issue_uid, lang_uid, statement_uid)
     es = create_connection()
     index_new_element(es, results)
