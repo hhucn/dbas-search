@@ -52,16 +52,6 @@ def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=
     return ret
 
 
-def pretty_print(text):
-    """
-    Pretty prints json.
-
-    :param text: input to be pretty printed
-    :return: pretty printed text
-    """
-    print(json.dumps(text, indent=2))
-
-
 def get_uid_of_issue(issue_slug):
     """
 
