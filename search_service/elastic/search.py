@@ -19,36 +19,22 @@ def create_connection():
     return Elasticsearch([{"host": "0.0.0.0", "port": 9200}])
 
 
-def init_database(es, protocol, host, port):
+def init_database(es, protocol, host, port, index=INDEX_NAME):
     """
     Fills the elasticsearch database with all data of active issues.
 
-    :param port:
-    :param host:
-    :param protocol:
+    :param index: The name of the index where elastic stores the data at
+    :param port: <dbas port>
+    :param host: <dbas host>
+    :param protocol: <dbas protocol>
     :param es: active client of elasticsearch
     :return:
     """
-    if not (es.indices.exists(index=INDEX_NAME)):
-        es.indices.create(index=INDEX_NAME, body=settings(), ignore=[400, 503])
+    if not (es.indices.exists(index=index)):
+        es.indices.create(index=index, body=settings(), ignore=[400, 503])
         for content in __get_data_of_issues(protocol, host, port):
-            index_new_element(es, __map_data(content))
-        es.indices.refresh(index=INDEX_NAME)
-
-
-def __map_data(content):
-    """
-    Maps a given content to the data structure that elastic requires.
-
-    :param content: data to be mapped
-    :return: data in required data structure
-    """
-    text = content["textversions"]["content"]
-    statement_uid = content["textversions"]["statementUid"]
-    is_position = content["isPosition"]
-    issue_uid = content["issueUid"]
-    language = content["lang"]
-    return data_mapping(text, is_position, issue_uid, language, statement_uid)
+            index_new_element(es, __map_data(content), index)
+        es.indices.refresh(index=index)
 
 
 def get_suggestions(es, uid, search, start_point):
@@ -62,7 +48,7 @@ def get_suggestions(es, uid, search, start_point):
     :param start_point: look up in start points or not (boolean)
     :return:
     """
-    results = get_matching_statements(es, uid, search, start_point)
+    results = get_matching_statements(es, uid, start_point, search)
     return __prepare_content_list(results)
 
 
@@ -86,25 +72,16 @@ def get_duplicates_or_reasons(es, uid, statement_uid, search):
     return __prepare_content_list(results)
 
 
-def get_all_statements_with_value(es, search, uid):
+def get_all_statements_with_value(es, uid, search):
     results = __get_matching_statements_with_value(es, uid, search)
     return __prepare_content_list(results)
 
 
-def get_availability():
-    """
-    
-    :return: the availability of elasticsearch
-    """
-    es = create_connection()
-    return es.ping()
-
-
-def get_matching_statements(es, uid, search, position):
+def get_matching_statements(es, uid, position, search):
     """
     Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
-    
+
     :param es: active client of elasticsearch
     :param uid: current issue id (int)
     :param search: the text to be looked up (string)
@@ -117,8 +94,8 @@ def get_matching_statements(es, uid, search, position):
     return __search_with_query(es, search_query(search, uid, position, synonym_analyzer))
 
 
-def index_new_element(es, content):
-    es.index(index=INDEX_NAME,
+def index_new_element(es, content, index=INDEX_NAME):
+    es.index(index=index,
              doc_type=DOC_TYPE,
              body=content)
 
@@ -172,7 +149,7 @@ def __get_matching_statements_with_value(es, uid, search):
     return __search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
 
 
-def __get_matching_duplicates_or_reasons(es, search, uid, statement_uid):
+def __get_matching_duplicates_or_reasons(es, uid, statement_uid, search):
     language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
     return __search_with_query(es, duplicates_or_reasons_query(search, uid, statement_uid, synonym_analyzer))
@@ -211,6 +188,21 @@ def __search_with_query(es, query_string):
             results.append(current)
 
     return results
+
+
+def __map_data(content):
+    """
+    Maps a given content to the data structure that elastic requires.
+
+    :param content: data to be mapped
+    :return: data in required data structure
+    """
+    text = content["textversions"]["content"]
+    statement_uid = content["textversions"]["statementUid"]
+    is_position = content["isPosition"]
+    issue_uid = content["issueUid"]
+    language = content["lang"]
+    return data_mapping(text, is_position, issue_uid, language, statement_uid)
 
 
 def __prepare_content_list(results):

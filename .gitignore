@@ -108,3 +108,4 @@ venv.bak/
 .idea/
 
 *.env
+/search_service/cover/
