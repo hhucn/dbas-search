@@ -10,6 +10,13 @@
 # Please consult the documentation for further information on configuration options:
 # https://www.elastic.co/guide/en/elasticsearch/reference/index.html
 #
+
+# Set CORS settings
+http.cors.enabled : true
+http.cors.allow-origin : "*"
+http.cors.allow-methods : HEAD, GET
+http.cors.allow-headers : X-Requested-With,X-Auth-Token,Content-Type, Content-Length
+
 # ---------------------------------- Cluster -----------------------------------
 #
 # Use a descriptive name for your cluster:

@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 
 from search_service.create_database import are_envs_set
 from search_service.create_database import seed_database
@@ -9,12 +9,10 @@ from search_service.elastic.search import create_connection, get_suggestions, ge
     get_all_statements_with_value
 
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 
 
 @app.route('/suggestions')
-@cross_origin()
 def suggest():
     """
     This route returns suggestions to a given search word.
@@ -36,7 +34,6 @@ def suggest():
 
 
 @app.route('/edits')
-@cross_origin()
 def edits():
     """
     This route returns search results for edited textversions.
@@ -53,7 +50,6 @@ def edits():
 
 
 @app.route('/duplicates_reasons')
-@cross_origin()
 def duplicates_reasons():
     """
     This route returns search results of textversions for duplicates or reasons.
@@ -70,7 +66,6 @@ def duplicates_reasons():
 
 
 @app.route('/statements')
-@cross_origin()
 def statements_with_value():
     """
     This route returns search results for textversions of statements matching a given value.
@@ -86,7 +81,6 @@ def statements_with_value():
 
 
 @app.route('/init', methods=['POST'])
-@cross_origin()
 def init():
     """
     This route seeds the elastic search index and starts the insertion-listener for the DBAS database.
