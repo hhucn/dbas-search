@@ -45,7 +45,7 @@ def settings():
     }
 
 
-def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
+def search_query(text, uid, is_position, synonym_analyzer=FILTER.get("en")):
     """
     The search query uses synonyms and fuzzy search in regard to a full text search.
     Notice that there are three parts.
@@ -58,7 +58,7 @@ def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
 
     :param text: the text to be searched (text)
     :param uid: uid of the issue to be looked up
-    :param position: is the text a start point or not (boolean)
+    :param is_position: is the text a start point or not (boolean)
     :param synonym_analyzer: the analyzer to be used for the synonyms (english or german)
     :return: search query for searching specific elements filtered by uid, and start_point
     """
@@ -100,7 +100,7 @@ def search_query(text, uid, position, synonym_analyzer=FILTER.get("en")):
                     },
                     {
                         "match": {
-                            "isPosition": position
+                            "isPosition": is_position
                         }
                     }
                 ]
@@ -428,12 +428,12 @@ def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")
     }
 
 
-def data_mapping(text, start_point, uid, lang_id, statement_uid):
+def data_mapping(text, is_position, uid, lang_id, statement_uid):
     """
     The data format used in the database
 
     :param text: text to be added
-    :param start_point: is the text a start point
+    :param is_position: is the text a start point
     :param uid: in which id should the text be added
     :param lang_id: which language is used
     :param statement_uid: to determine the language of the current issue
@@ -441,7 +441,7 @@ def data_mapping(text, start_point, uid, lang_id, statement_uid):
     """
     return (
         {
-            "isPosition": start_point,
+            "isPosition": is_position,
             "textversions": {
                 "content": text,
                 "statementUid": statement_uid
