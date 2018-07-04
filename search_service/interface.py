@@ -1,4 +1,5 @@
 import os
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
@@ -60,7 +61,7 @@ def duplicates_reasons():
     statement_uid = request.args.get('statement_uid', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
-    res = get_duplicates_or_reasons(es, search, uid, statement_uid)
+    res = get_duplicates_or_reasons(es, uid, statement_uid, search)
 
     return jsonify(result=res)
 
@@ -75,7 +76,7 @@ def statements_with_value():
     uid = request.args.get('id', type=int)
     search = request.args.get('search', default='', type=str)
     es = create_connection()
-    res = get_all_statements_with_value(es, search, uid)
+    res = get_all_statements_with_value(es, uid, search)
 
     return jsonify(result=res)
 
