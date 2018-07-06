@@ -1,4 +1,4 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.0.0
+FROM docker.elastic.co/elasticsearch/elasticsearch:6.3.1
 
 MAINTAINER Christian Meter <meter@cs.uni-duesseldorf.de>
 
