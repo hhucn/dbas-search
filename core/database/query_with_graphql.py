@@ -7,7 +7,7 @@ import os
 
 import requests
 
-from search_service import DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL
+from core import DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL
 
 
 def json_to_dict(col):

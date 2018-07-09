@@ -25,7 +25,7 @@ search:
     - docker run -d --name search_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env -e DBAS_HOST=web_$CI_JOB_ID -e DB_HOST=db_$CI_JOB_ID $CI_REGISTRY_IMAGE:experimental
     - sleep 25  # wait for elasticsearch to start up and pull data from dbas' database via dbas
   script:
-    - docker exec search_$CI_JOB_ID nosetests --with-coverage --cover-package=search_service --cover-xml -w . search_service
+    - docker exec search_$CI_JOB_ID nosetests --with-coverage --cover-package=core --cover-xml -w . core
   after_script:
     - docker kill db_$CI_JOB_ID web_$CI_JOB_ID search_$CI_JOB_ID || true
     - docker network rm dbas_$CI_JOB_ID || true

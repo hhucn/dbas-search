@@ -3,8 +3,8 @@ import string
 import time
 import unittest
 
-from search_service import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST
-from search_service.elastic.search import create_connection, init_database, get_suggestions
+from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST
+from core.elastic.search import create_connection, init_database, get_suggestions
 
 
 class TestSeeding(unittest.TestCase):

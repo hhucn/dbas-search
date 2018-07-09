@@ -3,10 +3,10 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-from search_service.create_database import are_envs_set
-from search_service.create_database import seed_database
-from search_service.elastic.listener import start_listening
-from search_service.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
+from core.create_database import are_envs_set
+from core.create_database import seed_database
+from core.elastic.listener import start_listening
+from core.elastic.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
     get_all_statements_with_value
 
 app = Flask(__name__)

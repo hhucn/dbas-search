@@ -4,10 +4,10 @@
 
 from elasticsearch import Elasticsearch
 
-from search_service import INDEX_NAME, DOC_TYPE, FILTER
-from search_service.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
+from core import INDEX_NAME, DOC_TYPE, FILTER
+from core.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
-from search_service.elastic.query_strings import settings, edits_query, search_query, \
+from core.elastic.query_strings import settings, edits_query, search_query, \
     duplicates_or_reasons_query, all_statements_with_value_query, data_mapping
 
 

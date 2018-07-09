@@ -9,13 +9,13 @@ RUN yum -y install python36u python36u-pip
 
 ENV PYTHONPATH /code
 
-COPY search_service/requirements.txt /code/search_service/requirements.txt
+COPY core/requirements.txt /code/core/requirements.txt
 RUN pip3.6 install -U pip && \
-    pip3.6 install -r /code/search_service/requirements.txt
+    pip3.6 install -r /code/core/requirements.txt
 
-COPY search_service/config/elasticsearch.yml /usr/share/elasticsearch/config/
-COPY search_service/analysis/synonyms_english.txt /usr/share/elasticsearch/config/synonyms_english.txt
-COPY search_service/analysis/synonyms_german.txt /usr/share/elasticsearch/config/synonyms_german.txt
+COPY core/config/elasticsearch.yml /usr/share/elasticsearch/config/
+COPY core/analysis/synonyms_english.txt /usr/share/elasticsearch/config/synonyms_english.txt
+COPY core/analysis/synonyms_german.txt /usr/share/elasticsearch/config/synonyms_german.txt
 
 COPY . /code
 
