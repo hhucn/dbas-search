@@ -4,7 +4,7 @@ import time
 import unittest
 
 from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST
-from core.elastic.search import create_connection, init_database, get_suggestions
+from core.v1.search import create_connection, init_database, get_suggestions
 
 
 class TestSeeding(unittest.TestCase):

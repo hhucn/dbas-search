@@ -6,8 +6,8 @@ from typing import List
 
 from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
 from core.elastic.listener import start_listening
-from core.elastic.search import create_connection
-from core.elastic.search import init_database
+from core.v1.search import create_connection
+from core.v1.search import init_database
 
 
 def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_name=DB_NAME):

@@ -7,7 +7,7 @@ function wait_for_elastic {
     done
     echo ":: Elastic launched on 0.0.0.0:9200"
 
-    python3.6 /code/core/create_database.py &
+    python3.6 /code/core/v1/create_database.py &
 }
 
 python3.6 /code/core/interface.py &
