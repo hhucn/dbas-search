@@ -1,6 +1,6 @@
 import unittest
 
-from search_service.database.query_with_graphql import json_to_dict
+from core.database.query_with_graphql import json_to_dict
 
 
 class TestJsonToDict(unittest.TestCase):

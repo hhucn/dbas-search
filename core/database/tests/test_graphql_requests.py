@@ -1,6 +1,6 @@
 import unittest
 
-from search_service.database.query_with_graphql import send_request_to_graphql, query_issue_id, \
+from core.database.query_with_graphql import send_request_to_graphql, query_issue_id, \
     query_all_uid, query_language_of_issue, \
     query_data_of_issue, get_uid_of_issue
 

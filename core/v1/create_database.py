@@ -4,10 +4,10 @@
 import logging
 from typing import List
 
-from search_service import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
-from search_service.elastic.listener import start_listening
-from search_service.elastic.search import create_connection
-from search_service.elastic.search import init_database
+from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
+from core.elastic.listener import start_listening
+from core.v1.search import create_connection
+from core.v1.search import init_database
 
 
 def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_name=DB_NAME):

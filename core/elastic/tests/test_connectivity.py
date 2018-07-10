@@ -1,6 +1,6 @@
 import unittest
 
-from search_service.elastic.search import create_connection
+from core.v1.search import create_connection
 
 
 class TestConnection(unittest.TestCase):

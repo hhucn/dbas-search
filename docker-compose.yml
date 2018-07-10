@@ -10,8 +10,8 @@ services:
       - development.env
 
     volumes:
-      - ./search_service/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
-      - ./search_service/analysis/synonyms_german.txt:/usr/share/elasticsearch/config/synonyms_german.txt
+      - ./core/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
+      - ./core/analysis/synonyms_german.txt:/usr/share/elasticsearch/config/synonyms_german.txt
       - .:/code/
 
 networks:
