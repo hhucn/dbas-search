@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  version: '0.0.1'
+  title: 'SearchAPI'
+  description: 'A of the semantic search API for D-BAS'
+
+servers:
+# Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/TomatenMarc/SearchAPI/0.0.1
+  - description: SwaggerHub API Auto Mocking
+  - url: 'http://localhost:5000'
+
+paths: 
+  /suggestions?id={id}&search={q}&position={pos}:
+    get:
+      parameters:
+        - name: id
+          description: "ID of the issue"
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: q
+          description: "Text to be searched"
+          in: path
+          schema:
+            type: string
+        - name: pos
+          description: "Is the searched text a position ?"
+          in: path
+          schema:
+            type: boolean
+          
+
+      description: "This is a string"
+      responses:
+        200:
+          description: "Valid responce"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html:
+                    type: "Highlighted result text"
+                  score:
+                    type: "The score of the search"
+                  statement_uid:
+                    type: "The statement uid of the result"
+                  text: 
+                    type: "Plain text of the result"
+                  
+  /edits?id={id}&search={q}&statement_uid={pos}:
+    get:
+      parameters:
+        - name: id
+          description: "ID of the issue"
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: q
+          description: "Text to be searched"
+          in: path
+          schema:
+            type: string
+        - name: statement_uid
+          description: "The UID of the statment which is edited"
+          in: path
+          schema:
+            type: integer
+          
+
+      description: "This is a string"
+      responses:
+        200:
+          description: "Valid responce"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html:
+                    type: "Highlighted result text"
+                  score:
+                    type: "The score of the search"
+                  statement_uid:
+                    type: "The statement uid of the result"
+                  text:
+                    type: "Plain text of the result"
+
+  /duplicates_reasons?id={id}&search={q}&statement_uid={pos}:
+    get:
+      parameters:
+        - name: id
+          description: "ID of the issue"
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: q
+          description: "Text to be searched"
+          in: path
+          schema:
+            type: string
+        - name: statement_uid
+          description: "The UID of the statment which is edited"
+          in: path
+          required: true
+          schema:
+            type: integer
+          
+
+      description: "This is a string"
+      responses:
+        200:
+          description: "Valid responce"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  html:
+                    type: "Highlighted result text"
+                  score:
+                    type: "The score of the search"
+                  statement_uid:
+                    type: "The statement uid of the result"
+                  text:
+                    type: "Plain text of the result"
+
+############V2############
+
+  paths:
+  /v2/statement?q={q}:
+    get:
+      summary: List matching statement.
+      description:
+        Lists all statement and its information matching to a given search word q.
+      tags: 
+        - statement
+      parameters:
+        - name: q 
+          description: "Text to be searched for"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List of all statement matching a given search word q.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/statement'
+components:
+  schemas:
+    author:
+      type: object
+      properties:
+        uid: 
+          type: integer
+        nickname:
+            type: string
+    issue:
+      type: object
+      properties:
+        uid:
+          type: string
+        slug:
+          type: string
+        lang:
+          type: string
+        title:
+          type: string
+        info:
+          type: string
+    
+    statement:
+      type: object
+      properties:
+        isPosition:
+          type: boolean
+        uid:
+          type: integer
+        text: 
+          type: string
+        author:
+          type: object
+          $ref: '#/components/schemas/author'
+        issue:
+          type: object
+          $ref: '#/components/schemas/issue'
