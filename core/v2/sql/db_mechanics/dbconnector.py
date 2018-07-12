@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 
-class Database:
+class DBConnector:
     """
     This class creates a database connection to the postgresql database.
     It can query data from it.

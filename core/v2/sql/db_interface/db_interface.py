@@ -1,13 +1,13 @@
 import os
 
-from core.v2.sql.db_mechanics.database import Database
+from core.v2.sql.db_mechanics.dbconnector import DBConnector
 from core.v2.sql.sql_commands.sql_adapter import SQLAdapter
 
 
-class DBInterface(Database, SQLAdapter):
+class DBInterface(DBConnector, SQLAdapter):
     """
     This class is a interface between the Database and a User.
-    It combines the Database class and the SQLAdapter class.
+    It combines the DatabaseConnector class and the SQLAdapter class.
     With this it is possible to combine the functionality of both classes.
     It allows the user to interact and query with the database.
     """
@@ -25,7 +25,7 @@ class DBInterface(Database, SQLAdapter):
         :param pw: <db-password>
         :param file: File  where the sql-query is stored.
         """
-        Database.__init__(self, host=host, user=user, name=name, pw=pw)
+        DBConnector.__init__(self, host=host, user=user, name=name, pw=pw)
         SQLAdapter.__init__(self, file=file)
 
     def query_data_with_sql(self) -> list:
@@ -34,4 +34,4 @@ class DBInterface(Database, SQLAdapter):
 
         :return: List of result queried with the sql-file in self.path.
         """
-        return Database.query(self, query=SQLAdapter.read_file(self))
+        return DBConnector.query(self, query=SQLAdapter.read_file(self))
