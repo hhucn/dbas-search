@@ -1,7 +1,7 @@
 import os
 
 from core.v2.sql.db_mechanics.database import Database
-from core.v2.sql.db_mechanics.sql_adapter import SQLAdapter
+from core.v2.sql.sql_commands.sql_adapter import SQLAdapter
 
 
 class DBInterface(Database, SQLAdapter):
@@ -14,7 +14,7 @@ class DBInterface(Database, SQLAdapter):
 
     def __init__(self, host: str = os.environ["DB_HOST"], user: str = os.environ["DB_USER"],
                  name: str = os.environ["DB_NAME"],
-                 pw: str = os.environ["DB_PW"], path: str = None):
+                 pw: str = os.environ["DB_PW"], file: str = None):
         """
         This init a instance of DBInterface and it combines the functionality
         of the Database class and the SQLAdapter class.
@@ -23,10 +23,10 @@ class DBInterface(Database, SQLAdapter):
         :param user: <db-user>
         :param name: <db-name>
         :param pw: <db-password>
-        :param path: Path where the sql-file is stored that contains the sql query to be searched with.
+        :param file: File  where the sql-query is stored.
         """
         Database.__init__(self, host=host, user=user, name=name, pw=pw)
-        SQLAdapter.__init__(self, path=path)
+        SQLAdapter.__init__(self, file=file)
 
     def query_data_with_sql(self) -> list:
         """

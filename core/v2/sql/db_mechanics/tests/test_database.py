@@ -1,7 +1,7 @@
 import unittest
 
 from core.v2.sql.db_mechanics.database import Database
-from core.v2.sql.db_mechanics.sql_adapter import SQLAdapter
+from core.v2.sql.sql_commands.sql_adapter import SQLAdapter
 
 
 class TestDatabase(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestDatabase(unittest.TestCase):
 
     def test_for_results_as_real_dict_tuples(self):
         db = Database()
-        res = db.query(SQLAdapter(path='../sql_commands/request.sql').read_file())
+        res = db.query(SQLAdapter(file='request.sql').read_file())
         self.assertIsNotNone(res)
         for r in res:
             for desc in db.curs.description:
