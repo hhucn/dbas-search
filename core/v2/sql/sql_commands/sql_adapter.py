@@ -33,5 +33,4 @@ class SQLAdapter:
         """
         with open(self.__get_cmd_folder() + '/' + self.file, 'r') as file:
             res = file.read()
-        file.close()
         return res
