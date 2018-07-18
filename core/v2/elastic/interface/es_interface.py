@@ -1,6 +1,6 @@
 import logging
 
-from core import INDEX_NAME_2
+from core import V2_ST_INDEX
 from core.v2.elastic.mapping.mapping import Mapping
 from core.v2.elastic.mechanics.es_connector import ESConnector
 from core.v2.sql.db_interface.db_interface import DBInterface
@@ -15,7 +15,7 @@ class ESInterface(ESConnector, DBInterface):
 
     """
 
-    def __init__(self, index=INDEX_NAME_2, file: str = None):
+    def __init__(self, index=V2_ST_INDEX, file: str = None):
         """
         Construct a ESInterface.
 

@@ -1,4 +1,4 @@
-from core import INDEX_NAME_2
+from core import V2_ST_INDEX
 from core.v1.search import index_new_element, create_connection
 
 
@@ -8,7 +8,7 @@ class ESConnector:
 
     """
 
-    def __init__(self, index=INDEX_NAME_2):
+    def __init__(self, index=V2_ST_INDEX):
         """
         Constructor of ESConnector to a given index.
 
