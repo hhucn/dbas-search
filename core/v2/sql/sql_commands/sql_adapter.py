@@ -31,7 +31,6 @@ class SQLAdapter:
 
         :return: sql-file as string
         """
-        file = open(self.__get_cmd_folder() + '/' + self.file, 'r')
-        res = file.read()
-        file.close()
+        with open(self.__get_cmd_folder() + '/' + self.file, 'r') as file:
+            res = file.read()
         return res

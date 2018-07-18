@@ -4,7 +4,7 @@
 
 from elasticsearch import Elasticsearch
 
-from core import INDEX_NAME, DOC_TYPE, FILTER
+from core import V1_DB_INDEX, DOC_TYPE, FILTER
 from core.database.query_with_graphql import send_request_to_graphql, query_data_of_issue, \
     query_language_of_issue, query_all_uid
 from core.elastic.query_strings import settings, edits_query, search_query, \
@@ -23,7 +23,7 @@ def create_connection():
                          sniffer_timeout=60)
 
 
-def init_database(es, protocol, host, port, index=INDEX_NAME):
+def init_database(es, protocol, host, port, index=V1_DB_INDEX):
     """
     Fills the elasticsearch database with all data of active issues.
 
@@ -98,7 +98,7 @@ def get_matching_statements(es, uid, position, search):
     return __search_with_query(es, search_query(search, uid, position, synonym_analyzer))
 
 
-def index_new_element(es, content, index=INDEX_NAME):
+def index_new_element(es, content, index=V1_DB_INDEX):
     es.index(index=index,
              doc_type=DOC_TYPE,
              body=content)
@@ -181,7 +181,7 @@ def __search_with_query(es, query_string):
         raise Exception("Elastic is not available")
 
     query = query_string
-    search_results = es.search(index=INDEX_NAME, body=query)
+    search_results = es.search(index=V1_DB_INDEX, body=query)
     for result in search_results.get("hits").get("hits"):
         current = []
         if "_source" and "highlight" in result:

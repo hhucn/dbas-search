@@ -2,7 +2,7 @@ import random
 import string
 import unittest
 
-from core import INDEX_NAME_2
+from core import V2_ST_INDEX
 from core.v2.elastic.mechanics.es_connector import ESConnector
 
 
@@ -16,7 +16,7 @@ class TestConnector(unittest.TestCase):
         self.conn = ESConnector(index=self.index_name)
 
     def test_default_index_name(self):
-        self.assertEqual(ESConnector().index_name, INDEX_NAME_2)
+        self.assertEqual(ESConnector().index_name, V2_ST_INDEX)
 
     def test_new_index_name(self):
         self.assertEqual(ESConnector(index="foo").index_name, "foo")
