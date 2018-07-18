@@ -62,9 +62,8 @@ class ESInterface(ESConnector, DBInterface):
         :param text: the text to be searched
         :return: filtered the _source of the ES search result
         """
-        results = self.__get_results_of_field(field=field, text=text, filter_path="")
-
-        return [res.get("_source") for res in results.get("hits").get("hits")] if results is not None else []
+        results = self.__get_results_of_field(field=field, text=text, filter_path="").get("hits").get("hits")
+        return [res.get("_source") for res in results] if results else []
 
     def __get_results_of_field(self, field: str = "", text: str = "", filter_path: str = "") -> dict:
         """
