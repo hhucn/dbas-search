@@ -21,12 +21,10 @@ class TestConnector(unittest.TestCase):
     def test_new_index_name(self):
         self.assertEqual(ESConnector(index="foo").index_name, "foo")
 
-    def test_create_index(self):
+    def test_create_index_and_delete_index(self):
         self.assertEqual(self.conn.index_name, self.index_name)
         self.conn.create_index()
         self.assertTrue(self.conn.index_exists())
-
-    def test_delete_index(self):
         self.assertEqual(self.conn.index_name, self.index_name)
         self.conn.delete_index()
         self.assertFalse(self.conn.index_exists())
