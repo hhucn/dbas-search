@@ -113,7 +113,7 @@ def init():
 def semantic_search_for_statements():
     q = request.args.get('q', type=str)
     if q is None or q is "":
-        return jsonify("{error: This is not the statement you are looking for}")
+        return jsonify({"error": "You must define a search value q"})
 
     return jsonify(ESInterface().get_source_result(field="text:", text=q))
 
