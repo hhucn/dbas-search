@@ -6,12 +6,12 @@ from core.v2.sql.sql_commands.sql_adapter import SQLAdapter
 
 class TestSQLAdapter(unittest.TestCase):
     def test_adapter_reads_sql_file(self):
-        ad = SQLAdapter(file='request.sql')
-        self.assertIsNotNone(ad.read_file())
+        adapter = SQLAdapter(file='request.sql')
+        self.assertIsNotNone(adapter.read_file())
 
     def test_database_gets_result_with_query_read_by_the_adapter(self):
-        ad = SQLAdapter(file='request.sql')
-        db = DBConnector()
-        res = db.query(ad.read_file())
+        adapter = SQLAdapter(file='request.sql')
+        database = DBConnector()
+        res = database.query(adapter.read_file())
         self.assertIsNotNone(res)
-        db.close_all()
+        database.close_all()
