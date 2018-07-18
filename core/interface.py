@@ -8,6 +8,7 @@ from core.v1.create_database import are_envs_set
 from core.v1.create_database import seed_database
 from core.v1.search import create_connection, get_suggestions, get_edits, get_duplicates_or_reasons, \
     get_all_statements_with_value
+from core.v2.elastic.interface.es_interface import ESInterface
 
 app = Flask(__name__)
 CORS(app)
@@ -106,6 +107,15 @@ def init():
         return jsonify(result=results)
     else:
         return "Database is already filled\n"
+
+
+@app.route('/v2/statement', methods=['GET'])
+def semantic_search_for_statements():
+    q = request.args.get('q', type=str)
+    if q is None or q is "":
+        return jsonify("{error: This is not the statement you are looking for}")
+
+    return jsonify(ESInterface().get_source_result(field="text:", text=q))
 
 
 if __name__ == '__main__':
