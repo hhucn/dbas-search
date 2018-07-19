@@ -35,6 +35,14 @@ search:
       - coverage.xml
     expire_in: 10 mins
 
+flake8:
+  image: python:3-alpine
+  stage: test
+  script:
+    - pip3 install --quiet flake8
+    - flake8 .
+  allow_failure: true
+
 sonar:
   image: hhucn/sonar-scanner
   stage: deploy
