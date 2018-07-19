@@ -112,10 +112,8 @@ def init():
 @app.route('/v2/statement', methods=['GET'])
 def semantic_search_for_statements():
     q = request.args.get('q', type=str)
-    if q is None or q is "":
-        return jsonify({"error": "You must define a search value q"})
-
-    return jsonify(ESInterface().get_source_result(field="text:", text=q))
+    error = {"error": "You must define a search value q"}
+    return jsonify(ESInterface().get_source_result(field="text:", text=q) if q else error)
 
 
 if __name__ == '__main__':
