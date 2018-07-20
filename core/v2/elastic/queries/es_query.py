@@ -15,7 +15,7 @@ class ESQuery:
             "query": {
                 "query_string": {
                     "fields": [self.field],
-                    "query": "*" + self.text + "*",
+                    "query": "*" + self.text + "*" if self.text else self.text,
                     "fuzziness": self.fuzziness
                 }
             }

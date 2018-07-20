@@ -74,7 +74,7 @@ class Mapping:
         :return:
         """
         return {
-            "isPosition": statement.__json__().get("uid"),
+            "isPosition": statement.__json__().get("isPosition"),
             "uid": statement.__json__().get("uid"),
             "text:": statement.__json__().get("text"),
             "author": author.__json__(),

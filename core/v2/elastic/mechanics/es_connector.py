@@ -41,14 +41,15 @@ class ESConnector:
         """
         return self.es.indices.exists(index=self.index_name)
 
-    def search_with(self, query):
+    def search_with(self, query, filter_path: str = "") -> dict:
         """
         Search in the index specified in the constructor with a given query
 
+        :param filter_path: filter results by field specified in filter_path
         :param query: Search Query
         :return: Results of the query in the index specified in the constructor.
         """
-        return self.es.search(index=self.index_name, body=query)
+        return self.es.search(index=self.index_name, body=query, filter_path=[filter_path], request_timeout=30)
 
     def index_element(self, content):
         """

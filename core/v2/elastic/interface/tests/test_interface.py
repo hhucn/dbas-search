@@ -22,6 +22,6 @@ class TestInterface(unittest.TestCase):
     def test_init_new_index_and_query(self):
         self.interface.initialize_new_index()
         query = ESQuery(field="text:", text="Cat", fuzziness=2).sem_query()
-        time.sleep(5)
+        time.sleep(3)
         res = self.interface.search_with(query=query).get("hits").get("hits")
         self.assertGreater(len(res), 0)

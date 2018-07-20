@@ -16,7 +16,11 @@ def create_connection():
 
     :return: connection to elasticsearch-client
     """
-    return Elasticsearch([{"host": "0.0.0.0", "port": 9200}])
+    return Elasticsearch([{"host": "0.0.0.0", "port": 9200}],
+                         sniff_on_start=True,
+                         sniff_on_connection_fail=True,
+                         retry_on_timeout=True,
+                         sniffer_timeout=60)
 
 
 def init_database(es, protocol, host, port, index=V1_DB_INDEX):

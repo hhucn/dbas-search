@@ -3,6 +3,7 @@ import logging
 from core import V2_ST_INDEX
 from core.v2.elastic.mapping.mapping import Mapping
 from core.v2.elastic.mechanics.es_connector import ESConnector
+from core.v2.elastic.queries.es_query import ESQuery
 from core.v2.sql.db_interface.db_interface import DBInterface
 from core.v2.sql.db_models.author import Author
 from core.v2.sql.db_models.issue import Issue
@@ -52,3 +53,26 @@ class ESInterface(ESConnector, DBInterface):
             issue = Issue(content)
             data = Mapping.data_mapping(statement, author, issue)
             ESConnector.index_element(self, data)
+
+    def get_source_result(self, field: str = "", text: str = "") -> list:
+        """
+        This method returns filtered results.
+
+        :param field: where should be searched at
+        :param text: the text to be searched
+        :return: filtered the _source of the ES search result
+        """
+        results = self.__get_results_of_field(field=field, text=text, filter_path="").get("hits").get("hits")
+        return [res.get("_source") for res in results] if results else []
+
+    def __get_results_of_field(self, field: str = "", text: str = "", filter_path: str = "") -> dict:
+        """
+        This method can get the ES search result.
+
+        :param field: the field where ES should look at
+        :param text: the text to be searched for
+        :param filter_path: the field to be contained in the ES result
+        :return:
+        """
+        return self.search_with(query=ESQuery(field=field, text=text, fuzziness=1).sem_query(),
+                                filter_path=filter_path)
