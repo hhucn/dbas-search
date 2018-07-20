@@ -29,8 +29,8 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_nam
         start_listening()
         logging.debug("Connection is established after seeding: {0}".format(es.ping()))
     else:
-        logging.error("""
-            (At least) one required environment variables is not set: 
+        logging.error(
+            """(At least) one required environment variables is not set:
                 DBAS_HOST={0}
                 DBAS_PORT={1}
                 DBAS_PROTOCOL={2}

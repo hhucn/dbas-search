@@ -4,6 +4,7 @@ import threading
 import time
 
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 from core.database.query_with_graphql import query_start_point_issue_of_statement, send_request_to_graphql
 from core.elastic.query_strings import data_mapping
@@ -19,7 +20,7 @@ def __listen_to_db():
     """
     conn = psycopg2.connect(user=os.environ["DB_USER"], password=os.environ["DB_PW"],
                             database=os.environ["DB_NAME"], host=os.environ["DB_HOST"])
-    conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     curs = conn.cursor()
     curs.execute("LISTEN textversions_changes;")
     while True:
@@ -37,8 +38,8 @@ def __insert_new_data(notification):
     """
     Insert and index the data delivered in notification to the elastic search index.
     Add additional information to the insertion datas.
-    Additional information are: statement.isPosition, issue.uid, issue.langUid .
-    
+    Additional information are: statement.isPosition, issue.uid, issue.langUid.
+
     :param notification: incoming notification containing the inserted data
     :return:
     """
