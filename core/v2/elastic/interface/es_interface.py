@@ -1,4 +1,5 @@
 import logging
+import time
 
 from core import V2_ST_INDEX
 from core.v2.elastic.mapping.mapping import Mapping
@@ -53,6 +54,19 @@ class ESInterface(ESConnector, DBInterface):
             issue = Issue(content)
             data = Mapping.data_mapping(statement, author, issue)
             ESConnector.index_element(self, data)
+
+    def reindex_to(self, destination: str, wait_for: int = 2):
+        """
+        Reindex to another index specified in destination
+
+        :param destination: where the current index should be reindex to
+        :return:
+        """
+
+        self.initialize_new_index()
+        time.sleep(wait_for)  # ugly as s***
+        ESConnector(index=destination).delete_index()
+        self.reindex(source=self.index_name, destination=destination)
 
     def get_source_result(self, field: str = "", text: str = "") -> list:
         """

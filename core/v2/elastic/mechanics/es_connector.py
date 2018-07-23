@@ -1,3 +1,7 @@
+import logging
+
+from elasticsearch import helpers
+
 from core import V2_ST_INDEX
 from core.v1.search import index_new_element, create_connection
 
@@ -59,3 +63,15 @@ class ESConnector:
         :return:
         """
         index_new_element(es=self.es, content=content, index=self.index_name)
+
+    def reindex(self, source: str, destination: str):
+        """
+        Reindex a source index to a destination index
+
+        :param source: the source index
+        :param destination: the destination index
+        :return:
+        """
+        logging.info("reindex from {0} to {1}".format(source, destination))
+        helpers.reindex(client=self.es, source_index=source, target_index=destination)
+        logging.info("reindex from {0} to {1}".format(source, destination))
