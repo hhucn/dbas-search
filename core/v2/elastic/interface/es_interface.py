@@ -55,10 +55,11 @@ class ESInterface(ESConnector, DBInterface):
             data = Mapping.data_mapping(statement, author, issue)
             ESConnector.index_element(self, data)
 
-    def reindex_to(self, destination: str, wait_for: int = 2):
+    def reindex_to(self, destination: str, wait_for: int = 3):
         """
         Reindex to another index specified in destination
 
+        :param wait_for: time to wait till the index should be seeded
         :param destination: where the current index should be reindex to
         :return:
         """
@@ -67,6 +68,7 @@ class ESInterface(ESConnector, DBInterface):
         time.sleep(wait_for)  # ugly as s***
         ESConnector(index=destination).delete_index()
         self.reindex(source=self.index_name, destination=destination)
+        self.delete_index()
 
     def get_source_result(self, field: str = "", text: str = "") -> list:
         """
