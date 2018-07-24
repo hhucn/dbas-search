@@ -17,7 +17,7 @@ class TestESInterfaceResults(unittest.TestCase):
         time.sleep(3)
 
     def test_get_source_result_empty_1(self):
-        res = self.interface.get_source_result(field="text:", text="Foo")
+        res = self.interface.get_source_result(field="text:", text="Coconut")
         self.assertIsNotNone(res)
         self.assertEqual(len(res), 0)
 
