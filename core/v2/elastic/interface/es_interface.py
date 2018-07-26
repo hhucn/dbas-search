@@ -1,7 +1,7 @@
 import logging
 import time
 
-from core import V2_ST_INDEX
+from core import STATEMENT_INDEX
 from core.v2.elastic.mapping.mapping import Mapping
 from core.v2.elastic.mechanics.es_connector import ESConnector
 from core.v2.elastic.queries.es_query import ESQuery
@@ -17,7 +17,7 @@ class ESInterface(ESConnector, DBInterface):
 
     """
 
-    def __init__(self, index=V2_ST_INDEX, file: str = None):
+    def __init__(self, index=STATEMENT_INDEX, file: str = None):
         """
         Construct a ESInterface.
 

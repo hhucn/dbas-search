@@ -2,8 +2,10 @@ import logging
 
 from elasticsearch import helpers
 
-from core import V2_ST_INDEX
+from core import STATEMENT_INDEX
+from core.elastic.query_strings import settings
 from core.v1.search import index_new_element, create_connection
+from core.v2.elastic.mapping.mapping import Mapping
 
 
 class ESConnector:
@@ -12,7 +14,7 @@ class ESConnector:
 
     """
 
-    def __init__(self, index=V2_ST_INDEX):
+    def __init__(self, index=STATEMENT_INDEX):
         """
         Constructor of ESConnector to a given index.
 
@@ -35,7 +37,11 @@ class ESConnector:
 
         :return:
         """
-        self.es.indices.create(index=self.index_name)
+        es_settings = dict(settings())
+        es_settings.update(Mapping.mapping().get("mappings"))
+        self.es.indices.create(index=self.index_name,
+                               ignore=[400, 503],
+                               body=es_settings)
 
     def index_exists(self):
         """
