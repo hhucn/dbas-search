@@ -1,4 +1,5 @@
 import os
+from http.client import HTTPException
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -12,6 +13,14 @@ from core.v2.elastic.interface.es_interface import ESInterface
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e
+    return jsonify(error=str(e)), code
 
 
 @app.route('/suggestions')
