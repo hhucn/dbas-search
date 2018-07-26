@@ -16,11 +16,8 @@ CORS(app)
 
 
 @app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e
-    return jsonify(error=str(e)), code
+def handle_error(e: Exception):
+    return jsonify(error=str(e))
 
 
 @app.route('/suggestions')
