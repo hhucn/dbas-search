@@ -1,7 +1,7 @@
 import os
 
 V1_DB_INDEX = "database"
-V2_ST_INDEX = "statement"
+STATEMENT_INDEX = "statement"
 DOC_TYPE = "json"
 
 DBAS_HOST = os.getenv("DBAS_HOST", "")

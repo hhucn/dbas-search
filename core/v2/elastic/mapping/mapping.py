@@ -18,44 +18,42 @@ class Mapping:
         """
         return {
             "mappings": {
-                "statement": {
-                    "properties": {
-                        "isPosition": {
-                            "type": "boolean"
-                        },
-                        "uid": {
-                            "type": "integer"
-                        },
-                        "text": {
-                            "type": "text"
-                        },
-                        "author": {
-                            "properties": {
-                                "uid": {
-                                    "type": "integer"
-                                },
-                                "nickname": {
-                                    "type": "text"
-                                }
+                "properties": {
+                    "isPosition": {
+                        "type": "boolean"
+                    },
+                    "uid": {
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "text"
+                    },
+                    "author": {
+                        "properties": {
+                            "uid": {
+                                "type": "integer"
+                            },
+                            "nickname": {
+                                "type": "text"
                             }
-                        },
-                        "issue": {
-                            "properties": {
-                                "uid": {
-                                    "type": "integer"
-                                },
-                                "slug": {
-                                    "type": "text"
-                                },
-                                "lang": {
-                                    "type": "text"
-                                },
-                                "title": {
-                                    "type": "text"
-                                },
-                                "info": {
-                                    "type": "text"
-                                }
+                        }
+                    },
+                    "issue": {
+                        "properties": {
+                            "uid": {
+                                "type": "integer"
+                            },
+                            "slug": {
+                                "type": "text"
+                            },
+                            "lang": {
+                                "type": "text"
+                            },
+                            "title": {
+                                "type": "text"
+                            },
+                            "info": {
+                                "type": "text"
                             }
                         }
                     }

@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from core import V2_ST_INDEX
+from core import STATEMENT_INDEX
 from core.v2.elastic.interface.es_interface import ESInterface
 from core.v2.elastic.queries.es_query import ESQuery
 
@@ -12,7 +12,7 @@ class TestInterface(unittest.TestCase):
 
     def test_default_values(self):
         interface = ESInterface()
-        self.assertEqual(interface.index_name, V2_ST_INDEX)
+        self.assertEqual(interface.index_name, STATEMENT_INDEX)
         self.assertEqual(interface.file, None)
 
     def test_non_default_values(self):
