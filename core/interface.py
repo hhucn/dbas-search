@@ -126,4 +126,6 @@ def semantic_search_for_statements():
 
 
 if __name__ == '__main__':
+    for cls in HTTPException.__subclasses__():
+        app.register_error_handler(cls, handle_error)
     app.run(debug=True, host="0.0.0.0", port=5000)
