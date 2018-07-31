@@ -119,7 +119,7 @@ def init():
 def semantic_search_for_statements():
     q = request.args.get('q', type=str)
     error = {"error": "You must define a search value q"}
-    return jsonify(ESInterface().get_source_result(field="text:", text=q) if q else error)
+    return jsonify(result=ESInterface().get_source_result(field="text", text=q) if q else error)
 
 
 if __name__ == '__main__':

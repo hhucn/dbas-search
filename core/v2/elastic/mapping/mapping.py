@@ -74,7 +74,7 @@ class Mapping:
         return {
             "isPosition": statement.__json__().get("isPosition"),
             "uid": statement.__json__().get("uid"),
-            "text:": statement.__json__().get("text"),
+            "text": statement.__json__().get("text"),
             "author": author.__json__(),
             "issue": issue.__json__()
         }
