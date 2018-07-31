@@ -20,7 +20,7 @@ def create_connection():
                          sniff_on_start=True,
                          sniff_on_connection_fail=True,
                          retry_on_timeout=True,
-                         sniffer_timeout=60)
+                         sniffer_timeout=180)
 
 
 def init_database(es, protocol, host, port, index=V1_DB_INDEX):
