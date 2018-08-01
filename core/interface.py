@@ -1,4 +1,5 @@
 import os
+from http.client import HTTPException
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -12,6 +13,11 @@ from core.v2.elastic.interface.es_interface import ESInterface
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.errorhandler(Exception)
+def handle_error(e: Exception):
+    return jsonify(error=str(e))
 
 
 @app.route('/suggestions')
@@ -113,8 +119,10 @@ def init():
 def semantic_search_for_statements():
     q = request.args.get('q', type=str)
     error = {"error": "You must define a search value q"}
-    return jsonify(ESInterface().get_source_result(field="text:", text=q) if q else error)
+    return jsonify(result=ESInterface().get_source_result(field="text", text=q) if q else error)
 
 
 if __name__ == '__main__':
+    for cls in HTTPException.__subclasses__():
+        app.register_error_handler(cls, handle_error)
     app.run(debug=True, host="0.0.0.0", port=5000)
