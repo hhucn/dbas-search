@@ -22,7 +22,7 @@ class TestReindexing(unittest.TestCase):
         self.assertTrue(self.interface.es.indices.exists(index=id_2))
         self.interface.reindex_to(destination=id_2)
         time.sleep(2)
-        res = es_client.search_with(query=ESQuery(field="text", text="Cat", fuzziness=1).sem_query())
+        res = es_client.search_with(query=ESQuery(field="text", text="Cat", fuzziness=1).semantic_search_query())
         time.sleep(3)
         res = res.get("hits").get("hits")
         self.assertIsNotNone(res)
