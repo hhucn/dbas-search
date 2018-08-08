@@ -66,7 +66,9 @@ class ESInterface(ESConnector, DBInterface):
 
         self.initialize_new_index()
         time.sleep(wait_for)  # ugly as s***
-        ESConnector(index=destination).delete_index()
+        es_con = ESConnector(index=destination)
+        es_con.delete_index()
+        es_con.create_index()
         self.reindex(source=self.index_name, destination=destination)
         self.delete_index()
 
@@ -90,5 +92,5 @@ class ESInterface(ESConnector, DBInterface):
         :param filter_path: the field to be contained in the ES result
         :return:
         """
-        return self.search_with(query=ESQuery(field=field, text=text, fuzziness=1).sem_query(),
+        return self.search_with(query=ESQuery(field=field, text=text, fuzziness=1).semantic_search_query(),
                                 filter_path=filter_path)
