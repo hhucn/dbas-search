@@ -6,7 +6,7 @@ class ESQuery:
         self.synonym_boost = synonym_boost
         self.fuzziness = fuzziness
 
-    def german_infix_search(self, ):
+    def german_infix_search(self):
         """
         This query does a infix search with german synonyms.
 
