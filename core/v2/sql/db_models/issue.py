@@ -4,7 +4,7 @@ class Issue(object):
 
     """
 
-    def __init__(self, content: list = None):
+    def __init__(self, content: dict = None):
         self.uid = content.get('issue_uid')
         self.slug = content.get('slug')
         self.lang = content.get('ui_locales')

@@ -1,5 +1,4 @@
 import logging
-import time
 
 from core import STATEMENT_INDEX
 from core.v2.elastic.mapping.mapping import Mapping
@@ -54,23 +53,6 @@ class ESInterface(ESConnector, DBInterface):
             issue = Issue(content)
             data = Mapping.data_mapping(statement, author, issue)
             ESConnector.index_element(self, data)
-
-    def reindex_to(self, destination: str, wait_for: int = 3):
-        """
-        Reindex to another index specified in destination
-
-        :param wait_for: time to wait till the index should be seeded
-        :param destination: where the current index should be reindex to
-        :return:
-        """
-
-        self.initialize_new_index()
-        time.sleep(wait_for)  # ugly as s***
-        es_con = ESConnector(index=destination)
-        es_con.delete_index()
-        es_con.create_index()
-        self.reindex(source=self.index_name, destination=destination)
-        self.delete_index()
 
     def get_source_result(self, field: str = "", text: str = "") -> list:
         """

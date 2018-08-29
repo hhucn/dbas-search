@@ -4,7 +4,7 @@ class Author(object):
 
     """
 
-    def __init__(self, content: list = None):
+    def __init__(self, content: dict = None):
         self.uid = content.get('author_uid')
         self.nickname = content.get('public_nickname')
 

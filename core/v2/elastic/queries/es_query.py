@@ -1,3 +1,8 @@
+from core.v2.sql.db_models.author import Author
+from core.v2.sql.db_models.issue import Issue
+from core.v2.sql.db_models.statement import Statement
+
+
 class ESQuery:
 
     def __init__(self, field: str = "text:", text: str = "", fuzziness: int = 3, synonym_boost: int = 5):
@@ -188,5 +193,117 @@ class ESQuery:
                         self.simple_fuzzy_search().get("query")
                     ]
                 }
+            }
+        }
+
+    @staticmethod
+    def update_textversion_information(statement_uid: int, element: dict) -> dict:
+        """
+        Update all information of a specific statement.
+
+        :param statement_uid: The uid of the statement that should be updated
+        :param element: The element that contains all the necessary information for the update.
+                        Must fit the Author, Issue, Statement
+        :return:
+        """
+        author = Author(element)
+        issue = Issue(element)
+        statement = Statement(element)
+        return {
+            "query": {
+                "match": {
+                    "uid": statement_uid
+                }
+            },
+            "script": {
+                "inline": "ctx._source.author.nickname='{0}';"
+                          "ctx._source.author.uid={1};"
+                          "ctx._source.isPosition={2};"
+                          "ctx._source.issue.info='{3}';"
+                          "ctx._source.issue.lang='{4}';"
+                          "ctx._source.issue.slug='{5}';"
+                          "ctx._source.issue.title='{6}';"
+                          "ctx._source.issue.uid={7};"
+                          "ctx._source.text='{8}';"
+                          "ctx._source.uid={9}".format(author.nickname, author.uid, str(statement.isPosition).lower(),
+                                                       issue.info,
+                                                       issue.lang, issue.slug, issue.title, issue.uid,
+                                                       statement.text, statement_uid),
+                "lang": "painless"
+            }
+        }
+
+    @staticmethod
+    def update_issue_information(issue_uid: int, element: dict) -> dict:
+        """
+        Update the issue information of a specific document.
+
+        :param issue_uid: The issue uid of the document that gets an update
+        :param element: The element that contains all necessary information for the update.
+                        Must fit Issue.
+        :return:
+        """
+        issue = Issue(element)
+        print(issue.__json__())
+        return {
+            "query": {
+                "match": {
+                    "issue.uid": issue_uid
+                }
+            },
+            "script": {
+                "inline": "ctx._source.issue.info='{0}';"
+                          "ctx._source.issue.lang='{1}';"
+                          "ctx._source.issue.slug='{2}';"
+                          "ctx._source.issue.title='{3}';"
+                          "ctx._source.issue.uid={4};".format(issue.info, issue.lang, issue.slug, issue.title,
+                                                              issue.uid),
+                "lang": "painless"
+            }
+        }
+
+    @staticmethod
+    def update_author_information(author_uid: int, element: dict) -> dict:
+        """
+        Update the author information of a specific document.
+
+        :param author_uid: The uid of the author that is updated.
+        :param element: The element that contains all information about the updated author.
+                        Must fit author.
+        :return:
+        """
+        author = Author(element)
+        print(author.__json__())
+        return {
+            "query": {
+                "match": {
+                    "author.uid": author_uid
+                }
+            },
+            "script": {
+                "inline": "ctx._source.author.nickname='{0}';"
+                          "ctx._source.author.uid={1};".format(author.nickname, author.uid),
+                "lang": "painless"
+            }
+        }
+
+    @staticmethod
+    def update_statement_information(statement_uid: int, is_position: bool) -> dict:
+        """
+        Update a statement position.
+
+        :param is_position: The value of the statement if it is a position or not.
+        :param statement_uid: The uid of the statement that should be updated.
+        :return:
+        """
+        return {
+            "query": {
+                "match": {
+                    "uid": statement_uid
+                }
+            },
+            "script": {
+                "inline": "ctx._source.isPosition={0};".format(str(is_position).lower()),
+                "lang": "painless"
             }
         }
