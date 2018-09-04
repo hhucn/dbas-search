@@ -22,17 +22,12 @@ class TestESInterfaceResults(unittest.TestCase):
         self.assertEqual(len(res), 0)
 
     def test_get_source_result_empty_2(self):
-        res = self.interface.get_source_result(field="text")
+        res = self.interface.get_source_result(field="text", text="Coconut")
         self.assertIsNotNone(res)
         self.assertEqual(len(res), 0)
 
     def test_get_source_result_empty_3(self):
-        res = self.interface.get_source_result(field="text", text="''")
-        self.assertIsNotNone(res)
-        self.assertEqual(len(res), 0)
-
-    def test_get_source_result_empty_4(self):
-        res = self.interface.get_source_result(field="text", text="")
+        res = self.interface.get_source_result(field="text", text="coCocNut")
         self.assertIsNotNone(res)
         self.assertEqual(len(res), 0)
 
@@ -48,5 +43,10 @@ class TestESInterfaceResults(unittest.TestCase):
 
     def test_get_source_result_not_empty_3(self):
         res = self.interface.get_source_result(field="text", text='""')
+        self.assertIsNotNone(res)
+        self.assertNotEqual(len(res), 0)
+
+    def test_get_source_result_not_empty_4(self):
+        res = self.interface.get_source_result(field="text", text="''")
         self.assertIsNotNone(res)
         self.assertNotEqual(len(res), 0)

@@ -20,7 +20,8 @@ def create_connection():
                          sniff_on_start=True,
                          sniff_on_connection_fail=True,
                          retry_on_timeout=True,
-                         sniffer_timeout=180)
+                         sniffer_timeout=180,
+                         timeout=180)
 
 
 def init_database(es, protocol, host, port, index=V1_DB_INDEX):
@@ -35,7 +36,8 @@ def init_database(es, protocol, host, port, index=V1_DB_INDEX):
     :return:
     """
     if not (es.indices.exists(index=index)):
-        es.indices.create(index=index, body=settings(), ignore=[400, 503])
+        es.cluster.health(wait_for_status="yellow")
+        es.indices.create(index=index, ignore=[400, 503], body=dict(settings()), request_timeout=180)
         for content in __get_data_of_issues(protocol, host, port):
             index_new_element(es, __map_data(content), index)
         es.indices.refresh(index=index)

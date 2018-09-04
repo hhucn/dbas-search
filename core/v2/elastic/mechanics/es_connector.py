@@ -37,11 +37,13 @@ class ESConnector:
 
         :return:
         """
+        self.es.cluster.health(wait_for_status="yellow")
         es_settings = dict(settings())
         es_settings.update(Mapping.mapping().get("mappings"))
         self.es.indices.create(index=self.index_name,
                                ignore=[400, 503],
-                               body=es_settings)
+                               body=es_settings,
+                               request_timeout=180)
 
     def index_exists(self):
         """

@@ -18,13 +18,23 @@ def settings():
                     "analyzer": {
                         "synonyms_english": {
                             "expand": True,
-                            "tokenizer": "keyword",
-                            "filter": ["synonyms_english", "lowercase"]
+                            "tokenizer": "whitespace",
+                            "filter": ["lowercase", "synonyms_english"]
                         },
                         "synonyms_german": {
                             "expand": True,
+                            "tokenizer": "whitespace",
+                            "filter": ["lowercase", "synonyms_german"]
+                        },
+                        "keyword_synonyms_english": {
+                            "expand": True,
                             "tokenizer": "keyword",
-                            "filter": ["synonyms_german", "lowercase"]
+                            "filter": ["lowercase", "synonyms_english"]
+                        },
+                        "keyword_synonyms_german": {
+                            "expand": True,
+                            "tokenizer": "keyword",
+                            "filter": ["lowercase", "synonyms_german"]
                         }
                     },
                     "filter": {
