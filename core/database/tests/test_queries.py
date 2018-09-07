@@ -2,7 +2,7 @@ import unittest
 
 from core.database.query_with_graphql import query_issue_id, \
     query_language_of_issue, \
-    query_data_of_issue, query_start_point_issue_of_statement
+    query_data_of_issue, query_statement_info_by_issue_uid
 
 
 class TestGraphQLQueries(unittest.TestCase):
@@ -49,5 +49,5 @@ class TestGraphQLQueries(unittest.TestCase):
 
         :return:
         """
-        query = query_start_point_issue_of_statement(2)
+        query = query_statement_info_by_issue_uid(2)
         self.assertIn("statement(uid: 2)", query)

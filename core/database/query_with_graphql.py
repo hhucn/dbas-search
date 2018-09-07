@@ -135,7 +135,7 @@ def query_data_of_issue(uid):
                """).format(uid)
 
 
-def query_start_point_issue_of_statement(uid):
+def query_statement_info_by_issue_uid(uid):
     """
     Additional information for a new insertion in the elastic search index if the listener notices an
     update in the DBAS database.

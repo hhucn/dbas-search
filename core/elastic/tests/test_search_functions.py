@@ -1,7 +1,7 @@
 import time
 import unittest
 
-from core.database.query_with_graphql import query_start_point_issue_of_statement, send_request_to_graphql
+from core.database.query_with_graphql import query_statement_info_by_issue_uid, send_request_to_graphql
 from core.v1.search import create_connection, get_all_statements_with_value, get_suggestions, get_edits, \
     get_duplicates_or_reasons
 
@@ -131,7 +131,7 @@ class TestContentList(unittest.TestCase):
 
         :return:
         """
-        query = query_start_point_issue_of_statement(1)
+        query = query_statement_info_by_issue_uid(1)
         res = send_request_to_graphql(query)
         self.assertGreater(len(res), 0)
 

@@ -462,3 +462,81 @@ def data_mapping(text, is_position, uid, lang_id, statement_uid):
             }
         }
     )
+
+
+def update_textversion(element: dict) -> dict:
+    """
+    Query to update a textversion and all regarding information by its statement uid.
+
+    :param element: must match the data mapping
+    :return:
+    """
+    isPosition = element.get("isPosition")
+    text = element.get("textversions").get("content")
+    statementUid = element.get("textversions").get("statementUid")
+    issueUid = element.get("issues").get("uid")
+    issueLang = element.get("issues").get("langUid")
+
+    return {
+        "query": {
+            "match": {
+                "textversions.statementUid": statementUid
+            }
+        },
+        "script": {
+            "inline": "ctx._source.isPosition={0};"
+                      "ctx._source.textversions.content='{1}';"
+                      "ctx._source.textversions.statementUid={2};"
+                      "ctx._source.issues.uid={3};"
+                      "ctx._source.issues.langUid='{4}';".format(str(isPosition).lower(), text, statementUid, issueUid,
+                                                                 issueLang),
+            "lang": "painless"
+        }
+    }
+
+
+def update_issue(element: dict) -> dict:
+    """
+    Query to update a issue by its issue uid.
+
+    :param element: Must match the data mapping
+    :return:
+    """
+    uid = element.get("issues").get("uid")
+    language = element.get("issues").get("langUid")
+
+    return {
+        "query": {
+            "match": {
+                "issues.uid": uid
+            }
+        },
+        "script": {
+            "inline": "ctx._source.issues.uid='{0}';"
+                      "ctx._source.issues.langUid='{1}';".format(uid, language),
+            "lang": "painless"
+        }
+    }
+
+
+def update_statement(element: dict) -> dict:
+    """
+    Query to update a statement by its statement uid.
+
+    :param element: must match data mapping
+    :return:
+    """
+    statementUid = element.get("textversions").get("statementUid")
+    isPosition = element.get("isPosition")
+
+    return {
+        "query": {
+            "match": {
+                "textversions.statementUid": statementUid
+            }
+        },
+        "script": {
+            "inline": "ctx._source.isPosition={0};".format(str(isPosition).lower()),
+            "language": "painless"
+        }
+    }
