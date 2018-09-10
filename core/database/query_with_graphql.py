@@ -10,7 +10,7 @@ import requests
 from core import DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL
 
 
-def json_to_dict(col):
+def json_to_dict(col) -> dict:
     """
     Given a json object as bytes, convert it to a Python dictionary.
 
@@ -25,7 +25,8 @@ def json_to_dict(col):
     return json.loads(col)
 
 
-def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT) -> dict:
+def send_request_to_graphql(query: str, protocol: str = DBAS_PROTOCOL, host: str = DBAS_HOST,
+                            port: int = DBAS_PORT) -> dict:
     """
     Send a request to GraphQl V2 and returns response as json.
 
@@ -52,7 +53,7 @@ def send_request_to_graphql(query, protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=
     return ret
 
 
-def get_uid_of_issue(issue_slug):
+def get_uid_of_issue(issue_slug: str) -> int:
     """
 
     :param issue_slug: The slug of the issue
@@ -63,7 +64,7 @@ def get_uid_of_issue(issue_slug):
     return int(response.get("issue").get("uid"))
 
 
-def query_issue_id(slug):
+def query_issue_id(slug: str) -> str:
     """
 
     :param slug: the slug of the issue
@@ -79,11 +80,11 @@ def query_issue_id(slug):
                 """).format(slug)
 
 
-def query_language_of_issue(uid):
+def query_language_of_issue(issue_uid: int) -> str:
     """
     Returns the language of an issue.
 
-    :param uid: current issue id
+    :param issue_uid: current issue id
     :return:
     """
     return ("""
@@ -94,10 +95,10 @@ def query_language_of_issue(uid):
                         }}
                    }}
                }}
-               """).format(uid)
+               """).format(issue_uid)
 
 
-def query_all_uid():
+def query_all_uid() -> str:
     """
     Query to get all issue uid.
 
@@ -112,12 +113,12 @@ def query_all_uid():
             """)
 
 
-def query_data_of_issue(uid):
+def query_data_of_issue(issue_uid: int) -> str:
     """
     Query to get all data of a specific issue.
     This the structure of this query is like the data_mapping in query_strings.py used in search.
 
-    :param uid: issue.uid of the issue to be looked up
+    :param issue_uid: issue.uid of the issue to be looked up
     :return: query to get all data of a specific issue
     """
     return ("""
@@ -132,15 +133,15 @@ def query_data_of_issue(uid):
                        lang
                    }}
                }}
-               """).format(uid)
+               """).format(issue_uid)
 
 
-def query_statement_info_by_issue_uid(uid):
+def query_statement_info_by_issue_uid(issue_uid: int) -> str:
     """
     Additional information for a new insertion in the elastic search index if the listener notices an
     update in the DBAS database.
 
-    :param uid: issue.uid of the issue to be looked up
+    :param issue_uid: issue.uid of the issue to be looked up
     :return: query for the additional information for the insertion to the elastic search index.
     """
     return ("""
@@ -151,4 +152,4 @@ def query_statement_info_by_issue_uid(uid):
                         lang
                     }}
                 }}
-            """).format(uid)
+            """).format(issue_uid)

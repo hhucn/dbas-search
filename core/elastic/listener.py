@@ -47,7 +47,7 @@ def __listen_to_db():
                 __update_statement(notification)
 
 
-def __insert_new_data(notification):
+def __insert_new_data(notification: dict):
     """
     Insert and index the data delivered in notification to the elastic search index.
     Add additional information to the insertion datas.
@@ -68,7 +68,7 @@ def __insert_new_data(notification):
     index_new_element(es, results)
 
 
-def __update_textversion(notification):
+def __update_textversion(notification: dict):
     """
     Updates an existing element by its statement_uid.
 
@@ -83,8 +83,8 @@ def __update_textversion(notification):
     position = response.get("statement").get("isPosition")
     issue_uid = response.get("statement").get("issueUid")
     lang_uid = response.get("statement").get("lang")
-    element = data_mapping(text=content, is_position=position, uid=issue_uid, statement_uid=statement_uid,
-                           lang_id=lang_uid)
+    element = data_mapping(text=content, is_position=position, uid=issue_uid, language=lang_uid,
+                           statement_uid=statement_uid)
     query = update_textversion(
         element=element
     )
@@ -95,7 +95,7 @@ def __update_textversion(notification):
     )
 
 
-def __update_issue(notification):
+def __update_issue(notification: dict):
     """
     Updates an existing element by its issue_uid.
 
@@ -106,7 +106,7 @@ def __update_issue(notification):
     query = query_statement_info_by_issue_uid(issue_uid)
     response = send_request_to_graphql(query)
     lang = response.get("statement").get("lang")
-    element = data_mapping(text=None, is_position=None, uid=issue_uid, lang_id=lang, statement_uid=None)
+    element = data_mapping(text=str(), is_position=bool(), uid=issue_uid, language=lang, statement_uid=int())
 
     query = update_issue(
         element=element
@@ -118,7 +118,7 @@ def __update_issue(notification):
     )
 
 
-def __update_statement(notification):
+def __update_statement(notification: dict):
     """
     Updates an existing element by its statement uid.
 
@@ -127,7 +127,7 @@ def __update_statement(notification):
     """
     statement_uid = notification.get("data").get("uid")
     is_position = notification.get("data").get("is_position")
-    element = data_mapping(text=None, is_position=is_position, uid=None, lang_id=None, statement_uid=statement_uid)
+    element = data_mapping(text=str(), is_position=is_position, uid=int(), language=str(), statement_uid=statement_uid)
     query = update_statement(
         element=element
     )

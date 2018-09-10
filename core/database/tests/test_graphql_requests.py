@@ -13,7 +13,7 @@ class TestGraphQLRequest(unittest.TestCase):
 
         :return:
         """
-        response = send_request_to_graphql("query{}", "", "", "")
+        response = send_request_to_graphql("query{}", "", "", 0)
         self.assertIsNotNone(response)
 
     def test_empty_query_has_response(self):

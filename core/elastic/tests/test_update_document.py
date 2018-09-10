@@ -12,8 +12,8 @@ class TestDocumentUpdate(unittest.TestCase):
         self.es_client = ESConnector(index=V1_DB_INDEX)
         time.sleep(3)
 
-    def test_if_textversion_is_updated(self):
-        notification = data_mapping(text="Coconut", is_position=True, uid=1, lang_id="en", statement_uid=2)
+    def test_textversion_is_updated(self):
+        notification = data_mapping(text="Coconut", is_position=True, uid=1, language="en", statement_uid=2)
         query = update_textversion(element=notification)
         update_ack = self.es_client.update_document(
             body=query,
@@ -21,8 +21,8 @@ class TestDocumentUpdate(unittest.TestCase):
         )
         self.assertEqual(update_ack.get("failures"), [])
 
-    def test_if_issue_is_updated(self):
-        notification = data_mapping(text=None, is_position=None, uid=2, lang_id="de", statement_uid=None)
+    def test_issue_is_updated(self):
+        notification = data_mapping(text="", is_position=False, uid=2, language="de", statement_uid=1)
         query = update_issue(element=notification)
         update_ack = self.es_client.update_document(
             body=query,
@@ -30,8 +30,8 @@ class TestDocumentUpdate(unittest.TestCase):
         )
         self.assertEqual(update_ack.get("failures"), [])
 
-    def test_if_statement_is_updated(self):
-        notification = data_mapping(text=None, is_position=False, uid=None, lang_id=None, statement_uid=2)
+    def test_statement_is_updated(self):
+        notification = data_mapping(text="", is_position=False, uid=1, language="de", statement_uid=2)
         query = update_statement(element=notification)
         update_ack = self.es_client.update_document(
             body=query,

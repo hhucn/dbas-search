@@ -4,7 +4,7 @@
 from core import FILTER
 
 
-def settings():
+def settings() -> dict:
     """
     The setting string for the client.
     Notice: the synonym files are stored in config/.
@@ -55,7 +55,7 @@ def settings():
     }
 
 
-def search_query(text, uid, is_position, synonym_analyzer=FILTER.get("en")):
+def search_query(text: str, uid: int, is_position: bool, synonym_analyzer: str = FILTER.get("en")) -> dict:
     """
     The search query uses synonyms and fuzzy search in regard to a full text search.
     Notice that there are three parts.
@@ -159,7 +159,7 @@ def search_query(text, uid, is_position, synonym_analyzer=FILTER.get("en")):
     }
 
 
-def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
+def edits_query(text: str, uid: int, synonym_analyzer: str = FILTER.get("en")) -> dict:
     """
     This query works like the search_query.
 
@@ -250,7 +250,8 @@ def edits_query(text, uid, synonym_analyzer=FILTER.get("en")):
     }
 
 
-def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FILTER.get("en")):
+def duplicates_or_reasons_query(text: str, issue_uid: int, value_uid: int,
+                                synonym_analyzer: str = FILTER.get("en")) -> dict:
     """
     This query works like search_query.
 
@@ -348,7 +349,7 @@ def duplicates_or_reasons_query(text, issue_uid, value_uid, synonym_analyzer=FIL
     }
 
 
-def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")):
+def all_statements_with_value_query(text: str, uid: int, synonym_analyzer: str = FILTER.get("en")) -> dict:
     """
     This query works like search_query.
 
@@ -438,14 +439,14 @@ def all_statements_with_value_query(text, uid, synonym_analyzer=FILTER.get("en")
     }
 
 
-def data_mapping(text, is_position, uid, lang_id, statement_uid):
+def data_mapping(text: str, is_position: bool, uid: int, language: str, statement_uid: int) -> dict:
     """
     The data format used in the database
 
     :param text: text to be added
     :param is_position: is the text a start point
     :param uid: in which id should the text be added
-    :param lang_id: which language is used
+    :param language: which language is used
     :param statement_uid: to determine the language of the current issue
     :return: data map of the data-format used in the elastic search index
     """
@@ -458,7 +459,7 @@ def data_mapping(text, is_position, uid, lang_id, statement_uid):
             },
             "issues": {
                 "uid": uid,
-                "langUid": lang_id
+                "langUid": language
             }
         }
     )
