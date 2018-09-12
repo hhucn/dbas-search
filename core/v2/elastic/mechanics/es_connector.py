@@ -72,6 +72,16 @@ class ESConnector:
         """
         index_new_element(es=self.es, content=content, index=self.index_name)
 
+    def update_document(self, body: dict, doc_type: str):
+        """
+        Update a document by a given query specified in body.
+
+        :param body: The body with the update query
+        :param doc_type: The doc_type of the specific document
+        :return:
+        """
+        return self.es.update_by_query(body=body, doc_type=doc_type, index=self.index_name)
+
     def reindex(self, source: str, destination: str):
         """
         Reindex a source index to a destination index

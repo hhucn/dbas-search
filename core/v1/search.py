@@ -24,7 +24,7 @@ def create_connection():
                          timeout=180)
 
 
-def init_database(es, protocol, host, port, index=V1_DB_INDEX):
+def init_database(es: Elasticsearch, protocol: str, host: str, port: int, index: str = V1_DB_INDEX):
     """
     Fills the elasticsearch database with all data of active issues.
 
@@ -43,7 +43,7 @@ def init_database(es, protocol, host, port, index=V1_DB_INDEX):
         es.indices.refresh(index=index)
 
 
-def get_suggestions(es, uid, search, start_point):
+def get_suggestions(es: Elasticsearch, uid: int, search: str, start_point: bool) -> list:
     """
     Returns a dictionary with suggestions.
     Notice that the content strings are already customized with highlighting strings.
@@ -58,7 +58,7 @@ def get_suggestions(es, uid, search, start_point):
     return __prepare_content_list(results)
 
 
-def get_edits(es, uid, statement_uid, search):
+def get_edits(es: Elasticsearch, uid: int, statement_uid: int, search: str) -> list:
     """
     Returns a dictionary with suggestions for the edit popup.
     Notice that the content strings are already customized with highlighting strings.
@@ -73,17 +73,17 @@ def get_edits(es, uid, statement_uid, search):
     return __prepare_content_list(results)
 
 
-def get_duplicates_or_reasons(es, uid, statement_uid, search):
+def get_duplicates_or_reasons(es: Elasticsearch, uid: int, statement_uid: int, search: str) -> list:
     results = __get_matching_duplicates_or_reasons(es, uid, statement_uid, search)
     return __prepare_content_list(results)
 
 
-def get_all_statements_with_value(es, uid, search):
+def get_all_statements_with_value(es: Elasticsearch, uid: int, search: str) -> list:
     results = __get_matching_statements_with_value(es, uid, search)
     return __prepare_content_list(results)
 
 
-def get_matching_statements(es, uid, position, search):
+def get_matching_statements(es: Elasticsearch, uid: int, position: bool, search: str) -> list:
     """
     Returns a list with suggestions.
     Notice that the content strings are already customized with highlighting strings.
@@ -100,13 +100,13 @@ def get_matching_statements(es, uid, position, search):
     return __search_with_query(es, search_query(search, uid, position, synonym_analyzer))
 
 
-def index_new_element(es, content, index=V1_DB_INDEX):
+def index_new_element(es: Elasticsearch, content: dict, index: str = V1_DB_INDEX):
     es.index(index=index,
              doc_type=DOC_TYPE,
              body=content)
 
 
-def __get_issue_ids(protocol, host, port):
+def __get_issue_ids(protocol: str, host: str, port: int) -> list:
     """
 
     :return: every uid in the D-BAS database
@@ -118,7 +118,7 @@ def __get_issue_ids(protocol, host, port):
     return []
 
 
-def __get_data_of_issues(protocol, host, port):
+def __get_data_of_issues(protocol: str, host: str, port: int) -> list:
     """
 
     :return: every data in the D-BAS database
@@ -136,7 +136,7 @@ def __get_data_of_issues(protocol, host, port):
     return statements
 
 
-def __get_used_language(uid):
+def __get_used_language(uid: int) -> str:
     """
     Determine the language of a issue.
 
@@ -149,19 +149,19 @@ def __get_used_language(uid):
     return language
 
 
-def __get_matching_statements_with_value(es, uid, search):
+def __get_matching_statements_with_value(es: Elasticsearch, uid: int, search: str) -> list:
     language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
     return __search_with_query(es, all_statements_with_value_query(search, uid, synonym_analyzer))
 
 
-def __get_matching_duplicates_or_reasons(es, uid, statement_uid, search):
+def __get_matching_duplicates_or_reasons(es: Elasticsearch, uid: int, statement_uid: int, search: str) -> list:
     language = __get_used_language(uid)
     synonym_analyzer = FILTER.get(language)
     return __search_with_query(es, duplicates_or_reasons_query(search, uid, statement_uid, synonym_analyzer))
 
 
-def __get_matching_edits(es, uid, statement_uid, search):
+def __get_matching_edits(es: Elasticsearch, uid: int, statement_uid: int, search: str) -> list:
     """
     Returns a list with suggestions for edit statements.
 
@@ -176,7 +176,7 @@ def __get_matching_edits(es, uid, statement_uid, search):
     return __search_with_query(es, edits_query(search, statement_uid, synonym_analyzer))
 
 
-def __search_with_query(es, query_string):
+def __search_with_query(es: Elasticsearch, query_string: dict) -> list:
     results = []
 
     if es.ping() is False:
@@ -196,7 +196,7 @@ def __search_with_query(es, query_string):
     return results
 
 
-def __map_data(content):
+def __map_data(content: dict) -> dict:
     """
     Maps a given content to the data structure that elastic requires.
 
@@ -211,7 +211,7 @@ def __map_data(content):
     return data_mapping(text, is_position, issue_uid, language, statement_uid)
 
 
-def __prepare_content_list(results):
+def __prepare_content_list(results: list):
     """
     Returns a prepared list to use it at the frontend.
 

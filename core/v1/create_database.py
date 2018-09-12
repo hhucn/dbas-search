@@ -10,7 +10,7 @@ from core.v1.search import create_connection
 from core.v1.search import init_database
 
 
-def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_name=DB_NAME):
+def seed_database(protocol: str = DBAS_PROTOCOL, host: str = DBAS_HOST, port: int = DBAS_PORT, db_name: str = DB_NAME):
     """
     Seeds elastic index with data at (host, port).
 
@@ -20,7 +20,7 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_nam
     :param db_name: Name of discussion-database, could be: discussion
     :return:
     """
-    if are_envs_set() or __are_strings_not_empty(protocol, host, port, db_name):
+    if are_envs_set() or __are_strings_not_empty([protocol, host, port, db_name]):
         logging.debug("Test connection to elastic search is active")
         es = create_connection()
         logging.debug("Connection is established: {0}".format(es.ping()))
@@ -38,7 +38,7 @@ def seed_database(protocol=DBAS_PROTOCOL, host=DBAS_HOST, port=DBAS_PORT, db_nam
             """.format(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME))
 
 
-def are_envs_set():
+def are_envs_set() -> bool:
     """
     Checks if the environment variables are set.
 
@@ -47,7 +47,7 @@ def are_envs_set():
     return __are_strings_not_empty(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME)
 
 
-def __are_strings_not_empty(*strings: List[str]):
+def __are_strings_not_empty(*strings: List[str]) -> bool:
     """
     Check if the parameters are set if the environment variables aren't set, because
     the injection doesn't overwrite them.
