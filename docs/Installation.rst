@@ -28,3 +28,32 @@ To enter an running Container use::
 To stop an running Container use::
 
     $ docker-compose stop
+
+
+Environment-Variables
+=====================
+
+To launch search in connection with D-BAS it is necessary to set some environment-variables in order
+to connect to the D-BAS application and its database.
+
+Database Variables
+==================
++----------------------+--------------------------------------------+
+| DB_HOST              | The database host of the D-BAS application |
++----------------------+--------------------------------------------+
+| DB_NAME              | The Name of the D-BAS database             |
++----------------------+--------------------------------------------+
+| DB_PW                | The Password of the D-BAS database         |
++----------------------+--------------------------------------------+
+| DB_USER              | The Name of the D-BAS database user        |
++----------------------+--------------------------------------------+
+
+D-BAS Variables
+===============
++----------------------+----------------------------------------------+
+| DBAS_PORT            | The Port on which the D-BAS app listens at   |
++----------------------+----------------------------------------------+
+| DBAS_PROTOCOL        | The Protocol which is used for D-BAS GraphQL |
++----------------------+----------------------------------------------+
+| DBAS_HOST            | The application host of D-BAS                |
++----------------------+----------------------------------------------+
