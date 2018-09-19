@@ -83,7 +83,6 @@ celerybeat-schedule
 
 # Environments
 !development.env
-.env
 .venv
 env/
 venv/
@@ -106,5 +105,3 @@ venv.bak/
 
 .DS_Store
 .idea/
-
-*.env
