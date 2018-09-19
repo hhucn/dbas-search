@@ -6,8 +6,14 @@ services:
       - "9200:9200"
       - "5000:5000"
 
-    env_file:
-      - development.env
+    environment:
+      APPLICATION_HOST: ${DBAS_HOST}
+      APPLICATION_PORT: ${DBAS_PORT}
+      APPLICATION_PROTOCOL: ${DBAS_PROTOCOL}
+      DATABASE_HOST: ${DB_HOST}
+      DATABASE_NAME: ${DB_NAME}
+      DATABASE_USER: ${DB_USER}
+      DATABASE_PASSWORD: ${DB_PW}
 
     volumes:
       - ./core/analysis/synonyms_english.txt:/usr/share/elasticsearch/config/synonyms_english.txt
