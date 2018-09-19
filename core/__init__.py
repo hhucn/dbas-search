@@ -4,9 +4,9 @@ V1_DB_INDEX = "database"
 STATEMENT_INDEX = "statement"
 DOC_TYPE = "json"
 
-DBAS_HOST = os.getenv("DBAS_HOST", "")
-DBAS_PORT = os.getenv("DBAS_PORT", "")
-DBAS_PROTOCOL = os.getenv("DBAS_PROTOCOL", "http")
-DB_NAME = os.getenv("DB_NAME", "discussion")
+APPLICATION_HOST = os.getenv("APPLICATION_HOST", "")
+APPLICATION_PORT = os.getenv("APPLICATION_PORT", "")
+APPLICATION_PROTOCOL = os.getenv("APPLICATION_PROTOCOL", "http")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "discussion")
 
 FILTER = {"en": "synonyms_english", "de": "synonyms_german"}

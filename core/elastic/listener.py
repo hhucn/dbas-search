@@ -20,8 +20,8 @@ def __listen_to_db():
 
     :return:
     """
-    conn = psycopg2.connect(user=os.environ["DB_USER"], password=os.environ["DB_PW"],
-                            database=os.environ["DB_NAME"], host=os.environ["DB_HOST"])
+    conn = psycopg2.connect(user=os.environ["DATABASE_USER"], password=os.environ["DATABASE_PASSWORD"],
+                            database=os.environ["DATABASE_NAME"], host=os.environ["DATABASE_HOST"])
     conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
     curs = conn.cursor()
     commands = ["LISTEN issues_changes;", "LISTEN textversions_changes;", "LISTEN statements_changes;"]

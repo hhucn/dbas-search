@@ -12,9 +12,9 @@ class DBConnector:
 
     """
 
-    def __init__(self, host: str = os.environ["DB_HOST"], user: str = os.environ["DB_USER"],
-                 name: str = os.environ["DB_NAME"],
-                 pw: str = os.environ["DB_PW"]):
+    def __init__(self, host: str = os.environ["DATABASE_HOST"], user: str = os.environ["DATABASE_USER"],
+                 name: str = os.environ["DATABASE_NAME"],
+                 pw: str = os.environ["DATABASE_PASSWORD"]):
         """
         Creates a cursor and a database connection to a database specified by the parameters.
 

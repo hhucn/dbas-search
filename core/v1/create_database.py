@@ -4,13 +4,14 @@
 import logging
 from typing import List
 
-from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST, DB_NAME
+from core import APPLICATION_PROTOCOL, APPLICATION_PORT, APPLICATION_HOST, DATABASE_NAME
 from core.elastic.listener import start_listening
 from core.v1.search import create_connection
 from core.v1.search import init_database
 
 
-def seed_database(protocol: str = DBAS_PROTOCOL, host: str = DBAS_HOST, port: int = DBAS_PORT, db_name: str = DB_NAME):
+def seed_database(protocol: str = APPLICATION_PROTOCOL, host: str = APPLICATION_HOST, port: int = APPLICATION_PORT,
+                  db_name: str = DATABASE_NAME):
     """
     Seeds elastic index with data at (host, port).
 
@@ -31,11 +32,11 @@ def seed_database(protocol: str = DBAS_PROTOCOL, host: str = DBAS_HOST, port: in
     else:
         logging.error(
             """(At least) one required environment variables is not set:
-                DBAS_HOST={0}
-                DBAS_PORT={1}
-                DBAS_PROTOCOL={2}
-                DB_NAME={3}
-            """.format(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME))
+                APPLICATION_HOST={0}
+                APPLICATION_PORT={1}
+                APPLICATION_PROTOCOL={2}
+                DATABASE_NAME={3}
+            """.format(APPLICATION_HOST, APPLICATION_PORT, APPLICATION_PROTOCOL, DATABASE_NAME))
 
 
 def are_envs_set() -> bool:
@@ -44,7 +45,7 @@ def are_envs_set() -> bool:
 
     :return:
     """
-    return __are_strings_not_empty(DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL, DB_NAME)
+    return __are_strings_not_empty(APPLICATION_HOST, APPLICATION_PORT, APPLICATION_PROTOCOL, DATABASE_NAME)
 
 
 def __are_strings_not_empty(*strings: List[str]) -> bool:
