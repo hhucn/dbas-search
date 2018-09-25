@@ -38,22 +38,22 @@ to connect to the D-BAS application and its database.
 
 Database Variables
 ==================
-+----------------------+--------------------------------------------+
-| DB_HOST              | The database host of the D-BAS application |
-+----------------------+--------------------------------------------+
-| DB_NAME              | The Name of the D-BAS database             |
-+----------------------+--------------------------------------------+
-| DB_PW                | The Password of the D-BAS database         |
-+----------------------+--------------------------------------------+
-| DB_USER              | The Name of the D-BAS database user        |
-+----------------------+--------------------------------------------+
++----------------------+--------------------------------------------------------------------+
+| DATABASE_HOST        | The database host used in the  D-BAS application                   |
++----------------------+--------------------------------------------------------------------+
+| DATABASE_NAME        | The name of the database used by the D-BAS application             |
++----------------------+--------------------------------------------------------------------+
+| DATABASE_PASSWORD    | The password of the database used by the D-BAS application         |
++----------------------+--------------------------------------------------------------------+
+| DATABASE_USER        | The name of the database user used by the D-BAS application        |
++----------------------+--------------------------------------------------------------------+
 
 D-BAS Variables
 ===============
-+----------------------+----------------------------------------------+
-| DBAS_PORT            | The Port on which the D-BAS app listens at   |
-+----------------------+----------------------------------------------+
-| DBAS_PROTOCOL        | The Protocol which is used for D-BAS GraphQL |
-+----------------------+----------------------------------------------+
-| DBAS_HOST            | The application host of D-BAS                |
-+----------------------+----------------------------------------------+
++----------------------+-----------------------------------------------------------------------+
+| APPLICATION_PORT     | The Port on which the D-BAS application listens at                    |
++----------------------+-----------------------------------------------------------------------+
+| APPLICATION_PROTOCOL | The Protocol which is required by D-BAS to query with GraphQL         |
++----------------------+-----------------------------------------------------------------------+
+| APPLICATION_HOST     | The application host of D-BAS                                         |
++----------------------+-----------------------------------------------------------------------+
