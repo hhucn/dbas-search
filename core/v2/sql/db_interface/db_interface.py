@@ -12,9 +12,9 @@ class DBInterface(DBConnector, SQLAdapter):
     It allows the user to interact and query with the database.
     """
 
-    def __init__(self, host: str = os.environ["DB_HOST"], user: str = os.environ["DB_USER"],
-                 name: str = os.environ["DB_NAME"],
-                 pw: str = os.environ["DB_PW"], file: str = None):
+    def __init__(self, host: str = os.environ["DATABASE_HOST"], user: str = os.environ["DATABASE_USER"],
+                 name: str = os.environ["DATABASE_NAME"],
+                 pw: str = os.environ["DATABASE_PASSWORD"], file: str = None):
         """
         This init a instance of DBInterface and it combines the functionality
         of the Database class and the SQLAdapter class.

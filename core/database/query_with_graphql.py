@@ -7,7 +7,7 @@ import os
 
 import requests
 
-from core import DBAS_HOST, DBAS_PORT, DBAS_PROTOCOL
+from core import APPLICATION_HOST, APPLICATION_PORT, APPLICATION_PROTOCOL
 
 
 def json_to_dict(col) -> dict:
@@ -25,8 +25,8 @@ def json_to_dict(col) -> dict:
     return json.loads(col)
 
 
-def send_request_to_graphql(query: str, protocol: str = DBAS_PROTOCOL, host: str = DBAS_HOST,
-                            port: int = DBAS_PORT) -> dict:
+def send_request_to_graphql(query: str, protocol: str = APPLICATION_PROTOCOL, host: str = APPLICATION_HOST,
+                            port: int = APPLICATION_PORT) -> dict:
     """
     Send a request to GraphQl V2 and returns response as json.
 
@@ -37,9 +37,9 @@ def send_request_to_graphql(query: str, protocol: str = DBAS_PROTOCOL, host: str
     :return: response of the db to query
     """
     if "" in [protocol, host, port]:
-        protocol = os.environ["DBAS_PROTOCOL"]
-        host = os.environ["DBAS_HOST"]
-        port = os.environ["DBAS_PORT"]
+        protocol = os.environ["APPLICATION_PROTOCOL"]
+        host = os.environ["APPLICATION_HOST"]
+        port = os.environ["APPLICATION_PORT"]
 
     API = "{}://{}:{}/api/v2/".format(protocol, host, port)
     url = "{}query?q={}".format(API, query)
