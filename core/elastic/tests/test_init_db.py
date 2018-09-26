@@ -3,7 +3,7 @@ import string
 import time
 import unittest
 
-from core import DBAS_PROTOCOL, DBAS_PORT, DBAS_HOST
+from core import APPLICATION_PROTOCOL, APPLICATION_PORT, APPLICATION_HOST
 from core.v1.search import create_connection, init_database, get_suggestions
 
 
@@ -26,7 +26,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT, index)
+            init_database(self.es, APPLICATION_PROTOCOL, APPLICATION_HOST, APPLICATION_PORT, index)
         except (Exception, ConnectionError):
             self.fail("init_data base failed")
         res = get_suggestions(self.es, 2, "cat", True)
@@ -40,7 +40,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, "coconut", DBAS_HOST, DBAS_PORT, index)
+            init_database(self.es, "coconut", APPLICATION_HOST, APPLICATION_PORT, index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass
@@ -53,7 +53,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, DBAS_PROTOCOL, "cockatoo", DBAS_PORT, index)
+            init_database(self.es, APPLICATION_PROTOCOL, "cockatoo", APPLICATION_PORT, index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass
@@ -66,7 +66,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, DBAS_PROTOCOL, DBAS_HOST, "seagull", index)
+            init_database(self.es, APPLICATION_PROTOCOL, APPLICATION_HOST, "seagull", index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass
@@ -79,7 +79,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, "coconut", "cockatoo", DBAS_PORT, index)
+            init_database(self.es, "coconut", "cockatoo", APPLICATION_PORT, index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass
@@ -92,7 +92,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, "coconut", DBAS_HOST, "seagull", index)
+            init_database(self.es, "coconut", APPLICATION_HOST, "seagull", index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass
@@ -105,7 +105,7 @@ class TestSeeding(unittest.TestCase):
         """
         index = self.id_generator()
         try:
-            init_database(self.es, DBAS_PROTOCOL, "cockatoo", "seagull", index)
+            init_database(self.es, APPLICATION_PROTOCOL, "cockatoo", "seagull", index)
             self.fail("The database should not be initialized")
         except (Exception, ConnectionError):
             pass

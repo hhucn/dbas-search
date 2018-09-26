@@ -13,16 +13,26 @@ build_test_images:
 search:
   image: docker:dind
   stage: test
+  variables:
+    AUTHN_SECRET: "89#s3cr3t_15"
+    DB_HOST: db_$CI_JOB_ID
+    DB_PORT: "5432"
+    DB_USER: "postgres"
+    DB_PW: "DXxCNtfnt!MOo!f8LY1!P%sw3KGzt@s!"
+    DB_NAME: "discussion"
+    DBAS_PROTOCOL: "http"
+    DBAS_HOST: web_$CI_JOB_ID
+    DBAS_PORT: "4284"
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
     - docker pull $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
     - docker pull $CI_REGISTRY_IMAGE:experimental
     - docker network create -d bridge dbas_$CI_JOB_ID
-    - docker run -d --name db_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
+    - docker run -d --name db_$CI_JOB_ID --net=dbas_$CI_JOB_ID $CI_REGISTRY/cn-tsn/project/dbas/dbas/db:development
     - sleep 8  # init dbas' database
-    - docker run -d --name web_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env -e DB_HOST=db_$CI_JOB_ID -e SEARCH_NAME=search_$CI_JOB_ID $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
-    - docker run -d --name search_$CI_JOB_ID --net=dbas_$CI_JOB_ID --env-file ./development.env -e DBAS_HOST=web_$CI_JOB_ID -e DB_HOST=db_$CI_JOB_ID $CI_REGISTRY_IMAGE:experimental
+    - docker run -d --name web_$CI_JOB_ID --net=dbas_$CI_JOB_ID -e AUTHN_SECRET=$AUTHN_SECRET -e DB_HOST=db_$CI_JOB_ID -e DB_PORT=$DB_PORT -e DB_USER=$DB_USER -e DB_PW=$DB_PW -e DB_NAME=$DB_NAME $CI_REGISTRY/cn-tsn/project/dbas/dbas:development
+    - docker run -d --name search_$CI_JOB_ID --net=dbas_$CI_JOB_ID -e APPLICATION_HOST=$DBAS_HOST -e DATABASE_HOST=$DB_HOST -e APPLICATION_PROTOCOL=$DBAS_PROTOCOL -e DATABASE_PASSWORD=$DB_PW -e DATABASE_USER=$DB_USER -e APPLICATION_PORT=$DBAS_PORT -e DATABASE_NAME=$DB_NAME $CI_REGISTRY_IMAGE:experimental
     - sleep 25  # wait for elasticsearch to start up and pull data from dbas' database via dbas
   script:
     - docker exec search_$CI_JOB_ID nosetests --with-coverage --cover-package=core --cover-xml -w . core -v

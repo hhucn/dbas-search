@@ -92,20 +92,20 @@ def statements_with_value():
 def init():
     """
     This route seeds the elastic search index and starts the insertion-listener for the DBAS database.
-    This route takes the arguments DBAS_PROTOCOL, DBAS_HOST, DBAS_PORT.
+    This route takes the arguments APPLICATION_PROTOCOL, APPLICATION_HOST, APPLICATION_PORT.
     If the environment variables are not set initialize the elastic index and start the database listener.
 
     :return: list of json-objects of the delivered arguments
     """
     results = request.get_json(silent=False)
-    protocol = results["DBAS_PROTOCOL"]
-    host = results["DBAS_HOST"]
-    port = results["DBAS_PORT"]
+    protocol = results["APPLICATION_PROTOCOL"]
+    host = results["APPLICATION_HOST"]
+    port = results["APPLICATION_PORT"]
 
     if not are_envs_set():
-        os.environ["DBAS_PROTOCOL"] = protocol
-        os.environ["DBAS_HOST"] = host
-        os.environ["DBAS_PORT"] = port
+        os.environ["APPLICATION_PROTOCOL"] = protocol
+        os.environ["APPLICATION_HOST"] = host
+        os.environ["APPLICATION_PORT"] = port
 
         seed_database(protocol, host, port)
         start_listening()
