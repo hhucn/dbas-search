@@ -21,7 +21,7 @@ A inline-query should contain all information and key to update a specific docum
 The keys must match those defined in the mapping of the specific index where the document
 should be updated.
 
-.. warning::
+.. note::
     Notice: Strings must be surrounded by simple quotation marks like: `'<variable>'`. Every command must end with a
     semicolon. Booleans must be lowercase.
 

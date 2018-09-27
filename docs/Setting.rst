@@ -26,7 +26,6 @@ The general structure of the setting is::
             }
         }
 
-
 More details about setting up a *analyzer* or *filter* can be found in:
 
 .. toctree::
@@ -50,8 +49,8 @@ The data mapping looks like::
 
 The equivalent query with *graphql* can be found in *query_with_graphql.py*.
 
-.. warning::
-	If you change the data mapping please make sure to modify the search query etc.
+.. note::
+    If you change the data mapping please make sure to modify the search query etc.
 
 
 
@@ -83,7 +82,7 @@ The general structure of the search query looks like::
         highlighting_string
     }
 
-.. warning::
+.. note::
    Do not delete the "must" section or you must find an other way to filter your data.
 
 A highlighting query can look like::
