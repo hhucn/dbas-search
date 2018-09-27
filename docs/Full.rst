@@ -13,7 +13,7 @@ A full text search query can be written like::
                 "fields": ["<field1>", "<field2>", ...]
         }
 
-.. warning::
+.. note::
 	Data for D-BAS-Search are stored in the <field> textversions.content.
 
 Notice the "*" within the *query* field. 

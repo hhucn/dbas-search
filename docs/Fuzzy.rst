@@ -15,7 +15,7 @@ A query string for fuzzy search looks like::
 		}
 	}
 
-.. warning::
+.. note::
 	Datas for D-BAS-Search are stored in the <field> textversions.content.
 
 

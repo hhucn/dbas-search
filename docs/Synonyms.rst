@@ -37,7 +37,7 @@ And to define a *filter* use::
 
 Notice that *<name of synonyms>* is place holder for a new synonym file.
 
-.. warning::
+.. note::
 
 	Never miss "" at the end and the beginning of *<name of synonyms>*.
 
@@ -75,7 +75,7 @@ A synonym search query looks like::
                 }
 	}
 
-.. warning::
+.. note::
         Data for D-BAS-Search are stored in the <field> textversions.content.
 
 

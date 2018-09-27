@@ -1,5 +1,5 @@
-Settings and structures
-=======================
+Settings and structures of version 1
+====================================
 
 To add new components to D-BAS-Search it is necessary to modify the search settings.
 
@@ -26,7 +26,6 @@ The general structure of the setting is::
             }
         }
 
-
 More details about setting up a *analyzer* or *filter* can be found in:
 
 .. toctree::
@@ -37,7 +36,7 @@ More details about setting up a *analyzer* or *filter* can be found in:
 The data mapping looks like::
 
         {
-            "isPosition": start_point,
+            "isPosition": is_position,
             "textversions": {
                 "content": text,
                 "statementUid": statement_uid
@@ -50,8 +49,8 @@ The data mapping looks like::
 
 The equivalent query with *graphql* can be found in *query_with_graphql.py*.
 
-.. warning::
-	If you change the data mapping please make sure to modify the search query etc.
+.. note::
+    If you change the data mapping please make sure to modify the search query etc.
 
 
 
@@ -74,7 +73,7 @@ The general structure of the search query looks like::
                     },
                     {
                         "match": {
-                            "isPosition": start_point
+                            "isPosition": is_position
                         }
                     }
                 ]
@@ -83,8 +82,8 @@ The general structure of the search query looks like::
         highlighting_string
     }
 
-.. warning::
-    Do not delete the "must" section or you must find an other way to filter your data.
+.. note::
+   Do not delete the "must" section or you must find an other way to filter your data.
 
 A highlighting query can look like::
 
@@ -108,3 +107,55 @@ A highlighting query can look like::
 Notice that *"force_source"* highlights the result with every *search_query*.
 
 The search_queries in the search and highlight query must be the same.
+
+Settings and structures of version 2
+====================================
+Version 2 of SEARCH uses the same settings that are used in version 1.
+The data-mapping is a different and can be seen in `v2/mapping`::
+
+    {
+            "mappings": {
+                "properties": {
+                    "isPosition": {
+                        "type": "boolean"
+                    },
+                    "uid": {
+                        "type": "integer"
+                    },
+                    "text": {
+                        "type": "text"
+                    },
+                    "author": {
+                        "properties": {
+                            "uid": {
+                                "type": "integer"
+                            },
+                            "nickname": {
+                                "type": "text"
+                            }
+                        }
+                    },
+                    "issue": {
+                        "properties": {
+                            "uid": {
+                                "type": "integer"
+                            },
+                            "slug": {
+                                "type": "text"
+                            },
+                            "lang": {
+                                "type": "text"
+                            },
+                            "title": {
+                                "type": "text"
+                            },
+                            "info": {
+                                "type": "text"
+                            }
+                        }
+                    }
+                }
+            }
+     }
+
+This mapping can also bee seen at: https://app.swaggerhub.com/apis/TomatenMarc/SearchAPI/0.0.1

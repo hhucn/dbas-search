@@ -16,6 +16,7 @@ The search supports:
    Synonyms
    Fuzzy
    Full
+   Update
 
 Check the out for more details.
 
