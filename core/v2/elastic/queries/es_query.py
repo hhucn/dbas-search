@@ -244,7 +244,6 @@ class ESQuery:
         :return:
         """
         issue = Issue(element)
-        print(issue.__json__())
         return {
             "query": {
                 "match": {
@@ -273,7 +272,6 @@ class ESQuery:
         :return:
         """
         author = Author(element)
-        print(author.__json__())
         return {
             "query": {
                 "match": {
