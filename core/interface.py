@@ -38,7 +38,7 @@ def suggest():
     es = create_connection()
     res = get_suggestions(es, uid, search, position)
 
-    return jsonify(result=res)
+    return jsonify(results=res)
 
 
 @app.route('/edits')
@@ -54,7 +54,7 @@ def edits():
     es = create_connection()
     res = get_edits(es, uid, statement_uid, search)
 
-    return jsonify(result=res)
+    return jsonify(results=res)
 
 
 @app.route('/duplicates_reasons')
@@ -70,7 +70,7 @@ def duplicates_reasons():
     es = create_connection()
     res = get_duplicates_or_reasons(es, uid, statement_uid, search)
 
-    return jsonify(result=res)
+    return jsonify(results=res)
 
 
 @app.route('/statements')
@@ -85,7 +85,7 @@ def statements_with_value():
     es = create_connection()
     res = get_all_statements_with_value(es, uid, search)
 
-    return jsonify(result=res)
+    return jsonify(results=res)
 
 
 @app.route('/init', methods=['POST'])
@@ -110,7 +110,7 @@ def init():
         seed_database(protocol, host, port)
         start_listening()
 
-        return jsonify(result=results)
+        return jsonify(results=results)
     else:
         return "Database is already filled\n"
 
@@ -119,7 +119,7 @@ def init():
 def semantic_search_for_statements():
     q = request.args.get('q', type=str)
     error = {"error": "You must define a search value q"}
-    return jsonify(result=ESInterface().get_source_result(field="text", text=q) if q else error)
+    return jsonify(results=ESInterface().get_source_result(field="text", text=q) if q else error)
 
 
 if __name__ == '__main__':
