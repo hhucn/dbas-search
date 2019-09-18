@@ -128,7 +128,7 @@ def __get_data_of_issues(protocol: str, host: str, port: int) -> list:
     issue_ids = __get_issue_ids(protocol, host, port)
     for id in issue_ids:
         content = send_request_to_graphql(query_data_of_issue(id), protocol, host, port)
-        content = content.get("statements")
+        content = content.get('issue').get("statements")
         if content:
             for data in content:
                 statements.append(data)

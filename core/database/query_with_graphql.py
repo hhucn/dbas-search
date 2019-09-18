@@ -123,15 +123,17 @@ def query_data_of_issue(issue_uid: int) -> str:
     """
     return ("""
                query{{
-                   statements(issueUid: {0}){{
-                       isPosition
-                       textversions{{
-                            content
-                            statementUid
-                       }}
-                       issueUid
-                       lang
-                   }}
+                   issue(uid:{0}){{
+                        statements{{
+                            isPosition
+                            textversions{{
+                                content
+                                statementUid
+                            }}
+                        issueUid
+                        lang
+                        }}
+                    }}
                }}
                """).format(issue_uid)
 

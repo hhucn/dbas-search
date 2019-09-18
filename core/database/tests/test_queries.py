@@ -32,7 +32,7 @@ class TestGraphQLQueries(unittest.TestCase):
         :return:
         """
         query = query_data_of_issue(2)
-        self.assertIn("statements(issueUid: 2)", query)
+        self.assertIn("issue(uid:2)", query)
 
     def test_query_data_of_issue(self):
         """
@@ -41,7 +41,7 @@ class TestGraphQLQueries(unittest.TestCase):
         :return:
         """
         query = query_data_of_issue(2)
-        self.assertIn("statements(issueUid: 2)", query)
+        self.assertIn("issue(uid:2)", query)
 
     def test_query_start_point_issue_of_statement(self):
         """

@@ -40,13 +40,3 @@ class TestESInterfaceResults(unittest.TestCase):
         res = self.interface.get_source_result(field="author.nickname", text="anonymous")
         self.assertIsNotNone(res)
         self.assertNotEqual(len(res), 0)
-
-    def test_get_source_result_not_empty_3(self):
-        res = self.interface.get_source_result(field="text", text='""')
-        self.assertIsNotNone(res)
-        self.assertNotEqual(len(res), 0)
-
-    def test_get_source_result_not_empty_4(self):
-        res = self.interface.get_source_result(field="text", text="''")
-        self.assertIsNotNone(res)
-        self.assertNotEqual(len(res), 0)

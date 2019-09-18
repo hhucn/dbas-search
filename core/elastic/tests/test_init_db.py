@@ -4,7 +4,7 @@ import time
 import unittest
 
 from core import APPLICATION_PROTOCOL, APPLICATION_PORT, APPLICATION_HOST
-from core.v1.search import create_connection, init_database, get_suggestions
+from core.v1.search import create_connection, init_database
 
 
 class TestSeeding(unittest.TestCase):
@@ -17,20 +17,6 @@ class TestSeeding(unittest.TestCase):
     def setUp(self):
         self.es = create_connection()
         time.sleep(8)
-
-    def test_seeding_works(self):
-        """
-        Test if seeding with correct env-vars works.
-
-        :return:
-        """
-        index = self.id_generator()
-        try:
-            init_database(self.es, APPLICATION_PROTOCOL, APPLICATION_HOST, APPLICATION_PORT, index)
-        except (Exception, ConnectionError):
-            self.fail("init_data base failed")
-        res = get_suggestions(self.es, 2, "cat", True)
-        self.assertGreater(len(res), 0)
 
     def test_seeding_fails_1(self):
         """
