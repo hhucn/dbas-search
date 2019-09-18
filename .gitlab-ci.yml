@@ -1,17 +1,18 @@
 image: docker
 
+services:
+  - docker:stable-dind
+
 build_test_images:
   stage: build
   tags:
-    - 40c
+    - ht
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE --pull .
-    - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:experimental
+    - docker build -t $CI_REGISTRY_IMAGE:experimental --pull .
     - docker push $CI_REGISTRY_IMAGE:experimental
 
 search:
-  image: docker:dind
   stage: test
   variables:
     AUTHN_SECRET: "89#s3cr3t_15"
